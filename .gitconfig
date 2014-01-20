@@ -1,0 +1,36 @@
+[user]
+	name = Lattapon Yodsuwan
+	email = i@clozed2u.com
+[core]
+	autocrlf = input
+	safecrlf = true
+	editor = vim
+	excludesfile = ~/.gitignore
+[alias]
+	co = checkout
+[apply]
+	whitespace = nowarn
+[color]
+	branch = auto
+	diff = auto
+	status = auto
+	interactive = auto
+	ui = true
+	pager = true
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+[credential]
+	helper = osxkeychain
+[push]
+	default = current
