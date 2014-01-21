@@ -4,8 +4,10 @@ silent! execute pathogen#infect()
 set nocompatible
 set shell=/bin/zsh
 set encoding=utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
 set t_Co=256
-set background=dark
+set background=light
 set expandtab
 set shiftwidth=2 tabstop=2 softtabstop=2
 set autoindent
@@ -13,13 +15,14 @@ set nowrap
 set nospell
 set nomodeline
 set backspace=2
-set laststatus=2
-set noshowmode
+set laststatus=0
+set showmode
 set showmatch
 set showcmd
+set confirm
 set noruler
 set number
-set nocursorline nocursorcolumn
+set cursorline nocursorcolumn
 set showtabline=0
 set visualbell noerrorbells
 set autoread
@@ -32,7 +35,8 @@ set gdefault
 set hlsearch incsearch ignorecase smartcase
 set nobackup nowritebackup noswapfile
 set history=50
-set list listchars=tab:»·,trail:·
+set shortmess=atI
+set list listchars=tab:▸\ ,trail:·,eol:¬
 set wildmenu wildmode=list:longest,full wildignore=*.png,*.jpg,*gif
 set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
@@ -62,7 +66,9 @@ set statusline=[%F]\ %m\ %=\ [%{toupper(g:currentmode[mode()])}]\ [%Y]\ [%l/%L]\
 
 filetype plugin indent on
 syntax on
-colorscheme desert
+colorscheme solarized
+highlight NonText cterm=none ctermbg=none ctermfg=7
+highlight SpecialKey cterm=none ctermbg=none ctermfg=7
 
 nnoremap ; :
 nnoremap : ;
@@ -99,5 +105,4 @@ nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
 
-autocmd BufRead,BufNewFile {*.markdown,*.md,*.text} set filetype=markdown
-autocmd FileType markdown setlocal syntax=off spell wrap
+autocmd FileType markdown setlocal nonumber spell wrap

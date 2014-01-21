@@ -58,12 +58,15 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
 cdpath=(.)
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' formats ' %b'
+zstyle ':vcs_info:*' stagedstr '%F{red}'
+zstyle ':vcs_info:*' unstagedstr '%F{red}'
+zstyle ':vcs_info:*' branchformats '%r'
+zstyle ':vcs_info:*' formats ' (%F{green}%c%u%b%f)'
 precmd() {vcs_info}
 
 # zmodload & zle
 zmodload -i zsh/complist
 zle -N self-insert url-quote-magic
 
-PROMPT='%F{magenta}%~%f%F{green}${vcs_info_msg_0_}%f %F{cyan}$%f %{$reset_color%}'
+PROMPT='%F{blue}%~%f${vcs_info_msg_0_} %{$reset_color%}'
 RPROMPT=''
