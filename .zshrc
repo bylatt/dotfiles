@@ -58,7 +58,7 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
 cdpath=(.)
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' stagedstr '%F{red}'
+zstyle ':vcs_info:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*' branchformats '%r'
 zstyle ':vcs_info:*' formats ' (%F{green}%c%u%b%f)'
