@@ -34,7 +34,7 @@ set magic
 set gdefault
 set hlsearch incsearch ignorecase smartcase
 set nobackup nowritebackup noswapfile
-set history=50
+set history=100
 set shortmess=atI
 set list listchars=tab:▸\ ,trail:·,eol:¬
 set wildmenu wildmode=list:longest,full wildignore=*.png,*.jpg,*gif
