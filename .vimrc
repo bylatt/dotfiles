@@ -7,17 +7,16 @@ set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
 set t_Co=256
-set background=light
+set background=dark
 set expandtab
 set shiftwidth=2 tabstop=2 softtabstop=2
-set autoindent
+set autoindent smartindent
 set nowrap
 set nospell
 set nomodeline
 set backspace=2
-set laststatus=0
+set laststatus=2
 set showmode
-set showmatch
 set showcmd
 set confirm
 set noruler
@@ -32,7 +31,7 @@ set clipboard=unnamed
 set scrolloff=4
 set magic
 set gdefault
-set hlsearch incsearch ignorecase smartcase
+set incsearch ignorecase smartcase showmatch hlsearch infercase
 set nobackup nowritebackup noswapfile
 set history=100
 set shortmess=atI
@@ -66,9 +65,9 @@ set statusline=[%F]\ %m\ %=\ [%{toupper(g:currentmode[mode()])}]\ [%Y]\ [%l/%L]\
 
 filetype plugin indent on
 syntax on
-colorscheme solarized
-highlight NonText cterm=none ctermbg=none ctermfg=7
-highlight SpecialKey cterm=none ctermbg=none ctermfg=7
+colorscheme hemisu
+"highlight NonText cterm=none ctermbg=none ctermfg=7
+"highlight SpecialKey cterm=none ctermbg=none ctermfg=7
 
 nnoremap ; :
 nnoremap : ;

@@ -11,8 +11,7 @@ alias mail='open -a Mail.app'
 alias note='open -a Notes.app'
 alias todo='open -a Reminders.app'
 
-autoload -U compinit promptinit colors select-word-style url-quote-magic vcs_info
-select-word-style bash
+autoload -U compinit promptinit colors vcs_info
 compinit -i
 promptinit
 colors
@@ -49,16 +48,12 @@ zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
-cdpath=(.)
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*' branchformats '%r'
 zstyle ':vcs_info:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
-
-zmodload -i zsh/complist
-zle -N self-insert url-quote-magic
 
 PROMPT='%F{magenta}$%f %F{blue}%~/%f${vcs_info_msg_0_} %{$reset_color%}'
 RPROMPT=''
