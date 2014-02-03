@@ -66,8 +66,6 @@ set statusline=[%F]\ %m\ %=\ [%{toupper(g:currentmode[mode()])}]\ [%Y]\ [%l/%L]\
 filetype plugin indent on
 syntax on
 colorscheme hemisu
-"highlight NonText cterm=none ctermbg=none ctermfg=7
-"highlight SpecialKey cterm=none ctermbg=none ctermfg=7
 
 nnoremap ; :
 nnoremap : ;

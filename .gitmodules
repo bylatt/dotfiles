@@ -16,3 +16,6 @@
 [submodule ".vim/bundle/vim-hemisu"]
 	path = .vim/bundle/vim-hemisu
 	url = git@github.com:noahfrederick/vim-hemisu.git
+[submodule ".vim/bundle/vim-editorconfig"]
+	path = .vim/bundle/vim-editorconfig
+	url = git@github.com:editorconfig/editorconfig-vim.git
