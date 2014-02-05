@@ -17,6 +17,7 @@ promptinit
 colors
 
 setopt no_beep
+setopt correct
 setopt correct_all
 setopt auto_cd
 setopt auto_name_dirs
@@ -30,15 +31,19 @@ setopt complete_aliases
 setopt always_to_end
 setopt append_history
 setopt extended_history
+setopt extendedglob
 setopt hist_expire_dups_first
 setopt hist_ignore_all_dups
 setopt hist_ignore_dups
 setopt hist_ignore_space
 setopt hist_verify
+setopt hist_find_no_dups
+setopt hist_reduce_blanks
 setopt inc_append_history
 setopt share_history
 setopt prompt_subst
 setopt long_list_jobs
+setopt multios
 
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=1000

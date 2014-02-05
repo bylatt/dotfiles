@@ -22,7 +22,7 @@ set confirm
 set noruler
 set number
 set cursorline nocursorcolumn
-set showtabline=0
+set showtabline=2
 set visualbell noerrorbells
 set autoread
 set hidden
