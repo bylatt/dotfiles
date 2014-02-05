@@ -33,4 +33,4 @@
 [credential]
 	helper = osxkeychain
 [push]
-	default = current
+	default = simple 
