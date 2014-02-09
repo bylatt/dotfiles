@@ -10,7 +10,7 @@ alias web='open -a Safari.app'
 alias mail='open -a Mail.app'
 alias note='open -a Notes.app'
 alias todo='open -a Reminders.app'
-
+alias rs="ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => 8000, :DocumentRoot => Dir.pwd).start'"
 autoload -U compinit promptinit colors vcs_info
 compinit -i
 promptinit
