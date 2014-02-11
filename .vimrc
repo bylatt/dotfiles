@@ -2,7 +2,7 @@ silent! runtime bundle/vim-pathogen/autoload/pathogen.vim
 silent! execute pathogen#infect()
 
 set nocompatible
-set shell=/bin/zsh
+set shell=/usr/local/bin/zsh
 set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
@@ -31,12 +31,12 @@ set clipboard=unnamed
 set scrolloff=4
 set magic
 set gdefault
-set incsearch ignorecase smartcase showmatch hlsearch infercase
+set incsearch ignorecase smartcase showmatch hlsearch infercase wrapscan
 set nobackup nowritebackup noswapfile
 set history=100
 set shortmess=atI
 set list listchars=tab:▸\ ,trail:·,eol:¬
-set wildmenu wildmode=list:longest,full wildignore=*.png,*.jpg,*gif
+set wildmenu wildmode=list:longest,full wildignore=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*
 set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
 set completeopt=longest,menuone,preview
@@ -102,4 +102,4 @@ nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
 
-autocmd FileType markdown setlocal nonumber spell wrap
+autocmd FileType markdown setlocal nonumber spell wrap background=light

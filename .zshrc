@@ -1,3 +1,4 @@
+export PATH=/usr/local/bin:$PATH
 export LANG=en_US.utf-8
 export TERM=xterm-256color
 export VISUAL=vim
@@ -5,12 +6,11 @@ export EDITOR=vim
 export CLICOLOR=1
 export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
 alias ls='ls -Glah'
-alias web='open -a Safari.app'
-alias mail='open -a Mail.app'
-alias note='open -a Notes.app'
-alias todo='open -a Reminders.app'
 alias rs="ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => 8000, :DocumentRoot => Dir.pwd).start'"
+
 autoload -U compinit promptinit colors vcs_info
 compinit -i
 promptinit
