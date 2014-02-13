@@ -7,7 +7,7 @@ set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
 set t_Co=256
-set background=dark
+set background=light
 set expandtab
 set shiftwidth=2 tabstop=2 softtabstop=2
 set autoindent smartindent
@@ -102,4 +102,4 @@ nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
 
-autocmd FileType markdown setlocal nonumber spell wrap background=light
+autocmd FileType markdown setlocal nonumber spell wrap laststatus=0 showtabline=0
