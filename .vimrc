@@ -102,4 +102,6 @@ nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
 
+nnoremap <cr> :nohlsearch<cr>
+
 autocmd FileType markdown setlocal nonumber spell wrap laststatus=0 showtabline=0
