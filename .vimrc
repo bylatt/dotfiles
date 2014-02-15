@@ -1,13 +1,13 @@
 " Setting up Vundle
-filetype off
-let VundleCheck=1
+let has_vundle=1
 let VundleReadme=expand('~/.vim/bundle/vundle/README.md')
 if !filereadable(VundleReadme)
 	echo "Installing Vundle..."
 	silent !mkdir -p ~/.vim/bundle
 	silent !git clone git@github.com:gmarik/Vundle.vim.git ~/.vim/bundle/vundle
-	let VundleReadme=0
+	let has_vundle=0
 endif
+filetype off
 set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 
@@ -15,7 +15,7 @@ Bundle 'gmarik/vundle'
 
 Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-liquid'
-Bundle 'StanAngeloff/php.vim'
+Bundle 'tpope/vim-rails'
 Bundle 'pangloss/vim-javascript'
 Bundle 'clozed2u/vim-sass'
 
@@ -24,7 +24,7 @@ Bundle 'editorconfig/editorconfig-vim'
 
 " Settings
 set nocompatible
-set shell=/usr/bin/zsh
+set shell=/usr/local/bin/zsh
 set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
