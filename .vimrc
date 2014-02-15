@@ -1,13 +1,35 @@
-silent! runtime bundle/vim-pathogen/autoload/pathogen.vim
-silent! execute pathogen#infect()
+" Setting up Vundle
+filetype off
+let VundleCheck=1
+let VundleReadme=expand('~/.vim/bundle/vundle/README.md')
+if !filereadable(VundleReadme)
+	echo "Installing Vundle..."
+	silent !mkdir -p ~/.vim/bundle
+	silent !git clone git@github.com:gmarik/Vundle.vim.git ~/.vim/bundle/vundle
+	let VundleReadme=0
+endif
+set rtp+=~/.vim/bundle/vundle
+call vundle#rc()
 
+Bundle 'gmarik/vundle'
+
+Bundle 'tpope/vim-markdown'
+Bundle 'tpope/vim-liquid'
+Bundle 'StanAngeloff/php.vim'
+Bundle 'pangloss/vim-javascript'
+Bundle 'clozed2u/vim-sass'
+
+Bundle 'noahfrederick/vim-hemisu'
+Bundle 'editorconfig/editorconfig-vim'
+
+" Settings
 set nocompatible
-set shell=/usr/local/bin/zsh
+set shell=/usr/bin/zsh
 set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
 set t_Co=256
-set background=light
+set background=dark
 set expandtab
 set shiftwidth=2 tabstop=2 softtabstop=2
 set autoindent smartindent
@@ -41,32 +63,14 @@ set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
 set completeopt=longest,menuone,preview
 set splitbelow splitright
-let g:currentmode={
-	\ 'n'  : 'Normal',
-	\ 'no' : 'N·Operator Pending',
-	\ 'v'  : 'Visual',
-	\ 'V'  : 'V·Line',
-	\ '' : 'V·Block',
-	\ 's'  : 'Select',
-	\ 'S'  : 'S·Line',
-	\ '' : 'S·Block',
-	\ 'i'  : 'Insert',
-	\ 'R'  : 'Replace',
-	\ 'Rv' : 'V·Replace',
-	\ 'c'  : 'Command',
-	\ 'cv' : 'Vim Ex',
-	\ 'ce' : 'Ex',
-	\ 'r'  : 'Prompt',
-	\ 'rm' : 'More',
-	\ 'r?' : 'Confirm',
-	\ '!'  : 'Shell',
-	\}
-set statusline=[%F]\ %m\ %=\ [%{toupper(g:currentmode[mode()])}]\ [%Y]\ [%l/%L]\ [%p%%]
+set statusline=[%F]\ %m\ %=\ [%Y]\ [%l/%L]\ [%p%%]
 
+" Colors and Indent
 filetype plugin indent on
 syntax on
 colorscheme hemisu
 
+" Keys mapping
 nnoremap ; :
 nnoremap : ;
 vnoremap ; :
@@ -104,4 +108,5 @@ nnoremap <c-l> <c-w>l
 
 nnoremap <cr> :nohlsearch<cr>
 
+" Per filetype settings
 autocmd FileType markdown setlocal nonumber spell wrap laststatus=0 showtabline=0

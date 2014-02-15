@@ -1,10 +1,10 @@
-export PATH=/usr/local/bin:$PATH
 export LANG=en_US.utf-8
 export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+export PATH=/usr/local/bin:$PATH
 
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
