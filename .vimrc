@@ -8,19 +8,18 @@ if !filereadable(VundleReadme)
 	let has_vundle=0
 endif
 filetype off
-set rtp+=~/.vim/bundle/vundle
+set runtimepath+=~/.vim/bundle/vundle
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
-
 Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-liquid'
 Bundle 'tpope/vim-rails'
+Bundle 'tpope/vim-vinegar'
 Bundle 'pangloss/vim-javascript'
 Bundle 'clozed2u/vim-sass'
-
-Bundle 'noahfrederick/vim-hemisu'
 Bundle 'editorconfig/editorconfig-vim'
+Bundle 'noahfrederick/vim-hemisu'
 
 " Settings
 set nocompatible
