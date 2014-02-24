@@ -12,18 +12,21 @@ set runtimepath+=~/.vim/bundle/vundle
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
-Bundle 'tpope/vim-markdown'
-Bundle 'tpope/vim-liquid'
-Bundle 'tpope/vim-rails'
 Bundle 'tpope/vim-vinegar'
-Bundle 'pangloss/vim-javascript'
-Bundle 'clozed2u/vim-sass'
-Bundle 'editorconfig/editorconfig-vim'
+Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-surround'
+Bundle 'justinmk/vim-sneak'
 Bundle 'noahfrederick/vim-hemisu'
+Bundle 'mattn/emmet-vim'
+Bundle 'Raimondi/delimitMate'
+Bundle 'troydm/easybuffer.vim'
+Bundle 'kien/ctrlp.vim'
+Bundle 'jelera/vim-javascript-syntax'
+Bundle 'othree/javascript-libraries-syntax.vim'
 
 " Settings
 set nocompatible
-set shell=/usr/local/bin/zsh
+set shell=/bin/zsh
 set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
@@ -34,7 +37,7 @@ set shiftwidth=2 tabstop=2 softtabstop=2
 set autoindent smartindent
 set nowrap
 set nospell
-set nomodeline
+set modeline
 set backspace=2
 set laststatus=2
 set showmode
@@ -43,7 +46,7 @@ set confirm
 set noruler
 set number
 set cursorline nocursorcolumn
-set showtabline=2
+set showtabline=0
 set visualbell noerrorbells
 set autoread
 set hidden
@@ -56,13 +59,14 @@ set incsearch ignorecase smartcase showmatch hlsearch infercase wrapscan
 set nobackup nowritebackup noswapfile
 set history=100
 set shortmess=atI
-set list listchars=tab:▸\ ,trail:·,eol:¬
+set nolist listchars=tab:▸\ ,trail:·,eol:¬
 set wildmenu wildmode=list:longest,full wildignore=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*
 set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
 set completeopt=longest,menuone,preview
 set splitbelow splitright
-set statusline=[%F]\ %m\ %=\ [%Y]\ [%l/%L]\ [%p%%]
+set statusline=%F\ %m\ %=\ %Y\ [LN\ %l/%L:%p%%]
+set timeout timeoutlen=1000 ttimeoutlen=100
 
 " Colors and Indent
 filetype plugin indent on
@@ -84,22 +88,21 @@ inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
 
-inoremap <expr> j ((pumvisible())?("\<c-n>"):("j"))
-inoremap <expr> k ((pumvisible())?("\<c-p>"):("k"))
-
 let mapleader=","
 let g:mapleader=","
 
-inoremap <leader>e <esc>
-
 inoremap <leader><tab> <C-x><C-o>
+inoremap <expr> j ((pumvisible())?("\<c-n>"):("j"))
+inoremap <expr> k ((pumvisible())?("\<c-p>"):("k"))
 
-noremap <leader>c <c-_><c-_>
+inoremap <leader>e <esc>
 
 noremap <leader>t <esc>:tabnew<cr>
 
 noremap <leader>s <esc>:split<cr>
 
+nnoremap + <c-w>+
+nnoremap - <c-w>-
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h

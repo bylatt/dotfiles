@@ -3,10 +3,9 @@ export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
+export LSCOLORS="Gxfxcxdxbxegedabagacad"
 export PATH=/usr/local/bin:$PATH
 
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 alias ls='ls -Glah'
 alias rs="ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => 8000, :DocumentRoot => Dir.pwd).start'"
