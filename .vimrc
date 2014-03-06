@@ -124,6 +124,6 @@ augroup END
 augroup JavaScriptCmds
 	autocmd!
 	autocmd Filetype javascript nnoremap <leader>r :!node %<cr>
-	autocmd Filetype javascript nnoremap <leader>c I//<ecs>
+	autocmd Filetype javascript nnoremap <leader>c I//<esc>
 augroup END
 

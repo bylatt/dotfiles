@@ -49,13 +49,6 @@ bindkey -M viins ',e' vi-cmd-mode
 bindkey -M viins '^r' history-incremental-search-backward
 bindkey -M vicmd '^r' history-incremental-search-backward
 
-VIMODE="-- INSERT --"
-function zle-keymap-select {
-	VIMODE="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
-	zle reset-prompt
-}
-zle -N zle-keymap-select
-
 HISTFILE=$HOME/.zhistory
 HISTSIZE=1000
 SAVEHIST=1000
@@ -71,5 +64,5 @@ zstyle ':vcs_info:*' branchformats '%r'
 zstyle ':vcs_info:*' formats ' %F{green}%c%u%b%f'
 precmd() {vcs_info}
 
-PROMPT='[%F{blue}%~/%f${vcs_info_msg_0_}] %F{magenta}$%f %{$reset_color%}'
-RPROMPT='${VIMODE}'
+PROMPT='[%F{blue}%~%f${vcs_info_msg_0_}] %F{blue}>>%f %{$reset_color%}'
+RPROMPT=''
