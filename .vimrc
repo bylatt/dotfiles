@@ -12,16 +12,19 @@ set runtimepath+=~/.vim/bundle/vundle
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
+Bundle 'noahfrederick/vim-hemisu'
+Bundle 'itchyny/lightline.vim'
 Bundle 'tpope/vim-vinegar'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-haml'
+Bundle 'tpope/vim-liquid'
+Bundle 'tpope/vim-markdown'
 Bundle 'justinmk/vim-sneak'
-Bundle 'noahfrederick/vim-hemisu'
 Bundle 'mattn/emmet-vim'
 Bundle 'Raimondi/delimitMate'
 Bundle 'troydm/easybuffer.vim'
-Bundle 'kien/ctrlp.vim'
-Bundle 'jelera/vim-javascript-syntax'
+Bundle 'pangloss/vim-javascript'
 Bundle 'othree/javascript-libraries-syntax.vim'
 
 " Settings
@@ -32,8 +35,7 @@ set termencoding=utf-8
 set fileencoding=utf-8
 set t_Co=256
 set background=dark
-set expandtab
-set shiftwidth=2 tabstop=2 softtabstop=2
+set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 set autoindent smartindent
 set nowrap
 set nospell
@@ -45,8 +47,8 @@ set showcmd
 set confirm
 set noruler
 set number
-set cursorline nocursorcolumn
-set showtabline=0
+set nocursorline nocursorcolumn
+"set showtabline=0
 set visualbell noerrorbells
 set autoread
 set hidden
@@ -100,6 +102,7 @@ inoremap <leader>e <esc>
 noremap <leader>t <esc>:tabnew<cr>
 
 noremap <leader>s <esc>:split<cr>
+noremap <leader>vs <esc>:vsplit<cr>
 
 nnoremap + <c-w>+
 nnoremap - <c-w>-
@@ -110,5 +113,17 @@ nnoremap <c-l> <c-w>l
 
 nnoremap <cr> :nohlsearch<cr>
 
+nnoremap <leader>ea :EasyBuffer<cr>
 " Per filetype settings
 autocmd FileType markdown setlocal nonumber spell wrap laststatus=0 showtabline=0
+
+augroup HTMLCmds
+	autocmd Filetype html nnoremap <leader>c I<!--<esc>A--><esc>
+augroup END
+
+augroup JavaScriptCmds
+	autocmd!
+	autocmd Filetype javascript nnoremap <leader>r :!node %<cr>
+	autocmd Filetype javascript nnoremap <leader>c I//<ecs>
+augroup END
+

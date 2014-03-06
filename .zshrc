@@ -4,8 +4,8 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
-export PATH=/usr/local/bin:$PATH
-
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
 
 alias ls='ls -Glah'
 alias rs="ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => 8000, :DocumentRoot => Dir.pwd).start'"
@@ -16,8 +16,8 @@ promptinit
 colors
 
 setopt no_beep
+unsetopt correct_all
 setopt correct
-setopt correct_all
 setopt auto_cd
 setopt auto_name_dirs
 setopt auto_pushd
@@ -44,7 +44,19 @@ setopt prompt_subst
 setopt long_list_jobs
 setopt multios
 
-HISTFILE=$HOME/.zsh_history
+bindkey -v
+bindkey -M viins ',e' vi-cmd-mode
+bindkey -M viins '^r' history-incremental-search-backward
+bindkey -M vicmd '^r' history-incremental-search-backward
+
+VIMODE="-- INSERT --"
+function zle-keymap-select {
+	VIMODE="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
+	zle reset-prompt
+}
+zle -N zle-keymap-select
+
+HISTFILE=$HOME/.zhistory
 HISTSIZE=1000
 SAVEHIST=1000
 
@@ -56,8 +68,8 @@ zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*' branchformats '%r'
-zstyle ':vcs_info:*' formats ' %F{green}%c%u(%b)%f'
+zstyle ':vcs_info:*' formats ' %F{green}%c%u%b%f'
 precmd() {vcs_info}
 
-PROMPT='%F{magenta}$%f %F{blue}%~/%f${vcs_info_msg_0_} %{$reset_color%}'
-RPROMPT=''
+PROMPT='[%F{blue}%~/%f${vcs_info_msg_0_}] %F{magenta}$%f %{$reset_color%}'
+RPROMPT='${VIMODE}'
