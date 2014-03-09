@@ -4,11 +4,6 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-
-alias ls='ls -Glah'
-alias rs="ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => 8000, :DocumentRoot => Dir.pwd).start'"
 
 autoload -U compinit promptinit colors vcs_info
 compinit -i
@@ -64,5 +59,5 @@ zstyle ':vcs_info:*' branchformats '%r'
 zstyle ':vcs_info:*' formats ' %F{green}%c%u%b%f'
 precmd() {vcs_info}
 
-PROMPT='[%F{blue}%~%f${vcs_info_msg_0_}] %F{blue}>>%f %{$reset_color%}'
+PROMPT='%F{magenta}$%f %F{blue}%~/%f${vcs_info_msg_0_} %{$reset_color%}'
 RPROMPT=''

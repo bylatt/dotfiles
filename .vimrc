@@ -11,6 +11,7 @@ filetype off
 set runtimepath+=~/.vim/bundle/vundle
 call vundle#rc()
 
+" Plugins to install
 Bundle 'gmarik/vundle'
 Bundle 'noahfrederick/vim-hemisu'
 Bundle 'itchyny/lightline.vim'
@@ -48,7 +49,6 @@ set confirm
 set noruler
 set number
 set nocursorline nocursorcolumn
-"set showtabline=0
 set visualbell noerrorbells
 set autoread
 set hidden
@@ -76,6 +76,9 @@ syntax on
 colorscheme hemisu
 
 " Keys mapping
+let mapleader=","
+let g:mapleader=","
+
 nnoremap ; :
 nnoremap : ;
 vnoremap ; :
@@ -90,22 +93,12 @@ inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
 
-let mapleader=","
-let g:mapleader=","
-
 inoremap <leader><tab> <C-x><C-o>
 inoremap <expr> j ((pumvisible())?("\<c-n>"):("j"))
 inoremap <expr> k ((pumvisible())?("\<c-p>"):("k"))
 
 inoremap <leader>e <esc>
 
-noremap <leader>t <esc>:tabnew<cr>
-
-noremap <leader>s <esc>:split<cr>
-noremap <leader>vs <esc>:vsplit<cr>
-
-nnoremap + <c-w>+
-nnoremap - <c-w>-
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
@@ -114,16 +107,6 @@ nnoremap <c-l> <c-w>l
 nnoremap <cr> :nohlsearch<cr>
 
 nnoremap <leader>ea :EasyBuffer<cr>
+
 " Per filetype settings
 autocmd FileType markdown setlocal nonumber spell wrap laststatus=0 showtabline=0
-
-augroup HTMLCmds
-	autocmd Filetype html nnoremap <leader>c I<!--<esc>A--><esc>
-augroup END
-
-augroup JavaScriptCmds
-	autocmd!
-	autocmd Filetype javascript nnoremap <leader>r :!node %<cr>
-	autocmd Filetype javascript nnoremap <leader>c I//<esc>
-augroup END
-
