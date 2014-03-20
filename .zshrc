@@ -1,10 +1,12 @@
-export LANG=en_US.utf-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
 
+alias ls="ls -Glah"
 autoload -U compinit promptinit colors vcs_info
 compinit -i
 promptinit
