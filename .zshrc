@@ -5,6 +5,7 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
+export PATH="/usr/local/git/bin:/usr/local/libtool/bin:/usr/local/automake/bin:/usr/local/autoconf/bin:/usr/local/vim/bin:/usr/local/mysql/bin:/usr/local/node/bin:$PATH"
 
 alias ls="ls -Glah"
 autoload -U compinit promptinit colors vcs_info
@@ -41,10 +42,10 @@ setopt prompt_subst
 setopt long_list_jobs
 setopt multios
 
-bindkey -v
-bindkey -M viins ',e' vi-cmd-mode
-bindkey -M viins '^r' history-incremental-search-backward
-bindkey -M vicmd '^r' history-incremental-search-backward
+#bindkey -v
+#bindkey -M viins ',e' vi-cmd-mode
+#bindkey -M viins '^r' history-incremental-search-backward
+#bindkey -M vicmd '^r' history-incremental-search-backward
 
 HISTFILE=$HOME/.zhistory
 HISTSIZE=1000
@@ -61,5 +62,5 @@ zstyle ':vcs_info:*' branchformats '%r'
 zstyle ':vcs_info:*' formats ' %F{green}%c%u%b%f'
 precmd() {vcs_info}
 
-PROMPT='%F{magenta}$%f %F{blue}%~/%f${vcs_info_msg_0_} %{$reset_color%}'
+PROMPT='$ %~/${vcs_info_msg_0_} %{$reset_color%}'
 RPROMPT=''

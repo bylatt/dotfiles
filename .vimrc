@@ -13,18 +13,17 @@ call vundle#rc()
 
 " Plugins to install
 Bundle 'gmarik/vundle'
-Bundle 'noahfrederick/vim-hemisu'
-Bundle 'itchyny/lightline.vim'
 Bundle 'editorconfig/editorconfig-vim'
+Bundle 'noahfrederick/vim-hemisu'
 Bundle 'tpope/vim-vinegar'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
 Bundle 'justinmk/vim-sneak'
-Bundle 'mattn/emmet-vim'
 Bundle 'Raimondi/delimitMate'
 Bundle 'troydm/easybuffer.vim'
 Bundle 'pangloss/vim-javascript'
-Bundle 'othree/javascript-libraries-syntax.vim'
+Bundle 'edsono/vim-matchit'
+Bundle 'StanAngeloff/php.vim'
 
 " Settings
 set nocompatible
@@ -48,10 +47,11 @@ set laststatus=2
 set showmode
 set showcmd
 set cmdheight=1
+set ttyfast
 set confirm
 set noruler
 set number
-set cursorline
+set nocursorline
 set nocursorcolumn
 set visualbell
 set noerrorbells
@@ -87,14 +87,13 @@ set splitright
 set timeout
 set timeoutlen=1000
 set ttimeoutlen=100
-runtime macros/matchit.vim
 
 " Colors and Indent
 filetype plugin indent on
 syntax on
-colorscheme hemisu
+colorscheme hemisu 
 if has('gui_running')
-	set guifont=Anonymous\ Pro:h14
+	set guifont=Inconsolata\ XL:h14
 	set guioptions-=m
 	set guioptions-=T
 	set guioptions-=r
@@ -119,7 +118,7 @@ inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
 
-inoremap <leader><tab> <C-x><C-o>
+inoremap <leader><tab> <c-x><o-o>
 inoremap <expr> j ((pumvisible())?("\<c-n>"):("j"))
 inoremap <expr> k ((pumvisible())?("\<c-p>"):("k"))
 
@@ -135,3 +134,5 @@ nnoremap <leader>ea :EasyBuffer<cr>
 
 " Per filetype settings
 autocmd FileType markdown setlocal nonumber spell wrap laststatus=0
+autocmd FileType php nnoremap <c-r> :!clear && php %<cr>
+autocmd FileType javascript nnoremap <c-r> :!clear && node %<cr>
