@@ -14,16 +14,18 @@ call vundle#rc()
 " Plugins to install
 Bundle 'gmarik/vundle'
 Bundle 'editorconfig/editorconfig-vim'
-Bundle 'noahfrederick/vim-hemisu'
+Bundle 'troydm/easybuffer.vim'
+Bundle 'justinmk/vim-sneak'
+Bundle 'altercation/vim-colors-solarized'
 Bundle 'tpope/vim-vinegar'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
-Bundle 'justinmk/vim-sneak'
-Bundle 'Raimondi/delimitMate'
-Bundle 'troydm/easybuffer.vim'
-Bundle 'pangloss/vim-javascript'
-Bundle 'edsono/vim-matchit'
-Bundle 'StanAngeloff/php.vim'
+Bundle 'moll/vim-node'
+Bundle 'guileen/vim-node-dict'
+Bundle 'digitaltoad/vim-jade'
+Bundle 'wavded/vim-stylus'
+Bundle 'kchmck/vim-coffee-script'
+Bundle 'jelera/vim-javascript-syntax'
 
 " Settings
 set nocompatible
@@ -32,7 +34,7 @@ set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
 set t_Co=256
-set background=light
+set background=dark
 set expandtab
 set shiftwidth=2
 set tabstop=2
@@ -81,7 +83,7 @@ set wildmode=list:longest,full
 set wildignore=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*
 set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
-set completeopt=longest,menuone,preview
+set statusline=[%n]\ %t\ %y\ %M\ %=\ %l\/\%L\ %v\ [0x%B]
 set splitbelow
 set splitright
 set timeout
@@ -91,9 +93,9 @@ set ttimeoutlen=100
 " Colors and Indent
 filetype plugin indent on
 syntax on
-colorscheme hemisu 
+colorscheme solarized 
 if has('gui_running')
-	set guifont=Inconsolata\ XL:h14
+	set guifont=Source\ Code\ Pro:h13
 	set guioptions-=m
 	set guioptions-=T
 	set guioptions-=r
@@ -118,7 +120,7 @@ inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
 
-inoremap <leader><tab> <c-x><o-o>
+inoremap <leader><tab> <c-x><c-o>
 inoremap <expr> j ((pumvisible())?("\<c-n>"):("j"))
 inoremap <expr> k ((pumvisible())?("\<c-p>"):("k"))
 

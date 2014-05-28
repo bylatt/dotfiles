@@ -5,9 +5,10 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
-export PATH="/usr/local/git/bin:/usr/local/libtool/bin:/usr/local/automake/bin:/usr/local/autoconf/bin:/usr/local/vim/bin:/usr/local/mysql/bin:/usr/local/node/bin:$PATH"
+export PATH="/usr/local:/usr/local/automake/bin:/usr/local/autoconf:/usr/local/vim/bin:/usr/local/git/bin:/usr/local/screen/bin:/usr/local/go/bin:/usr/local/node/bin:/usr/local/mysql/bin:/usr/local/mongodb/bin:$PATH"
 
 alias ls="ls -Glah"
+alias vi="vim"
 autoload -U compinit promptinit colors vcs_info
 compinit -i
 promptinit
@@ -42,12 +43,12 @@ setopt prompt_subst
 setopt long_list_jobs
 setopt multios
 
-#bindkey -v
-#bindkey -M viins ',e' vi-cmd-mode
-#bindkey -M viins '^r' history-incremental-search-backward
-#bindkey -M vicmd '^r' history-incremental-search-backward
+bindkey -v
+bindkey -M viins ',e' vi-cmd-mode
+bindkey -M viins '^r' history-incremental-search-backward
+bindkey -M vicmd '^r' history-incremental-search-backward
 
-HISTFILE=$HOME/.zhistory
+HISTFILE=$HOME/.zsh_history
 HISTSIZE=1000
 SAVEHIST=1000
 
@@ -59,8 +60,8 @@ zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*' branchformats '%r'
-zstyle ':vcs_info:*' formats ' %F{green}%c%u%b%f'
+zstyle ':vcs_info:*' formats ' %F{green}%c%u%b*%f'
 precmd() {vcs_info}
 
-PROMPT='$ %~/${vcs_info_msg_0_} %{$reset_color%}'
+PROMPT='%F{magenta}⌘ %f %F{cyan}%~/%f${vcs_info_msg_0_} %{$reset_color%}'
 RPROMPT=''
