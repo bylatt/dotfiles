@@ -1,0 +1,14 @@
+startup_message off
+shell zsh
+
+hardstatus alwayslastline
+hardstatus string "%{=b}%{G}Screen @ %0`@%H: %{C}%w %=%{G}%D, %m/%d"
+
+nonblock on
+backtick 0 0 0 whoami
+
+altscreen on
+
+defbce "on"
+attrcolor b ".I"
+termcapinfo xterm-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
