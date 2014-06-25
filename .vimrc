@@ -1,7 +1,7 @@
 " Setting up Vundle
-let has_vundle=1
-let VundleReadme=expand('~/.vim/bundle/vundle/README.md')
-if !filereadable(VundleReadme)
+let hasVundle=1
+let vundleReadme=expand('~/.vim/bundle/vundle/README.md')
+if !filereadable(vundleReadme)
 	echo "Installing Vundle..."
 	silent !mkdir -p ~/.vim/bundle
 	silent !git clone git@github.com:gmarik/Vundle.vim.git ~/.vim/bundle/vundle
@@ -12,20 +12,27 @@ set runtimepath+=~/.vim/bundle/vundle
 call vundle#rc()
 
 " Plugins to install
-Bundle 'gmarik/vundle'
-Bundle 'editorconfig/editorconfig-vim'
-Bundle 'troydm/easybuffer.vim'
-Bundle 'justinmk/vim-sneak'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'tpope/vim-vinegar'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-surround'
-Bundle 'moll/vim-node'
-Bundle 'guileen/vim-node-dict'
-Bundle 'digitaltoad/vim-jade'
-Bundle 'wavded/vim-stylus'
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'jelera/vim-javascript-syntax'
+Plugin 'gmarik/vundle'
+Plugin 'godlygeek/tabular'
+Plugin 'raimondi/delimitmate'
+Plugin 'itchyny/lightline.vim'
+Plugin 'itchyny/landscape.vim'
+Plugin 'troydm/easybuffer.vim'
+Plugin 'troydm/easytree.vim'
+Plugin 'tpope/vim-vinegar'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-markdown'
+Plugin 'tpope/vim-abolish'
+Plugin 'justinmk/vim-sneak'
+Plugin 'pangloss/vim-javascript'
+Plugin 'moll/vim-node'
+Plugin 'wavded/vim-stylus'
+Plugin 'digitaltoad/vim-jade'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'elzr/vim-json'
 
 " Settings
 set nocompatible
@@ -34,7 +41,7 @@ set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
 set t_Co=256
-set background=dark
+set background=light
 set expandtab
 set shiftwidth=2
 set tabstop=2
@@ -53,7 +60,7 @@ set ttyfast
 set confirm
 set noruler
 set number
-set nocursorline
+set cursorline
 set nocursorcolumn
 set visualbell
 set noerrorbells
@@ -76,7 +83,7 @@ set nobackup
 set nowritebackup
 set noswapfile
 set history=100
-set nolist 
+set list
 set listchars=tab:▸\ ,trail:·,eol:¬
 set wildmenu
 set wildmode=list:longest,full
@@ -93,9 +100,9 @@ set ttimeoutlen=100
 " Colors and Indent
 filetype plugin indent on
 syntax on
-colorscheme solarized 
+colorscheme landscape 
 if has('gui_running')
-	set guifont=Source\ Code\ Pro:h13
+	set guifont=Monaco:h14
 	set guioptions-=m
 	set guioptions-=T
 	set guioptions-=r
@@ -120,7 +127,6 @@ inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
 
-inoremap <leader><tab> <c-x><c-o>
 inoremap <expr> j ((pumvisible())?("\<c-n>"):("j"))
 inoremap <expr> k ((pumvisible())?("\<c-p>"):("k"))
 
@@ -132,9 +138,14 @@ nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
 
 nnoremap <cr> :nohlsearch<cr>
-nnoremap <leader>ea :EasyBuffer<cr>
+nnoremap <leader>eb :EasyBuffer<cr>
+nnoremap <leader>et :EasyTree<cr>
 
 " Per filetype settings
-autocmd FileType markdown setlocal nonumber spell wrap laststatus=0
+autocmd FileType markdown setlocal nonumber spell wrap
 autocmd FileType php nnoremap <c-r> :!clear && php %<cr>
+autocmd FileType ruby nnoremap <c-r> :!clear && ruby %<cr>
 autocmd FileType javascript nnoremap <c-r> :!clear && node %<cr>
+
+" Plugin settings
+let g:lightline={'colorscheme': 'landscape'}
