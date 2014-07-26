@@ -4,9 +4,8 @@ export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export LSCOLORS="Gxfxcxdxbxegedabagacad"
 export GREP_OPTIONS='--color=auto'
-export PATH="/usr/local/bin:/usr/local/autoconf/bin:/usr/local/automake/bin:/usr/local/git/bin:/usr/local/vim/bin:/usr/local/go/bin:/usr/local/node/bin:/usr/local/mysql/bin:/usr/local/mongodb/bin:$PATH"
+export PATH="/usr/local/bin:/usr/local/autoconf/bin:/usr/local/automake/bin:/usr/local/libtool/bin:/usr/local/screen/bin:/usr/local/vim/bin:/usr/local/git/bin:/usr/local/go/bin:/usr/local/node/bin:/usr/local/mysql/bin:/usr/local/mongodb/bin:$PATH"
 
 alias -g ls="ls -Glah"
 alias -g vi="vim"
@@ -57,15 +56,13 @@ zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' stagedstr '%F{yellow}'
-zstyle ':vcs_info:*' unstagedstr '%F{red}'
-zstyle ':vcs_info:*' branchformats '%r'
-zstyle ':vcs_info:*' formats ' %F{green}%c%u(%b)%f'
+zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*:*' check-for-changes true
+zstyle ':vcs_info:*:*' stagedstr '%F{yellow}'
+zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
+zstyle ':vcs_info:*:*' branchformats '%r'
+zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 
-PROMPT='%F{magenta}$%f %F{cyan}%~/%f${vcs_info_msg_0_} %{$reset_color%}'
+PROMPT='%F{magenta}@%f %F{cyan}%~/%f${vcs_info_msg_0_} %{$reset_color%}'
 RPROMPT=''
-
-# The next line updates PATH for the Google Cloud SDK.
-source /Users/clozed2u/google-cloud-sdk/path.zsh.inc

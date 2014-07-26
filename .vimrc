@@ -1,24 +1,20 @@
 " Setting up Vundle
-let hasVundle=1
-let vundleReadme=expand('~/.vim/bundle/vundle/README.md')
-if !filereadable(vundleReadme)
-	echo "Installing Vundle..."
-	silent !mkdir -p ~/.vim/bundle
+if !filereadable(expand('~/.vim/bundle/vundle/README.md'))
 	silent !git clone git@github.com:gmarik/Vundle.vim.git ~/.vim/bundle/vundle
-	let has_vundle=0
 endif
 filetype off
 set runtimepath+=~/.vim/bundle/vundle
-call vundle#rc()
+call vundle#begin()
 
-" Plugins to install
-Plugin 'gmarik/vundle'
-Plugin 'godlygeek/tabular'
-Plugin 'raimondi/delimitmate'
-Plugin 'itchyny/lightline.vim'
-Plugin 'itchyny/landscape.vim'
+Plugin 'gmarik/Vundle.vim'
+Plugin 'cocopon/iceberg.vim'
 Plugin 'troydm/easybuffer.vim'
 Plugin 'troydm/easytree.vim'
+Plugin 'edsono/vim-matchit'
+Plugin 'thinca/vim-quickrun'
+Plugin 'rainux/vim-desert-warm-256'
+Plugin 'junegunn/vim-easy-align'
+Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-vinegar'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
@@ -29,123 +25,75 @@ Plugin 'tpope/vim-abolish'
 Plugin 'justinmk/vim-sneak'
 Plugin 'pangloss/vim-javascript'
 Plugin 'moll/vim-node'
+Plugin 'ahayman/vim-nodejs-complete'
 Plugin 'wavded/vim-stylus'
 Plugin 'digitaltoad/vim-jade'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'elzr/vim-json'
 
+call vundle#end()
+
 " Settings
-set nocompatible
-set shell=/bin/zsh
-set encoding=utf-8
-set termencoding=utf-8
-set fileencoding=utf-8
-set t_Co=256
-set background=light
-set expandtab
-set shiftwidth=2
-set tabstop=2
-set softtabstop=2
-set autoindent
-set smartindent
-set nowrap
-set nospell
-set modeline
-set backspace=2
-set laststatus=2
-set showmode
-set showcmd
-set cmdheight=1
-set ttyfast
-set confirm
-set noruler
-set number
-set cursorline
-set nocursorcolumn
-set visualbell
-set noerrorbells
-set autoread
-set hidden
-set binary
-set noeol
-set clipboard+=unnamed
-set scrolloff=4
-set gdefault
-set incsearch
-set ignorecase
-set smartcase
-set showmatch
-set hlsearch
-set infercase
-set wrapscan
-set magic
-set nobackup
-set nowritebackup
-set noswapfile
-set history=100
-set list
-set listchars=tab:▸\ ,trail:·,eol:¬
-set wildmenu
-set wildmode=list:longest,full
-set wildignore=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*
-set omnifunc=syntaxcomplete#Complete
-set completefunc=syntaxcomplete#Complete
-set statusline=[%n]\ %t\ %y\ %M\ %=\ %l\/\%L\ %v\ [0x%B]
-set splitbelow
-set splitright
-set timeout
-set timeoutlen=1000
-set ttimeoutlen=100
+se nocp
+se sh=/bin/zsh
+se enc=utf-8 tenc=utf-8 fenc=utf-8
+se t_Co=256
+se bg=dark
+se et sta sw=4 ts=4 sts=4 ai si
+se nowrap nospell
+se bs=2
+se ls=2
+se smd sc ch=1
+se noru nu
+se nocul nocuc
+se novb noeb
+se ar
+se hid
+se bin
+se noeol
+se so=4
+se gd
+se is scs ic sm hls inf
+se ws
+se magic
+se nobk nowb noswf
+se list lcs=tab:▸\ ,trail:·,eol:¬
+se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*
+se ofu=syntaxcomplete#Complete cfu=syntaxcomplete#Complete
+se stl=[%n]\ %t\ %y\ %M\ %=\ %l\/\%L\ %v\ [0x%B]
+se sb spr
+se tf to tm=1000 ttm=100
+se fen fdm=indent
+se clipboard=unnamedplus
+se history=100
 
 " Colors and Indent
 filetype plugin indent on
 syntax on
-colorscheme landscape 
-if has('gui_running')
-	set guifont=Monaco:h14
-	set guioptions-=m
-	set guioptions-=T
-	set guioptions-=r
-	set guioptions-=L
-endif
+colo desert
 
 " Keys mapping
 let mapleader=","
 let g:mapleader=","
 
-nnoremap ; :
-nnoremap : ;
-vnoremap ; :
-vnoremap : ;
+nn ; :
+nn : ;
+vn ; :
+vn : ;
 
-noremap <up> <nop>
-noremap <down> <nop>
-noremap <left> <nop>
-noremap <right> <nop>
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
+ino <expr> j ((pumvisible())?("\<c-n>"):("j"))
+ino <expr> k ((pumvisible())?("\<c-p>"):("k"))
 
-inoremap <expr> j ((pumvisible())?("\<c-n>"):("j"))
-inoremap <expr> k ((pumvisible())?("\<c-p>"):("k"))
+ino <leader>e <esc>
 
-inoremap <leader>e <esc>
+nn <c-j> <c-w>j
+nn <c-k> <c-w>k
+nn <c-h> <c-w>h
+nn <c-l> <c-w>l
 
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
-
-nnoremap <cr> :nohlsearch<cr>
-nnoremap <leader>eb :EasyBuffer<cr>
-nnoremap <leader>et :EasyTree<cr>
+nn <cr> :nohls<cr>
+nn <leader>eb :EasyBuffer<cr>
+nn <leader>et :EasyTree<cr>
 
 " Per filetype settings
-autocmd FileType markdown setlocal nonumber spell wrap
-autocmd FileType php nnoremap <c-r> :!clear && php %<cr>
-autocmd FileType ruby nnoremap <c-r> :!clear && ruby %<cr>
-autocmd FileType javascript nnoremap <c-r> :!clear && node %<cr>
-
-" Plugin settings
-let g:lightline={'colorscheme': 'landscape'}
+au filetype markdown setl nonu spell wrap
