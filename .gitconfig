@@ -6,8 +6,6 @@
 	safecrlf = true
 	editor = vim
 	excludesfile = ~/.gitignore
-[alias]
-	co = checkout
 [apply]
 	whitespace = nowarn
 [color]
@@ -23,3 +21,14 @@
 	default = simple 
 [default]
 	push = current
+[alias]
+	st = status
+	co = checkout
+	rb = rebase
+	br = branch
+	fe = fetch
+	pl = pull
+	cm = commit
+	df = diff
+	cl = clone
+	ad = add
