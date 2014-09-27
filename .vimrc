@@ -1,6 +1,6 @@
 " Setting up Vundle
 if !filereadable(expand('~/.vim/bundle/vundle.vim/autoload/vundle.vim'))
-  silent !git clone https://github.com/gmarik/vundle.vim.git ~/.vim/bundle/vundle.vim
+	silent !git clone https://github.com/gmarik/vundle.vim.git ~/.vim/bundle/vundle.vim
 endif
 filetype off
 set rtp+=~/.vim/bundle/vundle.vim
@@ -8,12 +8,18 @@ call vundle#begin()
 Plugin 'raimondi/delimitmate'
 Plugin 'ervandew/supertab'
 Plugin 'godlygeek/tabular'
+Plugin 'scrooloose/nerdtree'
+Plugin 'kien/ctrlp.vim'
+Plugin 'chriskempson/base16-vim'
+Plugin 'chriskempson/base16-shell'
+Plugin 'chriskempson/base16-iterm2'
 Plugin 'gmarik/vundle.vim'
-Plugin 'reedes/vim-colors-pencil'
+Plugin 'rizzatti/funcoo.vim'
+Plugin 'rizzatti/greper.vim'
+Plugin 'rizzatti/dash.vim'
+Plugin 'stanangeloff/php.vim'
+Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'edsono/vim-matchit'
-Plugin 'noahfrederick/vim-hemisu'
-Plugin 'bling/vim-airline'
-Plugin 'kopischke/vim-mklib'
 Plugin 'tpope/vim-vinegar'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
@@ -58,7 +64,7 @@ se sm mat=10
 se ws
 se magic
 se nobk nowb noswf
-se list lcs=tab:▸·,trail:·,eol:¬
+se list lcs=tab:▸·,trail:· ",eol:¬
 se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*
 se ofu=syntaxcomplete#Complete cfu=syntaxcomplete#Complete
 se stl=[%n]\ %t\ %y\ %M\ %=\ [%l\/\%L\ %v]
@@ -70,12 +76,43 @@ se history=100
 
 " Colors and Indent
 if has('gui_running')
-	se gfn=Inconsolata\ XL:h14
+	se gfn=Inconsolata-g\ for\ Powerline:h14
 	se go-=mTrL
 endif
 filetype plugin indent on
 syntax on
-colo pencil
+let base16colorspace=256
+colo base16-railscasts
+
+" set up some custom colors
+hi clear SignColumn
+hi VertSplit    ctermbg=236
+hi ColorColumn  ctermbg=237
+hi LineNr       ctermbg=236 ctermfg=240
+hi CursorLineNr ctermbg=236 ctermfg=240
+hi CursorLine   ctermbg=236
+hi StatusLineNC ctermbg=238 ctermfg=0
+hi StatusLine   ctermbg=240 ctermfg=12
+hi IncSearch    ctermbg=3   ctermfg=1
+hi Search       ctermbg=1   ctermfg=3
+hi Visual       ctermbg=3   ctermfg=0
+hi Pmenu        ctermbg=240 ctermfg=12
+hi PmenuSel     ctermbg=3   ctermfg=1
+hi SpellBad     ctermbg=0   ctermfg=1
+
+" highlight the status bar when in insert mode
+if version >= 700
+	au InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
+	au InsertLeave * hi StatusLine ctermbg=240 ctermfg=12
+endif
+
+" highlight trailing spaces in annoying red
+hi ExtraWhitespace ctermbg=1 guibg=red
+mat ExtraWhitespace /\s\+$/
+au BufWinEnter * match ExtraWhitespace /\s\+$/
+au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+au InsertLeave * match ExtraWhitespace /\s\+$/
+au BufWinLeave * call clearmatches()
 
 " Keys mapping
 let mapleader=','
@@ -95,5 +132,7 @@ nno <cr> :nohls<cr>
 au filetype markdown setl nonu spell wrap
 
 " Plugin settings
-let g:airline_theme = 'pencil'
-let g:airline_powerline_fonts = 1
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:SuperTabDefaultCompletionType = ""
+nno <c-n> :NERDTreeToggle<cr>

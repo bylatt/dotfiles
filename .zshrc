@@ -4,9 +4,18 @@ export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export PATH="/usr/local/bin:/usr/local/autoconf/bin:/usr/local/automake/bin:/usr/local/libtool/bin:/usr/local/libevent/bin:/usr/local/vim/bin:/usr/local/git/bin:/usr/local/tmux/bin:/usr/local/go/bin:/usr/local/node/bin:/usr/local/php5/bin:/usr/local/mysql/bin:/usr/local/mongodb/bin:$PATH"
+export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+
+# rbenv setup
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
 
 alias ls="ls -Gflash"
+
+# Base16 Shell
+BASE16_SCHEME="railscasts"
+BASE16_SHELL="$HOME/.vim/bundle/base16-shell/base16-$BASE16_SCHEME.dark.sh"
+[[ -s $BASE16_SHELL ]] && . $BASE16_SHELL
 
 autoload -U compinit promptinit colors vcs_info
 compinit -i
@@ -63,5 +72,5 @@ zstyle ':vcs_info:*:*' branchformats '%r'
 zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 
-PROMPT='%F{cyan}$%f %F{magenta}%B%~/%b%f${vcs_info_msg_0_} %{$reset_color%}'
+PROMPT='%~${vcs_info_msg_0_} $ %{$reset_color%}'
 RPROMPT=''
