@@ -9,16 +9,19 @@ Plugin 'raimondi/delimitmate'
 Plugin 'ervandew/supertab'
 Plugin 'godlygeek/tabular'
 Plugin 'scrooloose/nerdtree'
-Plugin 'kien/ctrlp.vim'
 Plugin 'chriskempson/base16-vim'
 Plugin 'chriskempson/base16-shell'
 Plugin 'chriskempson/base16-iterm2'
+Plugin 'editorconfig/editorconfig-vim'
+Plugin 'kien/ctrlp.vim'
 Plugin 'gmarik/vundle.vim'
 Plugin 'rizzatti/funcoo.vim'
 Plugin 'rizzatti/greper.vim'
 Plugin 'rizzatti/dash.vim'
 Plugin 'stanangeloff/php.vim'
 Plugin 'shawncplus/phpcomplete.vim'
+Plugin 'bling/vim-airline'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'edsono/vim-matchit'
 Plugin 'tpope/vim-vinegar'
 Plugin 'tpope/vim-repeat'
@@ -82,37 +85,7 @@ endif
 filetype plugin indent on
 syntax on
 let base16colorspace=256
-colo base16-railscasts
-
-" set up some custom colors
-hi clear SignColumn
-hi VertSplit    ctermbg=236
-hi ColorColumn  ctermbg=237
-hi LineNr       ctermbg=236 ctermfg=240
-hi CursorLineNr ctermbg=236 ctermfg=240
-hi CursorLine   ctermbg=236
-hi StatusLineNC ctermbg=238 ctermfg=0
-hi StatusLine   ctermbg=240 ctermfg=12
-hi IncSearch    ctermbg=3   ctermfg=1
-hi Search       ctermbg=1   ctermfg=3
-hi Visual       ctermbg=3   ctermfg=0
-hi Pmenu        ctermbg=240 ctermfg=12
-hi PmenuSel     ctermbg=3   ctermfg=1
-hi SpellBad     ctermbg=0   ctermfg=1
-
-" highlight the status bar when in insert mode
-if version >= 700
-	au InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
-	au InsertLeave * hi StatusLine ctermbg=240 ctermfg=12
-endif
-
-" highlight trailing spaces in annoying red
-hi ExtraWhitespace ctermbg=1 guibg=red
-mat ExtraWhitespace /\s\+$/
-au BufWinEnter * match ExtraWhitespace /\s\+$/
-au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-au InsertLeave * match ExtraWhitespace /\s\+$/
-au BufWinLeave * call clearmatches()
+colo base16-ocean
 
 " Keys mapping
 let mapleader=','
@@ -122,17 +95,26 @@ ino <expr> j ((pumvisible())?("\<c-n>"):("j"))
 ino <expr> k ((pumvisible())?("\<c-p>"):("k"))
 ino <leader>e <esc>
 
-nno <c-j> <c-w>j
-nno <c-k> <c-w>k
-nno <c-h> <c-w>h
-nno <c-l> <c-w>l
-nno <cr> :nohls<cr>
+nn <c-j> <c-w>j
+nn <c-k> <c-w>k
+nn <c-h> <c-w>h
+nn <c-l> <c-w>l
+nn <cr> :nohls<cr>
+
+nn <tab> :bnext<cr>
+nn <S-tab> :bprevious<cr>
 
 " Per filetype settings
 au filetype markdown setl nonu spell wrap
 
 " Plugin settings
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:SuperTabDefaultCompletionType = ""
-nno <c-n> :NERDTreeToggle<cr>
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+let g:SuperTabContextDefaultCompletionType = "<c-x><c-f>"
+nn <leader>n :NERDTreeToggle<cr>
+nn <leader>p :CtrlP<cr>
+nn <leader>t :Tab /=<cr>
+vn <leader>t :Tab /=<cr>

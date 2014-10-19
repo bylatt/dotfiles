@@ -4,17 +4,18 @@ export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+export PATH="/usr/local/bin:/usr/local/sbin:/usr/local/libevent/bin:/usr/local/tmux/bin:/usr/local/vim/bin:/usr/local/php5/bin:/usr/local/node/bin:/usr/local/mongodb/bin:/usr/local/mysql/bin:/usr/local/mysql/support-files:$PATH"
 
 # rbenv setup
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+# export PATH="$HOME/.rbenv/bin:$PATH"
+# eval "$(rbenv init -)"
 
 alias ls="ls -Gflash"
 
 # Base16 Shell
-BASE16_SCHEME="railscasts"
-BASE16_SHELL="$HOME/.vim/bundle/base16-shell/base16-$BASE16_SCHEME.dark.sh"
+BASE16_SCHEME="ocean"
+BASE16_MODE="dark"
+BASE16_SHELL="$HOME/.vim/bundle/base16-shell/base16-$BASE16_SCHEME.$BASE16_MODE.sh"
 [[ -s $BASE16_SHELL ]] && . $BASE16_SHELL
 
 autoload -U compinit promptinit colors vcs_info
