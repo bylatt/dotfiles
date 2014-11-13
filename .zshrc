@@ -1,16 +1,51 @@
-export LANG=en_US.UTF-8
+# Fix path in TMUX
+if [ -x /usr/libexec/path_helper ]; then
+	if [ -z "$TMUX" ]; then
+		eval `/usr/libexec/path_helper -s`
+	fi
+fi
+
+# Export
+export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export PATH="/usr/local/bin:/usr/local/sbin:/usr/local/libevent/bin:/usr/local/tmux/bin:/usr/local/vim/bin:/usr/local/php5/bin:/usr/local/node/bin:/usr/local/mongodb/bin:/usr/local/mysql/bin:/usr/local/mysql/support-files:$PATH"
+export PATH="/usr/local/bin:$PATH"
+export PATH="/usr/local/vim/bin:$PATH"
+export PATH="/usr/local/tmux/bin:$PATH"
+export PATH="/usr/local/git/bin:$PATH"
+export PATH="/usr/local/sqlite/bin:$PATH"
+export PATH="/usr/local/mysql/bin:/usr/local/mysql/support-files:$PATH"
+export DYLD_LIBRARY_PATH="/usr/local/mysql/lib"
+export PATH="/usr/local/postgresql/bin:$PATH"
+export PATH="/usr/local/redis/bin:$PATH"
+export PATH="/usr/local/mongodb/bin:$PATH"
+export PATH="/usr/local/php5/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$PATH"
+export PATH="$HOME/.nenv/bin:$PATH"
 
-# rbenv setup
-# export PATH="$HOME/.rbenv/bin:$PATH"
-# eval "$(rbenv init -)"
+# If rbenv install load it
+if (( $+commands[rbenv] )); then
+	eval "$(rbenv init -)"
+fi
 
+# If nenv install load it
+if (( $+commands[nenv] )); then
+	eval "$(nenv init -)"
+fi
+
+# Alias
 alias ls="ls -Gflash"
+alias vi="vim"
+alias psql_start="pg_ctl -D /usr/local/var/db/postgresql -l /usr/local/var/log/postgresql/logfile.log start"
+alias psql_stop="pg_ctl -D /usr/local/var/db/postgresql stop"
+alias mongo_start="mongod --config=/usr/local/mongodb/mongodb.conf"
+alias mongo_stop="killall mongod"
+alias redis_start="redis-server /usr/local/redis/redis.conf"
+alias redis_stop="killall redis-server"
 
 # Base16 Shell
 BASE16_SCHEME="ocean"
@@ -18,10 +53,12 @@ BASE16_MODE="dark"
 BASE16_SHELL="$HOME/.vim/bundle/base16-shell/base16-$BASE16_SCHEME.$BASE16_MODE.sh"
 [[ -s $BASE16_SHELL ]] && . $BASE16_SHELL
 
+# ZSH specific settings
 autoload -U compinit promptinit colors vcs_info
 compinit -i
 promptinit
 colors
+vcs_info
 
 setopt no_beep
 unsetopt correct_all
@@ -53,7 +90,7 @@ setopt long_list_jobs
 setopt multios
 
 bindkey -v
-bindkey -M viins ',e' vi-cmd-mode
+bindkey -M viins 'jk' vi-cmd-mode
 bindkey -M viins '^r' history-incremental-search-backward
 bindkey -M vicmd '^r' history-incremental-search-backward
 

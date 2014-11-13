@@ -5,6 +5,8 @@ endif
 filetype off
 set rtp+=~/.vim/bundle/vundle.vim
 call vundle#begin()
+
+" Functionality
 Plugin 'raimondi/delimitmate'
 Plugin 'ervandew/supertab'
 Plugin 'godlygeek/tabular'
@@ -12,31 +14,22 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'chriskempson/base16-vim'
 Plugin 'chriskempson/base16-shell'
 Plugin 'chriskempson/base16-iterm2'
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'kien/ctrlp.vim'
 Plugin 'gmarik/vundle.vim'
-Plugin 'rizzatti/funcoo.vim'
-Plugin 'rizzatti/greper.vim'
-Plugin 'rizzatti/dash.vim'
-Plugin 'stanangeloff/php.vim'
-Plugin 'shawncplus/phpcomplete.vim'
+Plugin 'docunext/closetag.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'bling/vim-airline'
-Plugin 'airblade/vim-gitgutter'
 Plugin 'edsono/vim-matchit'
-Plugin 'tpope/vim-vinegar'
+Plugin 'justinmk/vim-sneak'
+Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-markdown'
-Plugin 'tpope/vim-speeddating'
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-unimpaired'
 Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-fugitive'
-Plugin 'justinmk/vim-sneak'
-Plugin 'pangloss/vim-javascript'
-Plugin 'digitaltoad/vim-jade'
-Plugin 'wavded/vim-stylus'
-Plugin 'kchmck/vim-coffee-script'
+Plugin 'tpope/vim-markdown'
+Plugin 'tpope/vim-liquid'
+Plugin 'tpope/vim-haml'
+Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-rake'
+Plugin 'tpope/vim-rails'
 call vundle#end()
 
 " Settings
@@ -80,7 +73,10 @@ se history=100
 " Colors and Indent
 if has('gui_running')
 	se gfn=Inconsolata-g\ for\ Powerline:h14
-	se go-=mTrL
+	se go-=m
+	se go-=T
+	se go-=r
+	se go-=L
 endif
 filetype plugin indent on
 syntax on
@@ -88,12 +84,12 @@ let base16colorspace=256
 colo base16-ocean
 
 " Keys mapping
-let mapleader=','
-let g:mapleader=','
+let mapleader=' '
+let g:mapleader=' '
 
 ino <expr> j ((pumvisible())?("\<c-n>"):("j"))
 ino <expr> k ((pumvisible())?("\<c-p>"):("k"))
-ino <leader>e <esc>
+ino jk <esc>
 
 nn <c-j> <c-w>j
 nn <c-k> <c-w>k
@@ -106,6 +102,9 @@ nn <S-tab> :bprevious<cr>
 
 " Per filetype settings
 au filetype markdown setl nonu spell wrap
+
+" Auto remove unwant whitespace
+au BufWritePre * :%s/\s\+$//e
 
 " Plugin settings
 let g:airline_powerline_fonts = 1
