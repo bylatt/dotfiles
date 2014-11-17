@@ -47,12 +47,6 @@ alias mongo_stop="killall mongod"
 alias redis_start="redis-server /usr/local/redis/redis.conf"
 alias redis_stop="killall redis-server"
 
-# Base16 Shell
-BASE16_SCHEME="ocean"
-BASE16_MODE="dark"
-BASE16_SHELL="$HOME/.vim/bundle/base16-shell/base16-$BASE16_SCHEME.$BASE16_MODE.sh"
-[[ -s $BASE16_SHELL ]] && . $BASE16_SHELL
-
 # ZSH specific settings
 autoload -U compinit promptinit colors vcs_info
 compinit -i
@@ -88,6 +82,7 @@ setopt share_history
 setopt prompt_subst
 setopt long_list_jobs
 setopt multios
+setopt nohashdirs
 
 bindkey -v
 bindkey -M viins 'jk' vi-cmd-mode
@@ -110,5 +105,6 @@ zstyle ':vcs_info:*:*' branchformats '%r'
 zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 
-PROMPT='%~${vcs_info_msg_0_} $ %{$reset_color%}'
-RPROMPT=''
+# PROMPT='%~${vcs_info_msg_0_} %{$reset_color%}'
+PROMPT='%F{green}%n%f %F{yellow}○%f %{$reset_color%}'
+RPROMPT='%F{red}%d%f'

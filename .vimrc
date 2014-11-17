@@ -11,16 +11,17 @@ Plugin 'raimondi/delimitmate'
 Plugin 'ervandew/supertab'
 Plugin 'godlygeek/tabular'
 Plugin 'scrooloose/nerdtree'
-Plugin 'chriskempson/base16-vim'
-Plugin 'chriskempson/base16-shell'
-Plugin 'chriskempson/base16-iterm2'
+Plugin 'scrooloose/syntastic'
+Plugin 'tomasr/molokai'
 Plugin 'gmarik/vundle.vim'
 Plugin 'docunext/closetag.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'bling/vim-airline'
-Plugin 'edsono/vim-matchit'
+Plugin 'mdouchement/matchit.vim'
 Plugin 'justinmk/vim-sneak'
+Plugin 'thoughtbot/vim-rspec'
 Plugin 'vim-ruby/vim-ruby'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-projectionist'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-commentary'
@@ -30,6 +31,7 @@ Plugin 'tpope/vim-haml'
 Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-rake'
 Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-dispatch'
 call vundle#end()
 
 " Settings
@@ -70,9 +72,21 @@ se fen fdm=syntax fdl=100
 se clipboard+=unnamed
 se history=100
 
+" highlight the status bar when in insert mode
+au InsertEnter * hi StatusLine ctermbg=255 ctermfg=112
+au InsertLeave * hi StatusLine ctermbg=255 ctermfg=238
+
+" highlight trailing spaces in annoying red
+highlight ExtraWhitespace ctermbg=1 guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()i statusline ctermbg=0
+
 " Colors and Indent
 if has('gui_running')
-	se gfn=Inconsolata-g\ for\ Powerline:h14
+	se gfn=Inconsolata-dz:h14
 	se go-=m
 	se go-=T
 	se go-=r
@@ -80,8 +94,7 @@ if has('gui_running')
 endif
 filetype plugin indent on
 syntax on
-let base16colorspace=256
-colo base16-ocean
+colo molokai
 
 " Keys mapping
 let mapleader=' '
@@ -107,10 +120,6 @@ au filetype markdown setl nonu spell wrap
 au BufWritePre * :%s/\s\+$//e
 
 " Plugin settings
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 let g:SuperTabContextDefaultCompletionType = "<c-x><c-f>"
 nn <leader>n :NERDTreeToggle<cr>

@@ -5,7 +5,7 @@
 
 dir=~/.dotfiles
 olddir=~/.dotfiles_old
-files=".zshrc .zshenv .vimrc .screenrc .gemrc .gitconfig .gitignore .hushlogin .tmux.conf"
+files=".zshrc .vimrc .npmrc .gemrc .irbrc .gitconfig .gitignore .hushlogin .tmux.conf"
 
 echo "Creating $olddir for backup of any existing dotfiles in home directory"
 mkdir -p $olddir
