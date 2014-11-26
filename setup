@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env sh
 #
 # This script creates symlinks from the home directory to any desired dotfiles in ~/.dotfiles
 #
 
 dir=~/.dotfiles
 olddir=~/.dotfiles_old
-files=".zshrc .vimrc .npmrc .gemrc .irbrc .gitconfig .gitignore .hushlogin .tmux.conf"
+files=".zshrc .vimrc .gemrc .irbrc .gitconfig .tmux.conf"
 
 echo "Creating $olddir for backup of any existing dotfiles in home directory"
 mkdir -p $olddir
