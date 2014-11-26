@@ -1,7 +1,8 @@
-require 'rubygems' unless defined? Gem
+require 'rubygems'
+require 'bond'
 require 'hirb'
-require 'interactive_editor'
 require "awesome_print"
 
+Bond.start
 Hirb.enable
 AwesomePrint.irb!

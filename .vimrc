@@ -1,38 +1,42 @@
 " Setting up Vundle
-if !filereadable(expand('~/.vim/bundle/vundle.vim/autoload/vundle.vim'))
-	silent !git clone https://github.com/gmarik/vundle.vim.git ~/.vim/bundle/vundle.vim
+if !filereadable(expand('~/.vim/bundle/neobundle.vim/autoload/neobundle.vim'))
+	silent !git clone https://github.com/shougo/neobundle.vim.git ~/.vim/bundle/neobundle.vim
 endif
 filetype off
-set rtp+=~/.vim/bundle/vundle.vim
-call vundle#begin()
-
-" Functionality
-Plugin 'raimondi/delimitmate'
-Plugin 'ervandew/supertab'
-Plugin 'godlygeek/tabular'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'tomasr/molokai'
-Plugin 'gmarik/vundle.vim'
-Plugin 'docunext/closetag.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'mdouchement/matchit.vim'
-Plugin 'justinmk/vim-sneak'
-Plugin 'thoughtbot/vim-rspec'
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-projectionist'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-markdown'
-Plugin 'tpope/vim-liquid'
-Plugin 'tpope/vim-haml'
-Plugin 'tpope/vim-endwise'
-Plugin 'tpope/vim-rake'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-dispatch'
-call vundle#end()
+set rtp+=~/.vim/bundle/neobundle.vim/
+call neobundle#begin(expand('~/.vim/bundle/'))
+NeoBundle 'shougo/vimproc.vim', {'build': {'mac' : 'make -f make_mac.mak'}}
+NeoBundle 'shougo/unite.vim'
+NeoBundle 'shougo/neomru.vim'
+NeoBundle 'shougo/neocomplcache.vim'
+NeoBundle 'shougo/neosnippet.vim'
+NeoBundle 'shougo/neosnippet-snippets'
+NeoBundle 'raimondi/delimitmate'
+NeoBundle 'godlygeek/tabular'
+NeoBundle 'chriskempson/base16-shell'
+NeoBundle 'chriskempson/base16-iterm2'
+NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'docunext/closetag.vim'
+NeoBundle 'mdouchement/matchit.vim'
+NeoBundle 'bling/vim-airline'
+NeoBundle 'justinmk/vim-sneak'
+NeoBundle 'thoughtbot/vim-rspec'
+NeoBundle 'vim-ruby/vim-ruby'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-projectionist'
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-vinegar'
+NeoBundle 'tpope/vim-commentary'
+NeoBundle 'tpope/vim-markdown'
+NeoBundle 'tpope/vim-liquid'
+NeoBundle 'tpope/vim-haml'
+NeoBundle 'tpope/vim-endwise'
+NeoBundle 'tpope/vim-rake'
+NeoBundle 'tpope/vim-rails'
+NeoBundle 'tpope/vim-dispatch'
+call neobundle#end()
+NeoBundleCheck
 
 " Settings
 se nocp
@@ -64,7 +68,7 @@ se magic
 se nobk nowb noswf
 se list lcs=tab:▸·,trail:· ",eol:¬
 se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*
-se ofu=syntaxcomplete#Complete cfu=syntaxcomplete#Complete
+" se ofu=syntaxcomplete#Complete cfu=syntaxcomplete#Complete
 se stl=[%n]\ %t\ %y\ %M\ %=\ [%l\/\%L\ %v]
 se sb spr
 se tf to tm=1000 ttm=100
@@ -72,21 +76,9 @@ se fen fdm=syntax fdl=100
 se clipboard+=unnamed
 se history=100
 
-" highlight the status bar when in insert mode
-au InsertEnter * hi StatusLine ctermbg=255 ctermfg=112
-au InsertLeave * hi StatusLine ctermbg=255 ctermfg=238
-
-" highlight trailing spaces in annoying red
-highlight ExtraWhitespace ctermbg=1 guibg=red
-match ExtraWhitespace /\s\+$/
-autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()i statusline ctermbg=0
-
 " Colors and Indent
 if has('gui_running')
-	se gfn=Inconsolata-dz:h14
+	se gfn=Inconsolata-g\ for\ Powerline:h14
 	se go-=m
 	se go-=T
 	se go-=r
@@ -94,14 +86,13 @@ if has('gui_running')
 endif
 filetype plugin indent on
 syntax on
-colo molokai
+let base16colorspace=256
+colo base16-ocean
 
 " Keys mapping
 let mapleader=' '
 let g:mapleader=' '
 
-ino <expr> j ((pumvisible())?("\<c-n>"):("j"))
-ino <expr> k ((pumvisible())?("\<c-p>"):("k"))
 ino jk <esc>
 
 nn <c-j> <c-w>j
@@ -119,10 +110,38 @@ au filetype markdown setl nonu spell wrap
 " Auto remove unwant whitespace
 au BufWritePre * :%s/\s\+$//e
 
+" NeoSnippet key-mappings.
+imap <c-k> <Plug>(neosnippet_expand_or_jump)
+smap <c-k> <Plug>(neosnippet_expand_or_jump)
+xmap <c-k> <Plug>(neosnippet_expand_target)
+imap <expr><tab> neosnippet#expandable_or_jumpable() ?
+			\ "\<Plug>(neosnippet_expand_or_jump)"
+			\: pumvisible() ? "\<c-n>" : "\<tab>"
+smap <expr><tab> neosnippet#expandable_or_jumpable() ?
+			\ "\<Plug>(neosnippet_expand_or_jump)"
+			\: "\<tab>"
+if has('conceal')
+	set conceallevel=2 concealcursor=i
+endif
+
 " Plugin settings
-let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
-let g:SuperTabContextDefaultCompletionType = "<c-x><c-f>"
-nn <leader>n :NERDTreeToggle<cr>
-nn <leader>p :CtrlP<cr>
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#left_sep=' '
+let g:airline#extensions#tabline#left_alt_sep='|'
+let g:airline_powerline_fonts=1
+let g:neocomplcache_enable_at_startup=1
+let g:neocomplcache_enable_smart_case=1
+let g:neocomplcache_min_syntax_length=3
+let g:neocomplcache_keyword_patterns = {}
+let g:neocomplcache_force_omni_patterns = {}
+let g:unite_data_directory='~/.vim/.cache/unite'
+let g:unite_enable_start_insert=1
+let g:unite_source_history_yank_enable=1
+let g:unite_prompt='» '
+let g:unite_split_rule = 'botright'
+nn <leader>p :Unite file file_rec/async<cr>
+nn <leader>/ :Unite grep:.<cr>
+nn <leader>y :Unite history:yank<cr>
+nn <leader>b :Unite -quick-match buffer<cr>
 nn <leader>t :Tab /=<cr>
 vn <leader>t :Tab /=<cr>

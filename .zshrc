@@ -37,6 +37,11 @@ if (( $+commands[nenv] )); then
 	eval "$(nenv init -)"
 fi
 
+BASE16_NAME="ocean"
+BASE16_TONE="dark"
+BASE16_SHELL="$HOME/.vim/bundle/base16-shell/base16-$BASE16_NAME.$BASE16_TONE.sh"
+[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+
 # Alias
 alias ls="ls -Gflash"
 alias vi="vim"
@@ -105,6 +110,6 @@ zstyle ':vcs_info:*:*' branchformats '%r'
 zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 
-# PROMPT='%~${vcs_info_msg_0_} %{$reset_color%}'
-PROMPT='%F{green}%n%f %F{yellow}○%f %{$reset_color%}'
-RPROMPT='%F{red}%d%f'
+# PROMPT='%B%U%1d%u%b${vcs_info_msg_0_} # %{$reset_color%}'
+PROMPT='%F{green}%B%U%1d%u%b%f %F{yellow}#%f %{$reset_color%}'
+RPROMPT=''
