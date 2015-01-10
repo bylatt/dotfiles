@@ -1,42 +1,40 @@
-" Setting up Vundle
-if !filereadable(expand('~/.vim/bundle/neobundle.vim/autoload/neobundle.vim'))
-	silent !git clone https://github.com/shougo/neobundle.vim.git ~/.vim/bundle/neobundle.vim
+" Setting up vundle
+if !filereadable(expand('~/.vim/bundle/vundle.vim/README.md'))
+	silent !git clone https://github.com/gmarik/vundle.vim.git ~/.vim/bundle/vundle.vim
 endif
 filetype off
-set rtp+=~/.vim/bundle/neobundle.vim/
-call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundle 'shougo/vimproc.vim', {'build': {'mac' : 'make -f make_mac.mak'}}
-NeoBundle 'shougo/unite.vim'
-NeoBundle 'shougo/neomru.vim'
-NeoBundle 'shougo/neocomplcache.vim'
-NeoBundle 'shougo/neosnippet.vim'
-NeoBundle 'shougo/neosnippet-snippets'
-NeoBundle 'raimondi/delimitmate'
-NeoBundle 'godlygeek/tabular'
-NeoBundle 'chriskempson/base16-shell'
-NeoBundle 'chriskempson/base16-iterm2'
-NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'docunext/closetag.vim'
-NeoBundle 'mdouchement/matchit.vim'
-NeoBundle 'bling/vim-airline'
-NeoBundle 'justinmk/vim-sneak'
-NeoBundle 'thoughtbot/vim-rspec'
-NeoBundle 'vim-ruby/vim-ruby'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-projectionist'
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-vinegar'
-NeoBundle 'tpope/vim-commentary'
-NeoBundle 'tpope/vim-markdown'
-NeoBundle 'tpope/vim-liquid'
-NeoBundle 'tpope/vim-haml'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-rake'
-NeoBundle 'tpope/vim-rails'
-NeoBundle 'tpope/vim-dispatch'
-call neobundle#end()
-NeoBundleCheck
+set rtp+=~/.vim/bundle/vundle.vim/
+call vundle#begin()
+Plugin 'raimondi/delimitmate'
+Plugin 'scrooloose/nerdtree'
+Plugin 'ervandew/supertab'
+Plugin 'talek/obvious-resize'
+Plugin 'jazzcore/ctrlp-cmatcher'
+Plugin 'gmarik/vundle.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'docunext/closetag.vim'
+Plugin 'wellle/targets.vim'
+Plugin 'andrewradev/splitjoin.vim'
+Plugin 'rking/ag.vim'
+Plugin 'noahfrederick/vim-hemisu'
+Plugin 'bronson/vim-trailing-whitespace'
+Plugin 'pangloss/vim-javascript'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'thoughtbot/vim-rspec'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-speeddating'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-liquid'
+Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-markdown'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-haml'
+Plugin 'tpope/vim-rake'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-bundler'
+call vundle#end()
 
 " Settings
 se nocp
@@ -44,15 +42,17 @@ se sh=/bin/zsh
 se enc=utf-8 tenc=utf-8 fenc=utf-8
 se t_Co=256
 se t_ut=
-se bg=dark
+se t_vb=
+se bg=light
 se et sta sw=2 ts=2 sts=2 ai si
 se nowrap nospell
 se bs=2
 se ls=2
+se stal=0
 se smd sc ch=1
-se noru nu
+se noru nu "rnu
 se cul nocuc
-se novb noeb
+se noeb vb
 se smd
 se sc
 se ar
@@ -67,81 +67,67 @@ se ws
 se magic
 se nobk nowb noswf
 se list lcs=tab:▸·,trail:· ",eol:¬
-se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*
-" se ofu=syntaxcomplete#Complete cfu=syntaxcomplete#Complete
+se ofu=syntaxcomplete#Complete cfu=syntaxcomplete#Complete
+se cot=longest,menuone
+se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*
 se stl=[%n]\ %t\ %y\ %M\ %=\ [%l\/\%L\ %v]
 se sb spr
 se tf to tm=1000 ttm=100
 se fen fdm=syntax fdl=100
 se clipboard+=unnamed
 se history=100
+se cole=2 cocu=i
 
 " Colors and Indent
 if has('gui_running')
-	se gfn=Inconsolata-g\ for\ Powerline:h14
+	se gfn=Inconsolata\ LGC:h14
 	se go-=m
 	se go-=T
 	se go-=r
 	se go-=L
+	se vb t_vb=
 endif
 filetype plugin indent on
 syntax on
-let base16colorspace=256
-colo base16-ocean
+colo hemisu
 
 " Keys mapping
 let mapleader=' '
 let g:mapleader=' '
-
 ino jk <esc>
-
-nn <c-j> <c-w>j
-nn <c-k> <c-w>k
-nn <c-h> <c-w>h
-nn <c-l> <c-w>l
+nm <c-j> <c-w>j
+nm <c-k> <c-w>k
+nm <c-h> <c-w>h
+nm <c-l> <c-w>l
+vm <  <gv
+vm > >gv
 nn <cr> :nohls<cr>
+nn <tab> :bn<cr>
+nn <S-tab> :bp<cr>
+nn <leader>q :bw<cr>
+nn <silent> <leader>+ :exe "res " . (winheight(0) * 3/2)<cr>
+nn <silent> <leader>- :exe "res " . (winheight(0) * 2/3)<cr>
 
-nn <tab> :bnext<cr>
-nn <S-tab> :bprevious<cr>
-
-" Per filetype settings
-au filetype markdown setl nonu spell wrap
-
-" Auto remove unwant whitespace
-au BufWritePre * :%s/\s\+$//e
-
-" NeoSnippet key-mappings.
-imap <c-k> <Plug>(neosnippet_expand_or_jump)
-smap <c-k> <Plug>(neosnippet_expand_or_jump)
-xmap <c-k> <Plug>(neosnippet_expand_target)
-imap <expr><tab> neosnippet#expandable_or_jumpable() ?
-			\ "\<Plug>(neosnippet_expand_or_jump)"
-			\: pumvisible() ? "\<c-n>" : "\<tab>"
-smap <expr><tab> neosnippet#expandable_or_jumpable() ?
-			\ "\<Plug>(neosnippet_expand_or_jump)"
-			\: "\<tab>"
-if has('conceal')
-	set conceallevel=2 concealcursor=i
+if version >= 700
+	au InsertEnter * hi StatusLine ctermfg=255 ctermbg=64 guifg=#ffffff guibg=#608205
+	au InsertLeave * hi StatusLine ctermfg=232 ctermbg=255 guifg=#000000 guibg=#eaeaea
+	au BufWritePre * :%s/\s\+$//e
 endif
 
 " Plugin settings
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#left_sep=' '
-let g:airline#extensions#tabline#left_alt_sep='|'
-let g:airline_powerline_fonts=1
-let g:neocomplcache_enable_at_startup=1
-let g:neocomplcache_enable_smart_case=1
-let g:neocomplcache_min_syntax_length=3
-let g:neocomplcache_keyword_patterns = {}
-let g:neocomplcache_force_omni_patterns = {}
-let g:unite_data_directory='~/.vim/.cache/unite'
-let g:unite_enable_start_insert=1
-let g:unite_source_history_yank_enable=1
-let g:unite_prompt='» '
-let g:unite_split_rule = 'botright'
-nn <leader>p :Unite file file_rec/async<cr>
-nn <leader>/ :Unite grep:.<cr>
-nn <leader>y :Unite history:yank<cr>
-nn <leader>b :Unite -quick-match buffer<cr>
-nn <leader>t :Tab /=<cr>
-vn <leader>t :Tab /=<cr>
+let g:SuperTabDefaultCompletionType="context"
+let g:ctrlp_use_caching=0
+let g:ctrlp_user_command='ag %s -i --nocolor --nogroup --hidden
+			\ --ignore .git
+			\ --ignore .svn
+			\ --ignore .hg
+			\ --ignore .DS_Store
+			\ --ignore "**/*.pyc"
+			\ -g ""'
+let g:ctrlp_match_func={'match': 'matcher#cmatch'}
+let g:NERDTreeWinPos="right"
+nn <leader>n :NERDTreeToggle<cr>
+nn <leader>pf :CtrlP<cr>
+nn <leader>pb :CtrlPBuffer<cr>
+nn <leader>pm :CtrlPMRU<cr>
+vn <leader>a :LiveEasyAlign<cr>

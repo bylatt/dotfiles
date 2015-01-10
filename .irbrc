@@ -1,8 +1,11 @@
 require 'rubygems'
-require 'bond'
-require 'hirb'
-require "awesome_print"
+require 'pp'
+require 'irb/completion'
 
-Bond.start
-Hirb.enable
-AwesomePrint.irb!
+IRB.conf[:PROMPT_MODE] = :SIMPLE
+IRB.conf[:AUTO_INDENT] = true
+
+def copy(data)
+  File.popen('pbcopy', 'w') { |p| p << data.to_s }
+  $?.success?
+end

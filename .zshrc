@@ -13,23 +13,22 @@ export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export PATH="/usr/local/bin:$PATH"
-export PATH="/usr/local/vim/bin:$PATH"
-export PATH="/usr/local/tmux/bin:$PATH"
-export PATH="/usr/local/git/bin:$PATH"
-export PATH="/usr/local/sqlite/bin:$PATH"
-export PATH="/usr/local/mysql/bin:/usr/local/mysql/support-files:$PATH"
-export DYLD_LIBRARY_PATH="/usr/local/mysql/lib"
-export PATH="/usr/local/postgresql/bin:$PATH"
-export PATH="/usr/local/redis/bin:$PATH"
-export PATH="/usr/local/mongodb/bin:$PATH"
-export PATH="/usr/local/php5/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
+export PATH="$HOME/.pyenv/bin:$PATH"
 export PATH="$HOME/.nenv/bin:$PATH"
+for d in /usr/local/*/bin
+do
+	export PATH="$d:$PATH"
+done
 
 # If rbenv install load it
 if (( $+commands[rbenv] )); then
 	eval "$(rbenv init -)"
+fi
+
+# If pyenv install load it
+if (( $+commands[pyenv] )); then
+	eval "$(pyenv init -)"
 fi
 
 # If nenv install load it
@@ -37,20 +36,18 @@ if (( $+commands[nenv] )); then
 	eval "$(nenv init -)"
 fi
 
-BASE16_NAME="ocean"
-BASE16_TONE="dark"
-BASE16_SHELL="$HOME/.vim/bundle/base16-shell/base16-$BASE16_NAME.$BASE16_TONE.sh"
-[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
-
 # Alias
-alias ls="ls -Gflash"
-alias vi="vim"
-alias psql_start="pg_ctl -D /usr/local/var/db/postgresql -l /usr/local/var/log/postgresql/logfile.log start"
-alias psql_stop="pg_ctl -D /usr/local/var/db/postgresql stop"
-alias mongo_start="mongod --config=/usr/local/mongodb/mongodb.conf"
-alias mongo_stop="killall mongod"
-alias redis_start="redis-server /usr/local/redis/redis.conf"
-alias redis_stop="killall redis-server"
+alias l="ls -Gflash"
+alias v="vim"
+alias m="mvim"
+alias g="git"
+alias c="clear"
+alias e="exit"
+alias o="open"
+alias pg.start="pg_ctl -D /usr/local/var/db/postgresql -l /usr/local/var/log/postgresql/postgresql.log start"
+alias pg.stop="pg_ctl -D /usr/local/var/db/postgresql stop"
+alias redis.start="redis-server /usr/local/redis/redis.conf"
+alias redis.stop="redis-cli shutdown"
 
 # ZSH specific settings
 autoload -U compinit promptinit colors vcs_info
@@ -110,6 +107,5 @@ zstyle ':vcs_info:*:*' branchformats '%r'
 zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 
-# PROMPT='%B%U%1d%u%b${vcs_info_msg_0_} # %{$reset_color%}'
-PROMPT='%F{green}%B%U%1d%u%b%f %F{yellow}#%f %{$reset_color%}'
+PROMPT='%F{cyan}%B%U%1d#%u%b%f %{$reset_color%}'
 RPROMPT=''
