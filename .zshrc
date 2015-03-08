@@ -29,9 +29,6 @@ alias redis.stop="redis-cli shutdown"
 alias mongo.start="mongod --fork --config=/usr/local/etc/mongodb/mongodb.conf"
 alias mongo.stop="mongo admin --eval 'db.shutdownServer()'"
 
-BASE16_SHELL="$HOME/.vim/bundle/base16-shell/base16-railscasts.dark.sh"
-[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
-
 # ZSH specific settings
 autoload -U compinit promptinit colors vcs_info
 compinit -i
