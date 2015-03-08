@@ -18,14 +18,3 @@
 	helper = osxkeychain
 [push]
 	default = simple
-[alias]
-	st = status
-	co = checkout
-	rb = rebase
-	br = branch
-	fe = fetch
-	pl = pull
-	cm = commit
-	df = diff
-	cl = clone
-	ad = add

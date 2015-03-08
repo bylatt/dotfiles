@@ -13,41 +13,24 @@ export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export PATH="$HOME/.rbenv/bin:$PATH"
-export PATH="$HOME/.pyenv/bin:$PATH"
-export PATH="$HOME/.nenv/bin:$PATH"
-for d in /usr/local/*/bin
-do
-	export PATH="$d:$PATH"
-done
+export PATH="$HOME/.rbenv/bin:$HOME/.pyenv/bin:$HOME/.luaenv/bin:$HOME/.nenv/bin:$PATH"
 
-# If rbenv install load it
-if (( $+commands[rbenv] )); then
-	eval "$(rbenv init -)"
-fi
-
-# If pyenv install load it
-if (( $+commands[pyenv] )); then
-	eval "$(pyenv init -)"
-fi
-
-# If nenv install load it
-if (( $+commands[nenv] )); then
-	eval "$(nenv init -)"
-fi
+if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; fi
+if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; fi
+if (( $+commands[luaenv] )); then eval "$(luaenv init -)"; fi
+if (( $+commands[nenv] )); then eval "$(nenv init -)"; fi
 
 # Alias
-alias l="ls -Gflash"
-alias v="vim"
-alias m="mvim"
-alias g="git"
-alias c="clear"
-alias e="exit"
-alias o="open"
+alias ls="ls -Glah"
 alias pg.start="pg_ctl -D /usr/local/var/db/postgresql -l /usr/local/var/log/postgresql/postgresql.log start"
 alias pg.stop="pg_ctl -D /usr/local/var/db/postgresql stop"
-alias redis.start="redis-server /usr/local/redis/redis.conf"
+alias redis.start="redis-server /usr/local/etc/redis/redis.conf"
 alias redis.stop="redis-cli shutdown"
+alias mongo.start="mongod --fork --config=/usr/local/etc/mongodb/mongodb.conf"
+alias mongo.stop="mongo admin --eval 'db.shutdownServer()'"
+
+BASE16_SHELL="$HOME/.vim/bundle/base16-shell/base16-railscasts.dark.sh"
+[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 
 # ZSH specific settings
 autoload -U compinit promptinit colors vcs_info
@@ -99,13 +82,14 @@ zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
-zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*:*' check-for-changes true
 zstyle ':vcs_info:*:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*:*' branchformats '%r'
 zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
+local smiley="%(?,:),:()"
 
-PROMPT='%F{cyan}%B%U%1d#%u%b%f %{$reset_color%}'
+PROMPT='%F{cyan}%B%1d${smiley}%b%f %{$reset_color%}'
 RPROMPT=''
