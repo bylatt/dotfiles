@@ -13,11 +13,9 @@ export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export PATH="$HOME/.rbenv/bin:$HOME/.pyenv/bin:$HOME/.luaenv/bin:$HOME/.nenv/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$HOME/.nenv/bin:$PATH"
 
 if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; fi
-if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; fi
-if (( $+commands[luaenv] )); then eval "$(luaenv init -)"; fi
 if (( $+commands[nenv] )); then eval "$(nenv init -)"; fi
 
 # Alias

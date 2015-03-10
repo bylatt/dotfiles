@@ -7,12 +7,12 @@ set rtp+=~/.vim/bundle/vundle.vim/
 call vundle#begin()
 Plugin 'raimondi/delimitmate'
 Plugin 'ervandew/supertab'
+Plugin 'scrooloose/nerdtree'
 Plugin 'gmarik/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'felikz/ctrlp-py-matcher'
 Plugin 'docunext/closetag.vim'
 Plugin 'rking/ag.vim'
-Plugin 'othree/html5.vim'
+Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'junegunn/vim-easy-align'
 Plugin 'noahfrederick/vim-hemisu'
 Plugin 'thoughtbot/vim-rspec'
@@ -33,8 +33,6 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'elzr/vim-json'
 Plugin 'digitaltoad/vim-jade'
 Plugin 'wavded/vim-stylus'
-" Plugin 'fatih/vim-go'
-" Plugin 'klen/python-mode'
 call vundle#end()
 
 " Settings
@@ -51,7 +49,7 @@ se bs=2
 se ls=2
 se stal=0
 se smd sc ch=1
-se noru nu "rnu
+se noru nu nornu
 se nocul nocuc
 se noeb vb
 se smd
@@ -87,7 +85,6 @@ if has('gui_running')
 	se go-=r
 	se go-=L
 	se vb t_vb=
-	se bg=dark
 endif
 filetype plugin indent on
 syntax on
@@ -95,14 +92,14 @@ colo hemisu
 
 " Highlight the status bar when in insert mode
 if version >= 700
-	hi StatusLine ctermbg=255 ctermfg=236 guibg=#ECEBEB guifg=#2A2A2A
-	hi CursorLineNr cterm=bold ctermfg=11 ctermbg=255 term=bold guifg=#9C7D5E guibg=#ECEBEB
-	au InsertEnter * hi StatusLine ctermbg=2 ctermfg=231 guibg=#7A9601 guifg=#FFFFFF
-	au InsertLeave * hi StatusLine ctermbg=255 ctermfg=236 guibg=#ECEBEB guifg=#2A2A2A
+	hi StatusLine ctermbg=none ctermfg=255
+	hi CursorLineNr cterm=bold ctermbg=none ctermfg=11
+	au InsertEnter * hi StatusLine ctermbg=191 ctermfg=236
+	au InsertLeave * hi StatusLine ctermbg=none ctermfg=255
 endif
 
 " Highlight trailing spaces in annoying red
-highlight ExtraWhitespace ctermbg=11 guibg=#9C7D5E
+highlight ExtraWhitespace ctermbg=1
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
@@ -127,66 +124,29 @@ nn <silent> <leader>+ :exe "res " . (winheight(0) * 3/2)<cr>
 nn <silent> <leader>- :exe "res " . (winheight(0) * 2/3)<cr>
 
 " Plugin settings
-let g:netrw_liststyle=3
-let g:netrw_browse_split=4
-let g:netrw_altv=1
-let g:netrw_banner=0
-let g:netrw_list_hide=&wildignore
-
-fun! VexToggle(dir)
-	if exists("t:vex_buf_nr")
-		call VexClose()
-	else
-		call VexOpen(a:dir)
-	endif
-endf
-
-fun! VexOpen(dir)
-	let vex_width = 25
-	execute "Vexplore " . a:dir
-	let t:vex_buf_nr = bufnr("%")
-	wincmd H
-	call VexSize(vex_width)
-endf
-
-fun! VexClose()
-	let cur_win_nr = winnr()
-	let target_nr = ( cur_win_nr == 1 ? winnr("#") : cur_win_nr )
-	1wincmd w
-	close
-	unlet t:vex_buf_nr
-	execute (target_nr - 1) . "wincmd w"
-	call NormalizeWidths()
-endf
-
-fun! VexSize(vex_width)
-	execute "vertical resize" . a:vex_width
-	set winfixwidth
-	call NormalizeWidths()
-endf
-
-fun! NormalizeWidths()
-	let eadir_pref = &eadirection
-	set eadirection=hor
-	set equalalways! equalalways!
-	let &eadirection = eadir_pref
-endf
-
-aug NetrwGroup
-	autocmd! BufEnter * call NormalizeWidths()
-aug END
-
-no <c-n> :call VexToggle(getcwd())<CR>
-
-vmap <cr> <plug>(EasyAlign)
-let g:SuperTabDefaultCompletionType="context"
-let g:ctrlp_use_caching=0
+vm <cr> <plug>(EasyAlign)
+nm <c-n> :NERDTreeToggle<cr>
+let g:NERDTreeWinPos='right'
+let g:SuperTabDefaultCompletionType='context'
+let g:vim_json_syntax_conceal=0
+let g:ctrlp_use_caching=1
 let g:ctrlp_max_files=0
-let g:ctrlp_match_func={'match': 'pymatcher#PyMatch'}
+let g:ctrlp_cache_dir=$HOME.'/.cache/ctrlp'
+let g:ctrlp_match_func={'match': 'BetterMatch'}
 let g:ctrlp_user_command='ag %s -i --nocolor --nogroup --hidden
 			\ --ignore .git
-			\ --ignore .svn
-			\ --ignore .hg
+			\ --ignore .svn \ --ignore .hg
 			\ --ignore .DS_Store
-			\ --ignore "**/*.pyc"
 			\ -g ""'
+
+function! BetterMatch(items,str,limit,mmode,ispath,crfile,regex)
+	let cachefile=ctrlp#utils#cachedir().'/matcher'
+	if !(filereadable(cachefile)&&a:items==readfile(cachefile))
+		call writefile(a:items,cachefile)
+	endif
+	if !filereadable(cachefile)
+		return []
+	endif
+	let cmd='matcher --limit '.a:limit.' --manifest '.cachefile.' --no-dotfiles '.a:str
+	return split(system(cmd), "\n")
+endfunction
