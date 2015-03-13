@@ -13,19 +13,15 @@ export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export PATH="$HOME/.rbenv/bin:$HOME/.nenv/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$HOME/.nenv/bin:$HOME/.pyenv/bin:$HOME/.phpenv/bin:$PATH"
 
 if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; fi
 if (( $+commands[nenv] )); then eval "$(nenv init -)"; fi
+if (( $+commands[pyenv] )); then eval "$(nenv init -)"; fi
+if (( $+commands[phpenv] )); then eval "$(nenv init -)"; fi
 
 # Alias
 alias ls="ls -Glah"
-alias pg.start="pg_ctl -D /usr/local/var/db/postgresql -l /usr/local/var/log/postgresql/postgresql.log start"
-alias pg.stop="pg_ctl -D /usr/local/var/db/postgresql stop"
-alias redis.start="redis-server /usr/local/etc/redis/redis.conf"
-alias redis.stop="redis-cli shutdown"
-alias mongo.start="mongod --fork --config=/usr/local/etc/mongodb/mongodb.conf"
-alias mongo.stop="mongo admin --eval 'db.shutdownServer()'"
 
 # ZSH specific settings
 autoload -U compinit promptinit colors vcs_info
@@ -70,9 +66,11 @@ bindkey -M viins '^r' history-incremental-search-backward
 bindkey -M vicmd '^r' history-incremental-search-backward
 
 HISTFILE=$HOME/.zsh_history
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=1024
+SAVEHIST=1024
 
+zstyle ':completion::complete:*' use-cache on
+zstyle ':completion:*' cache-path ~/.cache/zsh
 zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select
@@ -86,5 +84,5 @@ zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 local smiley="%(?,:),:()"
 
-PROMPT='%F{cyan}%B%1d${smiley}%b%f %{$reset_color%}'
+PROMPT='%F{green}%B%U%1d%u${smiley}%b%f %{$reset_color%}'
 RPROMPT=''
