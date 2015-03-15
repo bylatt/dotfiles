@@ -13,12 +13,11 @@ export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export PATH="$HOME/.rbenv/bin:$HOME/.nenv/bin:$HOME/.pyenv/bin:$HOME/.phpenv/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$HOME/.nenv/bin:$HOME/.pyenv/bin:$PATH"
 
 if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; fi
 if (( $+commands[nenv] )); then eval "$(nenv init -)"; fi
-if (( $+commands[pyenv] )); then eval "$(nenv init -)"; fi
-if (( $+commands[phpenv] )); then eval "$(nenv init -)"; fi
+if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; fi
 
 # Alias
 alias ls="ls -Glah"
@@ -84,5 +83,5 @@ zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 local smiley="%(?,:),:()"
 
-PROMPT='%F{green}%B%U%1d%u${smiley}%b%f %{$reset_color%}'
+PROMPT='%F{2}%B%U%1d%u${smiley}%b%f %{$reset_color%}'
 RPROMPT=''
