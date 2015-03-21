@@ -6,13 +6,20 @@ if [ -x /usr/libexec/path_helper ]; then
 fi
 
 # Export
-export LC_CTYPE=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+export LANG="en_US.UTF-8"
+export LC_COLLATE="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+export LC_MESSAGES="en_US.UTF-8"
+export LC_MONETARY="en_US.UTF-8"
+export LC_NUMERIC="en_US.UTF-8"
+export LC_TIME="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
+export LSCOLORS=Exfxcxdxbxegedabagacad
+export GREP_OPTIONS='--color=auto'
 export PATH="$HOME/.rbenv/bin:$HOME/.nenv/bin:$HOME/.pyenv/bin:$PATH"
 
 if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; fi
@@ -83,5 +90,5 @@ zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 local smiley="%(?,:),:()"
 
-PROMPT='%F{2}%B%U%1d%u${smiley}%b%f %{$reset_color%}'
+PROMPT='%F{green}%B%U%1d%u${smiley}%b%f %{$reset_color%}'
 RPROMPT=''
