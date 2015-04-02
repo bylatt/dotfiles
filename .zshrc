@@ -20,10 +20,11 @@ export EDITOR=vim
 export CLICOLOR=1
 export LSCOLORS=Exfxcxdxbxegedabagacad
 export GREP_OPTIONS='--color=auto'
-export PATH="$HOME/.rbenv/bin:$HOME/.nenv/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$HOME/.nenv/bin:$HOME/.pyenv/bin:$PATH"
 
-if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; fi
-if (( $+commands[nenv] )); then eval "$(nenv init -)"; fi
+if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; source "$HOME/.rbenv/completions/rbenv.zsh"; fi
+if (( $+commands[nenv] )); then eval "$(nenv init -)"; source "$HOME/.nenv/completions/nenv.zsh"; fi
+if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; source "$HOME/.pyenv/completions/pyenv.zsh"; fi
 
 # Alias
 alias ls="ls -Glah"

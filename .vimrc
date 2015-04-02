@@ -5,19 +5,22 @@ endif
 set rtp+=~/.vim/bundle/vundle.vim/
 call vundle#begin()
 Plugin 'raimondi/delimitmate'
-Plugin 'sirver/ultisnips'
 Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdtree'
 Plugin 'ervandew/supertab'
 Plugin 'felikz/ctrlp-py-matcher'
+Plugin 'jlanzarotta/bufexplorer'
+Plugin 'sirver/ultisnips'
 Plugin 'tomtom/tcomment_vim'
+Plugin 'editorconfig/editorconfig-vim'
+Plugin 'stanangeloff/php.vim'
 Plugin 'gmarik/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'othree/html5.vim'
 Plugin 'docunext/closetag.vim'
 Plugin 'noahfrederick/vim-hemisu'
-Plugin 'justinmk/vim-sneak'
 Plugin 'honza/vim-snippets'
+Plugin 'justinmk/vim-sneak'
 Plugin 'edsono/vim-matchit'
 Plugin 'junegunn/vim-easy-align'
 Plugin 'plasticboy/vim-markdown'
@@ -35,6 +38,7 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'digitaltoad/vim-jade'
 Plugin 'wavded/vim-stylus'
+Plugin 'mxw/vim-jsx'
 call vundle#end()
 
 " Settings
@@ -52,7 +56,7 @@ se bs=2
 se ls=2
 se stal=0
 se smd sc ch=1
-se noru nu nornu
+se noru nu rnu
 se cul nocuc
 se noeb vb
 se smd
@@ -106,12 +110,6 @@ au BufWinEnter * mat ExtraWhitespace /\s\+$/
 au InsertEnter * mat ExtraWhitespace /\s\+\%#\@<!$/
 au InsertLeave * mat ExtraWhitespace /\s\+$/
 au BufWinLeave * call clearmatches()
-
-" Auto show nerdtree when vim open and no file specific
-" and auto close vim if the last only windows is nerdtree
-au StdinReadPre * let s:std_in=1
-au VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-au bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " Keys mapping
 let g:mapleader=' '
