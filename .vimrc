@@ -5,14 +5,12 @@ endif
 set rtp+=~/.vim/bundle/vundle.vim/
 call vundle#begin()
 Plugin 'raimondi/delimitmate'
-Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdtree'
 Plugin 'ervandew/supertab'
+Plugin 'majutsushi/tagbar'
 Plugin 'felikz/ctrlp-py-matcher'
-Plugin 'jlanzarotta/bufexplorer'
 Plugin 'sirver/ultisnips'
 Plugin 'tomtom/tcomment_vim'
-Plugin 'editorconfig/editorconfig-vim'
 Plugin 'stanangeloff/php.vim'
 Plugin 'gmarik/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
@@ -20,7 +18,6 @@ Plugin 'othree/html5.vim'
 Plugin 'docunext/closetag.vim'
 Plugin 'noahfrederick/vim-hemisu'
 Plugin 'honza/vim-snippets'
-Plugin 'justinmk/vim-sneak'
 Plugin 'edsono/vim-matchit'
 Plugin 'junegunn/vim-easy-align'
 Plugin 'plasticboy/vim-markdown'
@@ -36,8 +33,7 @@ Plugin 'tpope/vim-haml'
 Plugin 'tpope/vim-rails'
 Plugin 'pangloss/vim-javascript'
 Plugin 'kchmck/vim-coffee-script'
-Plugin 'digitaltoad/vim-jade'
-Plugin 'wavded/vim-stylus'
+Plugin 'burnettk/vim-angular'
 Plugin 'mxw/vim-jsx'
 call vundle#end()
 
@@ -56,7 +52,7 @@ se bs=2
 se ls=2
 se stal=0
 se smd sc ch=1
-se noru nu rnu
+se noru nu nornu
 se cul nocuc
 se noeb vb
 se smd
@@ -72,11 +68,11 @@ se sm mat=10
 se ws
 se magic
 se nobk nowb noswf
-se list lcs=tab:▸·,trail:· ",eol:¬
+se list lcs=tab:▸·,trail:• ",eol:¬
 se ofu=syntaxcomplete#Complete cfu=syntaxcomplete#Complete
 se cot=longest,menuone
 se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*
-se stl=%F\ %{fugitive#head()}\ %#warningmsg#%{SyntasticStatuslineFlag()}%*\ %=\ %Y\ LN:%l\/\%L
+se stl=%F\ %{fugitive#head()}\ %*\ %=\ %Y\ LN:%l\/\%L
 se sb spr
 se tf to tm=1000 ttm=100
 se fen fdm=syntax fdl=100
@@ -135,11 +131,13 @@ nn <silent> <leader>- :exe "res " . (winheight(0) * 2/3)<cr>
 " Plugin settings
 vm <cr> <plug>(EasyAlign)
 nm <c-n> :NERDTreeToggle<cr>
+let NERDTreeHijackNetrw=1
+nm <c-m> :ToggleBufExplorer<cr>
+let g:javascript_enable_domhtmlcss=1
 let g:UltiSnipsExpandTrigger='<tab>'
 let g:UltiSnipsJumpForwardTrigger='<c-y>'
 let g:UltiSnipsJumpBackwardTrigger='<c-m>'
 let g:UltiSnipsEditSplit='vertical'
-let g:airline_powerline_fonts=1
 let g:syntastic_enable_signs=0
 let g:ctrlp_use_caching=1
 let g:ctrlp_clear_cache_on_exit=1
