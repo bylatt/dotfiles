@@ -1,8 +1,7 @@
-# Fix path in TMUX
-if [ -x /usr/libexec/path_helper ]; then
-	if [ -z "$TMUX" ]; then
-		eval `/usr/libexec/path_helper -s`
-	fi
+# Fix duplicate path in TMUX
+if [ -f /etc/profile ]; then
+	PATH=""
+	source /etc/profile
 fi
 
 # Export
@@ -85,7 +84,7 @@ zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*:*' branchformats '%r'
 zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
-local smiley="%(?,:),:()"
+local smiley="%(?,=),=()"
 
 PROMPT='%F{green}%B%U%1d%u${smiley}%b%f %{$reset_color%}'
 RPROMPT=''
