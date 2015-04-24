@@ -20,7 +20,7 @@ export CLICOLOR=1
 export PATH="$HOME/.rbenv/bin:$HOME/.pyenv/bin:$HOME/.nenv/bin:/usr/local/php5/bin:$PATH"
 
 if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; source "$HOME/.rbenv/completions/rbenv.zsh"; fi
-if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; source "$HOME/.rbenv/completions/pyenv.zsh"; fi
+if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; source "$HOME/.pyenv/completions/pyenv.zsh"; fi
 if (( $+commands[nenv] )); then eval "$(nenv init -)"; source "$HOME/.nenv/completions/nenv.zsh"; fi
 source "$HOME/bin/z.sh";
 

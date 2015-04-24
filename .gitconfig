@@ -25,3 +25,4 @@
 	cm = commit -m
 	co = checkout
 	aa = add --all
+	pu = push
