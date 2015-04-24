@@ -1,24 +1,21 @@
 " Setting up vundle
 if !filereadable(expand($HOME.'/.vim/bundle/vundle.vim/README.md'))
 	sil !git clone https://github.com/gmarik/vundle.vim.git $HOME/.vim/bundle/vundle.vim
-endif
-set rtp+=$HOME/.vim/bundle/vundle.vim/
+en
+se rtp+=$HOME/.vim/bundle/vundle.vim/
 call vundle#begin()
 Plugin 'raimondi/delimitmate'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'ervandew/supertab'
-Plugin 'majutsushi/tagbar'
-Plugin 'felikz/ctrlp-py-matcher'
-Plugin 'stanangeloff/php.vim'
 Plugin 'gmarik/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'othree/html5.vim'
-Plugin 'wellle/targets.vim'
-Plugin 'docunext/closetag.vim'
 Plugin 'noahfrederick/vim-hemisu'
 Plugin 'edsono/vim-matchit'
 Plugin 'gabesoft/vim-ags'
+Plugin 'xolox/vim-easytags'
+Plugin 'xolox/vim-misc'
+Plugin 'chrisbra/vim-diff-enhanced'
 Plugin 'jeetsukumaran/vim-indentwise'
 Plugin 'junegunn/vim-easy-align'
 Plugin 'plasticboy/vim-markdown'
@@ -70,7 +67,7 @@ se sm mat=10
 se ws
 se magic
 se nobk nowb noswf
-se list lcs=tab:▸·,trail:• ",eol:¬
+se list lcs=tab:\ \ ,trail:\  ",eol:\
 se ofu=syntaxcomplete#Complete cfu=syntaxcomplete#Complete
 se cot=longest,menuone
 se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*
@@ -97,11 +94,14 @@ colo hemisu
 
 " More color scheme settings
 hi Normal ctermbg=none
+hi NonText cterm=none ctermbg=none ctermfg=236
+hi SpecialKey cterm=none ctermbg=none ctermfg=236
 hi CursorLine cterm=none ctermbg=none
+hi CursorLineNr cterm=none ctermbg=none
 hi LineNr cterm=none ctermbg=none ctermfg=236
-hi StatusLine cterm=none ctermbg=232 ctermfg=148
+hi StatusLine cterm=none ctermbg=none ctermfg=148
 au InsertEnter * hi StatusLine ctermbg=148 ctermfg=232
-au InsertLeave * hi StatusLine ctermbg=232 ctermfg=148
+au InsertLeave * hi StatusLine ctermbg=none ctermfg=148
 
 " Highlight trailing spaces in annoying red
 hi ExtraWhitespace ctermbg=1
@@ -121,6 +121,8 @@ nm <c-l> <c-w>l
 vm <  <gv
 vm > >gv
 nm <cr> :noh<cr>
+nn ; :
+nn ! :!
 nn <silent> <leader>+ :exe "res " . (winheight(0) * 3/2)<cr>
 nn <silent> <leader>- :exe "res " . (winheight(0) * 2/3)<cr>
 
@@ -136,8 +138,6 @@ vm <cr> <plug>(EasyAlign)
 nm <c-n> :NERDTreeToggle<cr>
 let NERDTreeHijackNetrw=1
 let g:javascript_enable_domhtmlcss=1
-let g:syntastic_php_checkers=['php']
-let g:syntastic_ruby_checkers=['mri']
 let g:syntastic_check_on_open=1
 let g:syntastic_check_on_wq=0
 let g:syntastic_enable_signs=0
@@ -148,7 +148,6 @@ let g:ctrlp_by_filename=1
 let g:ctrlp_regexp=1
 let g:ctrlp_switch_buffer=0
 let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$|\.cache$|\DS_Store$|\node_modules$|\bower_components$'
-let g:ctrlp_match_func={'match': 'pymatcher#PyMatch'}
 if executable('ag')
 	let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
 				\ --ignore .git

@@ -17,13 +17,21 @@ export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
-export PATH="$HOME/.rbenv/bin:$HOME/.nenv/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$HOME/.pyenv/bin:$HOME/.nenv/bin:/usr/local/php5/bin:$PATH"
 
 if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; source "$HOME/.rbenv/completions/rbenv.zsh"; fi
+if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; source "$HOME/.rbenv/completions/pyenv.zsh"; fi
 if (( $+commands[nenv] )); then eval "$(nenv init -)"; source "$HOME/.nenv/completions/nenv.zsh"; fi
+source "$HOME/bin/z.sh";
 
 # Alias
-alias ls="ls -Glah"
+alias l="ls -Glah"
+alias g="git"
+alias v="vim"
+alias a="ag"
+alias c="clear"
+alias e="exit"
+alias d="df -h"
 
 # ZSH specific settings
 autoload -U compinit promptinit colors vcs_info
@@ -84,7 +92,7 @@ zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*:*' branchformats '%r'
 zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
-local smiley="%(?,=),=()"
+local smiley="%(?,:),:()"
 
 PROMPT='%F{green}%B%U%1d%u${smiley}%b%f %{$reset_color%}'
 RPROMPT=''

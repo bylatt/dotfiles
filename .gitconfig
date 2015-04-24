@@ -18,3 +18,10 @@
 	helper = osxkeychain
 [push]
 	default = simple
+[alias]
+	in = init
+	ll = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	st = status -sb
+	cm = commit -m
+	co = checkout
+	aa = add --all
