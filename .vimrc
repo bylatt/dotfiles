@@ -79,9 +79,12 @@ se tf to tm=1000 ttm=100
 se fen fdm=syntax fdl=100
 se cole=0 cocu=i
 se history=100
-se fo-=cro
+se fo-=c fo-=r fo-=o
 se clipboard+=unnamed
 "" }}}
+" Filetype						                                                         {{{
+" --------------------------------------------------------------------------------
+" }}}
 " Colors and syntax						                                                 {{{
 " --------------------------------------------------------------------------------
 if has('gui_running')
