@@ -79,12 +79,8 @@ se tf to tm=1000 ttm=100
 se fen fdm=syntax fdl=100
 se cole=0 cocu=i
 se history=100
-se fo-=c fo-=r fo-=o
 se clipboard+=unnamed
 "" }}}
-" Filetype						                                                         {{{
-" --------------------------------------------------------------------------------
-" }}}
 " Colors and syntax						                                                 {{{
 " --------------------------------------------------------------------------------
 if has('gui_running')
@@ -213,4 +209,8 @@ au filetype unite call s:unite_settings()
 " <c-x><c-l> for whole line completion
 " <c-n> for next match keyword
 " <c-p> for previous match keyword
+" }}}
+" Filetype						                                                         {{{
+" --------------------------------------------------------------------------------
+autocmd filetype * setlocal fo-=c fo-=r fo-=o
 " }}}
