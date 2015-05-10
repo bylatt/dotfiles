@@ -24,5 +24,7 @@
 	st = status -sb
 	cm = commit -m
 	co = checkout
+	cl = clone
 	aa = add --all
-	pu = push
+	ps = push
+	pu = pull

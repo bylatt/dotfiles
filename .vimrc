@@ -1,43 +1,46 @@
-" Setting up vundle
-if !filereadable(expand($HOME.'/.vim/bundle/vundle.vim/README.md'))
-	sil !git clone https://github.com/gmarik/vundle.vim.git $HOME/.vim/bundle/vundle.vim
-en
-se rtp+=$HOME/.vim/bundle/vundle.vim/
-call vundle#begin()
-Plugin 'raimondi/delimitmate'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'ervandew/supertab'
-Plugin 'gmarik/vundle.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'noahfrederick/vim-hemisu'
-Plugin 'edsono/vim-matchit'
-Plugin 'gabesoft/vim-ags'
-Plugin 'xolox/vim-easytags'
-Plugin 'xolox/vim-misc'
-Plugin 'chrisbra/vim-diff-enhanced'
-Plugin 'jeetsukumaran/vim-indentwise'
-Plugin 'junegunn/vim-easy-align'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'thoughtbot/vim-rspec'
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-liquid'
-Plugin 'tpope/vim-endwise'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-haml'
-Plugin 'tpope/vim-rails'
-Plugin 'pangloss/vim-javascript'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'burnettk/vim-angular'
-Plugin 'mxw/vim-jsx'
-call vundle#end()
-
-" Settings
-au!
+" NeoBundle Settings                                                           {{{
+" --------------------------------------------------------------------------------
+se rtp+=$HOME/.vim/bundle/neobundle.vim/
+call neobundle#begin(expand($HOME.'/.vim/bundle/'))
+NeoBundleFetch 'shougo/neobundle.vim'
+NeoBundle 'shougo/vimproc.vim', {'build': {'unix': 'make'}}
+NeoBundle 'shougo/unite.vim'
+NeoBundle 'vim-scripts/summerfruit256.vim'
+NeoBundle 'vim-scripts/desert256.vim'
+NeoBundle 'vim-scripts/xoria256.vim'
+NeoBundle 'raimondi/delimitmate'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'kana/vim-arpeggio', {'build': {'unix': 'make'}}
+NeoBundle 'edsono/vim-matchit'
+NeoBundle 'junegunn/vim-easy-align'
+NeoBundle 'christoomey/vim-tmux-navigator'
+NeoBundle 'thoughtbot/vim-rspec'
+NeoBundle 'vim-ruby/vim-ruby'
+NeoBundle 'tpope/vim-projectionist'
+NeoBundle 'tpope/vim-speeddating'
+NeoBundle 'tpope/vim-commentary'
+NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'tpope/vim-dispatch'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-markdown'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-abolish'
+NeoBundle 'tpope/vim-bundler'
+NeoBundle 'tpope/vim-endwise'
+NeoBundle 'tpope/vim-vinegar'
+NeoBundle 'tpope/vim-eunuch'
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'tpope/vim-rbenv'
+NeoBundle 'tpope/vim-rails'
+NeoBundle 'tpope/vim-rake'
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'burnettk/vim-angular'
+NeoBundle 'mxw/vim-jsx'
+call neobundle#end()
+" }}}
+" Vim Settings                                                                 {{{
+" --------------------------------------------------------------------------------
 se nocp
 se sh=/bin/zsh
 se enc=utf-8 tenc=utf-8 fenc=utf-8
@@ -54,7 +57,6 @@ se smd sc ch=1
 se noru nu nornu
 se cul nocuc
 se noeb vb
-se smd
 se sc
 se ar aw
 se hid
@@ -70,50 +72,49 @@ se nobk nowb noswf
 se list lcs=tab:\ \ ,trail:\  ",eol:\
 se ofu=syntaxcomplete#Complete cfu=syntaxcomplete#Complete
 se cot=longest,menuone
-se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*
-se stl=%F\ %{fugitive#head()}\ %*\ %#warningmsg#%{SyntasticStatuslineFlag()}%*\ %=\ %Y\ LN:%l\/\%L
+se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*
+se stl=%1*%{getcwd()}/%2*%f\ %1*%{fugitive#head()}\ %m\ %3*%{SyntasticStatuslineFlag()}\ %1*%=\ →\ %Y
 se sb spr
 se tf to tm=1000 ttm=100
 se fen fdm=syntax fdl=100
 se cole=0 cocu=i
-se clipboard+=unnamed
 se history=100
-
-" Colors and syntax
+se fo-=cro
+se clipboard+=unnamed
+"" }}}
+" Colors and syntax						                                                 {{{
+" --------------------------------------------------------------------------------
 if has('gui_running')
-	se gfn=Inconsolata\ LGC:h13
+	se gfn=Inconsolata\ LGC:h14
 	se go-=m
 	se go-=T
 	se go-=r
 	se go-=L
-	se vb t_vb=
+	colo summerfruit256
+el
+	colo desert256
 en
 filet plugin indent on
 syntax on
-colo hemisu
-
-" More color scheme settings
+" }}}
+" Improve color scheme						                                             {{{
+" --------------------------------------------------------------------------------
 hi Normal ctermbg=none
 hi NonText cterm=none ctermbg=none ctermfg=236
 hi SpecialKey cterm=none ctermbg=none ctermfg=236
 hi CursorLine cterm=none ctermbg=none
 hi CursorLineNr cterm=none ctermbg=none
 hi LineNr cterm=none ctermbg=none ctermfg=236
-hi StatusLine cterm=none ctermbg=none ctermfg=148
-au InsertEnter * hi StatusLine ctermbg=148 ctermfg=232
-au InsertLeave * hi StatusLine ctermbg=none ctermfg=148
-
-" Highlight trailing spaces in annoying red
-hi ExtraWhitespace ctermbg=1
-mat ExtraWhitespace /\s\+$/
-au BufWinEnter * mat ExtraWhitespace /\s\+$/
-au InsertEnter * mat ExtraWhitespace /\s\+\%#\@<!$/
-au InsertLeave * mat ExtraWhitespace /\s\+$/
-au BufWinLeave * call clearmatches()
-
-" Keys mapping
+hi StatusLine cterm=none ctermbg=15 ctermfg=242
+hi StatusLineNC cterm=none ctermbg=none ctermfg=232
+hi IncSearch cterm=bold ctermbg=220 ctermfg=236
+hi User1 cterm=none ctermbg=15 ctermfg=242
+hi User2 cterm=bold ctermbg=15 ctermfg=232
+hi User3 cterm=none ctermbg=15 ctermfg=1
+" }}}
+" Keys mapping					        	                                             {{{
+" --------------------------------------------------------------------------------
 let g:mapleader=' '
-ino jk <esc>
 nm <c-j> <c-w>j
 nm <c-k> <c-w>k
 nm <c-h> <c-w>h
@@ -123,40 +124,90 @@ vm > >gv
 nm <cr> :noh<cr>
 nn ; :
 nn ! :!
-nn <silent> <leader>+ :exe "res " . (winheight(0) * 3/2)<cr>
-nn <silent> <leader>- :exe "res " . (winheight(0) * 2/3)<cr>
+" }}}
+" Arpeggio setup					        	                                           {{{
+" --------------------------------------------------------------------------------
+let g:arpeggio_timeoutlen=100
 
+fu! s:ArpeggioDefault()
+	Arpeggio ino jk <esc>
+endf
+
+au vimenter * call s:ArpeggioDefault()
+" }}}
+" EasyAlign setup					        	                                           {{{
+" --------------------------------------------------------------------------------
+vm <cr> <plug>(EasyAlign)
+" }}}
+" Syntastic setup					        	                                           {{{
+" --------------------------------------------------------------------------------
+let g:syntastic_check_on_open=1
+let g:syntastic_check_on_wq=0
+let g:syntastic_enable_signs=0
+" }}}
+" JavaScript syntax setup					        	                                   {{{
+" --------------------------------------------------------------------------------
+let g:javascript_enable_domhtmlcss=1
+" }}}
+" Unite setup					        	                                               {{{
+" --------------------------------------------------------------------------------
+nn <leader>p :Unite -no-split -start-insert file_rec/async:!<cr>
+nn <leader>y :Unite history/yank<cr>
+nn <leader>s :Unite -quick-match buffer<cr>
+nn <leader>/ :Unite grep:.<cr>
+let g:unite_source_history_yank_enable=1
+let g:unite_prompt='→ '
+let g:unite_split_rule='topleft'
+let g:unite_data_directory=$HOME.'/.vim/tmp/unite'
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#filters#sorter_default#use(['sorter_rank'])
+call unite#custom_source('file_rec/async,file_rec,file_mru,file,buffer,grep',
+			\ 'ignore_pattern', join([
+			\ '\.git/',
+			\ '\.svn/',
+			\ '\.hg/',
+			\ '\.cache/',
+			\ 'tmp/',
+			\ 'node_modules/',
+			\ 'vendor/',
+			\ 'bower_components/',
+			\ '.sass-cache',
+			\ ], '\|'))
+let s:ag_opts = '-SU --hidden --nocolor --nogroup '.
+			\ '--ignore ".git" '.
+			\ '--ignore ".svn" '.
+			\ '--ignore ".hg" '.
+			\ '--ignore ".DS_Store" '.
+			\ '--ignore ".cache" '.
+			\ '--ignore "bower_components" '.
+			\ '--ignore "node_modules" '.
+			\ '--ignore "vendor" '.
+			\ '--ignore "*.ttf" '.
+			\ '--ignore "*.png" '.
+			\ '--ignore "*.jpg" '.
+			\ '--ignore "*.gif" '.
+			\ '--ignore "**/*.pyc"'
+if executable('ag')
+	let g:unite_source_rec_async_command='ag --follow '.s:ag_opts.' -g ""'
+	let g:unite_source_grep_command = 'ag'
+	let g:unite_source_grep_default_opts = '-i --line-numbers '.s:ag_opts
+	let g:unite_source_grep_recursive_opt = ''
+en
+
+fu! s:unite_settings()
+	im <buffer> <esc> <plug>(unite_exit)
+	im <buffer> <c-j> <plug>(unite_select_next_line)
+	im <buffer> <c-k> <plug>(unite_select_previous_line)
+endf
+
+au filetype unite call s:unite_settings()
+" }}}
+" Note      					        	                                               {{{
+" --------------------------------------------------------------------------------
 " Default vim key binding for autocomplete
 " <c-x><c-o> for omnicompletion
 " <c-x><c-f> for pathcompletion
 " <c-x><c-l> for whole line completion
 " <c-n> for next match keyword
 " <c-p> for previous match keyword
-
-" Plugin settings
-vm <cr> <plug>(EasyAlign)
-nm <c-n> :NERDTreeToggle<cr>
-let NERDTreeHijackNetrw=1
-let g:javascript_enable_domhtmlcss=1
-let g:syntastic_check_on_open=1
-let g:syntastic_check_on_wq=0
-let g:syntastic_enable_signs=0
-let g:ctrlp_use_caching=1
-let g:ctrlp_clear_cache_on_exit=1
-let g:ctrlp_cache_dir=$HOME.'/.cache/ctrlp'
-let g:ctrlp_by_filename=1
-let g:ctrlp_regexp=1
-let g:ctrlp_switch_buffer=0
-let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$|\.cache$|\DS_Store$|\node_modules$|\bower_components$'
-if executable('ag')
-	let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
-				\ --ignore .git
-				\ --ignore .svn
-				\ --ignore .hg
-				\ --ignore .DS_Store
-				\ --ignore .cache
-				\ --ignore node_modules
-				\ --ignore bower_components
-				\ --ignore "**/*.pyc"
-				\ -g ""'
-en
+" }}}
