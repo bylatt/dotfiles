@@ -1,46 +1,38 @@
-" NeoBundle Settings                                                           {{{
-" --------------------------------------------------------------------------------
+" NeoBundle Settings            {{{
+" ---------------------------------
 se rtp+=$HOME/.vim/bundle/neobundle.vim/
 call neobundle#begin(expand($HOME.'/.vim/bundle/'))
 NeoBundleFetch 'shougo/neobundle.vim'
 NeoBundle 'shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'shougo/unite.vim'
-NeoBundle 'vim-scripts/summerfruit256.vim'
-NeoBundle 'vim-scripts/desert256.vim'
-NeoBundle 'vim-scripts/xoria256.vim'
+NeoBundle 'itchyny/landscape.vim'
 NeoBundle 'raimondi/delimitmate'
 NeoBundle 'scrooloose/syntastic'
+NeoBundle 'ervandew/supertab'
+NeoBundle 'tmhedberg/matchit'
 NeoBundle 'kana/vim-arpeggio', {'build': {'unix': 'make'}}
-NeoBundle 'edsono/vim-matchit'
-NeoBundle 'junegunn/vim-easy-align'
+NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'christoomey/vim-tmux-navigator'
-NeoBundle 'thoughtbot/vim-rspec'
+NeoBundle 'junegunn/vim-easy-align'
+NeoBundle 'plasticboy/vim-markdown'
+NeoBundle 'sickill/vim-pasta'
 NeoBundle 'vim-ruby/vim-ruby'
-NeoBundle 'tpope/vim-projectionist'
 NeoBundle 'tpope/vim-speeddating'
 NeoBundle 'tpope/vim-commentary'
-NeoBundle 'tpope/vim-unimpaired'
-NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-markdown'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-abolish'
-NeoBundle 'tpope/vim-bundler'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-vinegar'
-NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-rbenv'
-NeoBundle 'tpope/vim-rails'
-NeoBundle 'tpope/vim-rake'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'burnettk/vim-angular'
 NeoBundle 'mxw/vim-jsx'
 call neobundle#end()
 " }}}
-" Vim Settings                                                                 {{{
-" --------------------------------------------------------------------------------
+" Vim Settings                  {{{
+" ---------------------------------
 se nocp
 se sh=/bin/zsh
 se enc=utf-8 tenc=utf-8 fenc=utf-8
@@ -48,7 +40,7 @@ se t_Co=256
 se t_ut=
 se t_vb=
 se bg=dark
-se noet sta sw=2 ts=2 sts=2 ai si
+se et sta sw=2 ts=2 sts=2 ai si
 se nowrap nospell
 se bs=2
 se ls=2
@@ -76,43 +68,53 @@ se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*
 se stl=%1*%{getcwd()}/%2*%f\ %1*%{fugitive#head()}\ %m\ %3*%{SyntasticStatuslineFlag()}\ %1*%=\ →\ %Y
 se sb spr
 se tf to tm=1000 ttm=100
-se fen fdm=syntax fdl=100
+se fen fdm=syntax fdl=4
 se cole=0 cocu=i
 se history=100
 se clipboard+=unnamed
 "" }}}
-" Colors and syntax						                                                 {{{
-" --------------------------------------------------------------------------------
+" Color and Syntax              {{{
+" ---------------------------------
 if has('gui_running')
-	se gfn=Inconsolata\ LGC:h14
+	se gfn=Inconsolata\ LGC:h15
 	se go-=m
 	se go-=T
 	se go-=r
 	se go-=L
-	colo summerfruit256
-el
-	colo desert256
 en
 filet plugin indent on
 syntax on
+colo landscape
 " }}}
-" Improve color scheme						                                             {{{
-" --------------------------------------------------------------------------------
+" Improve landscape color       {{{
+" ---------------------------------
 hi Normal ctermbg=none
-hi NonText cterm=none ctermbg=none ctermfg=236
+hi MatchParen cterm=bold
+hi TabLineSel cterm=bold
+hi Title cterm=bold
+hi DiffText cterm=bold
+hi DiffDelete cterm=bold
+hi Keyword cterm=bold
+hi Todo cterm=bold
+hi Function cterm=bold
+hi Statement cterm=bold
+hi Type cterm=bold
+hi ErrorMsg cterm=bold
+hi VisualNOS cterm=bold,underline
+hi NonText cterm=bold ctermbg=none ctermfg=236
 hi SpecialKey cterm=none ctermbg=none ctermfg=236
 hi CursorLine cterm=none ctermbg=none
 hi CursorLineNr cterm=none ctermbg=none
 hi LineNr cterm=none ctermbg=none ctermfg=236
+hi IncSearch cterm=bold ctermbg=220 ctermfg=236
 hi StatusLine cterm=none ctermbg=15 ctermfg=242
 hi StatusLineNC cterm=none ctermbg=none ctermfg=232
-hi IncSearch cterm=bold ctermbg=220 ctermfg=236
 hi User1 cterm=none ctermbg=15 ctermfg=242
 hi User2 cterm=bold ctermbg=15 ctermfg=232
 hi User3 cterm=none ctermbg=15 ctermfg=1
 " }}}
-" Keys mapping					        	                                             {{{
-" --------------------------------------------------------------------------------
+" Keys mapping                  {{{
+" ---------------------------------
 let g:mapleader=' '
 nm <c-j> <c-w>j
 nm <c-k> <c-w>k
@@ -124,32 +126,40 @@ nm <cr> :noh<cr>
 nn ; :
 nn ! :!
 " }}}
-" Arpeggio setup					        	                                           {{{
-" --------------------------------------------------------------------------------
+" Arpeggio setup                {{{
+" ---------------------------------
 let g:arpeggio_timeoutlen=100
 
 fu! s:ArpeggioDefault()
 	Arpeggio ino jk <esc>
 endf
 
-au vimenter * call s:ArpeggioDefault()
+fu! s:ArpeggioInit()
+	call s:ArpeggioDefault()
+endf
+
+au vimenter * call s:ArpeggioInit()
 " }}}
-" EasyAlign setup					        	                                           {{{
-" --------------------------------------------------------------------------------
+" Textobj user setup            {{{
+" ---------------------------------
+" }}}
+" EasyAlign setup               {{{
+" ---------------------------------
 vm <cr> <plug>(EasyAlign)
 " }}}
-" Syntastic setup					        	                                           {{{
-" --------------------------------------------------------------------------------
+" Syntastic setup               {{{
+" ---------------------------------
 let g:syntastic_check_on_open=1
 let g:syntastic_check_on_wq=0
 let g:syntastic_enable_signs=0
+let g:syntastic_ruby_checkers=['mri', 'rubocop']
 " }}}
-" JavaScript syntax setup					        	                                   {{{
-" --------------------------------------------------------------------------------
+" JavaScript syntax setup       {{{
+" ---------------------------------
 let g:javascript_enable_domhtmlcss=1
 " }}}
-" Unite setup					        	                                               {{{
-" --------------------------------------------------------------------------------
+" Unite setup                   {{{
+" ---------------------------------
 nn <leader>p :Unite -no-split -start-insert file_rec/async:!<cr>
 nn <leader>y :Unite history/yank<cr>
 nn <leader>s :Unite -quick-match buffer<cr>
@@ -201,8 +211,8 @@ endf
 
 au filetype unite call s:unite_settings()
 " }}}
-" Note      					        	                                               {{{
-" --------------------------------------------------------------------------------
+" Note                          {{{
+" ---------------------------------
 " Default vim key binding for autocomplete
 " <c-x><c-o> for omnicompletion
 " <c-x><c-f> for pathcompletion
@@ -210,7 +220,12 @@ au filetype unite call s:unite_settings()
 " <c-n> for next match keyword
 " <c-p> for previous match keyword
 " }}}
-" Filetype						                                                         {{{
-" --------------------------------------------------------------------------------
-autocmd filetype * setlocal fo-=c fo-=r fo-=o
+" Filetype                      {{{
+" ---------------------------------
+au filetype * setl fo-=c fo-=r fo-=o
+au filetype vim setl et si sw=2 ts=2 sts=2 fdm=marker fdl=0
+au filetype zsh setl et si sw=2 ts=2 sts=2 fdm=marker fdl=0
+au filetype php setl et si sw=2 ts=2 sts=2 fdm=syntax
+au filetype ruby setl et si sw=2 ts=2 sts=2 fdm=syntax
+au filetype python setl et nosi sw=4 ts=4 sts=4 fdm=syntax
 " }}}
