@@ -5,13 +5,14 @@ call neobundle#begin(expand($HOME.'/.vim/bundle/'))
 NeoBundleFetch 'shougo/neobundle.vim'
 NeoBundle 'shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'shougo/unite.vim'
-NeoBundle 'itchyny/landscape.vim'
+NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'raimondi/delimitmate'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'ervandew/supertab'
 NeoBundle 'tmhedberg/matchit'
 NeoBundle 'kana/vim-arpeggio', {'build': {'unix': 'make'}}
 NeoBundle 'kana/vim-textobj-user'
+NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'junegunn/vim-easy-align'
 NeoBundle 'plasticboy/vim-markdown'
@@ -84,9 +85,9 @@ if has('gui_running')
 en
 filet plugin indent on
 syntax on
-colo landscape
+colo jellybeans
 " }}}
-" Improve landscape color       {{{
+" Improve color scheme          {{{
 " ---------------------------------
 hi Normal ctermbg=none
 hi MatchParen cterm=bold
@@ -107,9 +108,9 @@ hi CursorLine cterm=none ctermbg=none
 hi CursorLineNr cterm=none ctermbg=none
 hi LineNr cterm=none ctermbg=none ctermfg=236
 hi IncSearch cterm=bold ctermbg=220 ctermfg=236
-hi StatusLine cterm=none ctermbg=15 ctermfg=242
+hi StatusLine cterm=none ctermbg=15 ctermfg=246
 hi StatusLineNC cterm=none ctermbg=none ctermfg=232
-hi User1 cterm=none ctermbg=15 ctermfg=242
+hi User1 cterm=none ctermbg=15 ctermfg=246
 hi User2 cterm=bold ctermbg=15 ctermfg=232
 hi User3 cterm=none ctermbg=15 ctermfg=1
 " }}}
@@ -153,6 +154,9 @@ let g:syntastic_check_on_open=1
 let g:syntastic_check_on_wq=0
 let g:syntastic_enable_signs=0
 let g:syntastic_ruby_checkers=['mri', 'rubocop']
+let g:syntastic_haml_checkers=['haml']
+let g:syntastic_sass_checkers=['sass']
+let g:syntastic_python_checkers=['python', 'flake8']
 " }}}
 " JavaScript syntax setup       {{{
 " ---------------------------------
