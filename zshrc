@@ -5,53 +5,6 @@ if [ -f /etc/profile ]; then
 	source /etc/profile
 fi
 # }}}
-# iTerm2 integration         {{{
-# ------------------------------
-if [[ -o login ]]; then
-  if [ x"$TERM" != "xscreen" ]; then
-    # Indicates start of command output. Runs just before command executes.
-    iterm2_before_cmd_executes() {
-      printf "\033]133;C\007"
-    }
-
-    # Report return code of command; runs after command finishes but before prompt
-    iterm2_after_cmd_executes() {
-      printf "\033]133;D;$?\007"
-      printf "\033]1337;RemoteHost=$USER@`hostname -f`\007\033]1337;CurrentDir=$PWD\007"
-    }
-
-    # Mark start of prompt
-    iterm2_prompt_start() {
-      printf "\033]133;A\007"
-    }
-
-    # Mark end of prompt
-    iterm2_prompt_end() {
-      printf "\033]133;B\007"
-    }
-
-    PS1="%{$(iterm2_prompt_start)%}$PS1%{$(iterm2_prompt_end)%}"
-
-    iterm2_precmd() {
-      iterm2_after_cmd_executes
-    }
-
-    iterm2_preexec() {
-      iterm2_before_cmd_executes
-    }
-
-    [[ -z $precmd_functions ]] && precmd_functions=()
-    precmd_functions=($precmd_functions iterm2_precmd)
-
-    [[ -z $preexec_functions ]] && preexec_functions=()
-    preexec_functions=($preexec_functions iterm2_preexec)
-
-    printf "\033]1337;RemoteHost=$USER@`hostname -f`\007"
-    printf "\033]1337;CurrentDir=$PWD\007"
-    printf "\033]1337;ShellIntegrationVersion=1\007"
-  fi
-fi
-# }}}
 # Export                     {{{
 # ------------------------------
 export LANG="en_US.UTF-8"
@@ -85,7 +38,7 @@ alias d="df -h"
 # }}}
 # ZSH substring search       {{{
 # ------------------------------
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=magenta,fg=white,bold'
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=cyan,fg=white,bold'
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=red,fg=white,bold'
 HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS='i'
 
@@ -279,12 +232,12 @@ fi
 # ZSH specific settings      {{{
 # ------------------------------
 autoload -U compinit promptinit colors vcs_info
-compinit -i
+compinit -d $HOME/.zsh_compdump
 promptinit
 colors
 vcs_info
 
-setopt no_beep
+unsetopt beep
 unsetopt correct_all
 setopt correct
 setopt auto_cd
@@ -339,6 +292,6 @@ zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 local smiley="%(?,:),:()"
 
-PROMPT='%F{cyan}%B→%b%f %F{green}%B%U%1d%u%b%f %{$reset_color%}'
+PROMPT='%B%F{green}%U%1d%u%f%F{cyan}${smiley}%f%b %{$reset_color%}'
 RPROMPT=''
 # }}}
