@@ -20,7 +20,7 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
-export PATH="$HOME/.rbenv/bin:$HOME/.pyenv/bin:$HOME/.ndenv/bin:/usr/local/php5/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$HOME/.pyenv/bin:$HOME/.ndenv/bin:$PATH"
 
 if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; source "$HOME/.rbenv/completions/rbenv.zsh"; fi
 if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; source "$HOME/.pyenv/completions/pyenv.zsh"; fi

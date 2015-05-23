@@ -48,7 +48,7 @@ se sc
 se ar aw
 se hid
 se bin
-se noeol
+se eol
 se so=4
 se gd
 se is scs ic hls inf
@@ -56,7 +56,7 @@ se sm mat=10
 se ws
 se magic
 se nobk nowb noswf
-se list lcs=tab:\ \ ,trail:\  ",eol:\
+se list lcs=tab:\ \ ,trail:\ ,extends:# ",eol:\,nbsp:.
 se ofu=syntaxcomplete#Complete cfu=syntaxcomplete#Complete
 se cot=longest,menuone
 se wmnu wim=list:longest,full wig=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*
