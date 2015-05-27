@@ -19,12 +19,15 @@
 [push]
 	default = simple
 [alias]
-	in = init
-	ll = log --color --graph --pretty=format:'%C(red)%h%C(reset) - %C(yellow)%d%C(reset) %s %C(green)%cr%C(reset) %C(bold blue)<%an - %ae>%C(reset)'
-	st = status -sb
+	aa = add --all
 	cm = commit -m
 	co = checkout
 	cl = clone
-	aa = add --all
+	df = diff
+	fe = fetch
+	in = init
+	ll = log --color --graph --pretty=format:'%C(red)%h%C(reset) - %C(yellow)%d%C(reset) %s %C(green)%cr%C(reset) %C(bold blue)<%an - %ae>%C(reset)'
+	mg = merge
 	ps = push
 	pu = pull
+	st = status -sb

@@ -20,7 +20,7 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
-export PATH="$HOME/.rbenv/bin:$HOME/.pyenv/bin:$HOME/.ndenv/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$HOME/.pyenv/bin:$HOME/.ndenv/bin:/usr/local/php5/bin:$PATH"
 
 if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; source "$HOME/.rbenv/completions/rbenv.zsh"; fi
 if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; source "$HOME/.pyenv/completions/pyenv.zsh"; fi
@@ -28,17 +28,25 @@ if (( $+commands[ndenv] )); then eval "$(ndenv init -)"; source "$HOME/.ndenv/co
 # }}}
 # Alias                      {{{
 # ------------------------------
-alias l="ls -Glah"
-alias g="git"
-alias v="vim"
-alias a="ag"
-alias c="clear"
-alias e="exit"
-alias d="df -h"
+alias a='ag'
+alias c='clear'
+alias d='df -h'
+alias e='exit'
+alias g='git'
+alias l='ls -GFlAhp'
+alias t='tmux'
+alias v='vim'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias mkdir='mkdir -pv'
+alias ..='cd ../'
+alias ...='cd ../../'
+mcd() { mkdir -p "$1" && cd "$1"; }
+trash() { mv "$@" ~/.Trash; }
 # }}}
 # ZSH substring search       {{{
 # ------------------------------
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=cyan,fg=white,bold'
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=green,fg=white,bold'
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=red,fg=white,bold'
 HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS='i'
 
@@ -283,7 +291,7 @@ zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
-zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:*' enable git svn
 zstyle ':vcs_info:*:*' check-for-changes true
 zstyle ':vcs_info:*:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
