@@ -201,7 +201,7 @@ let g:syntastic_python_checkers=['python', 'flake8']
 " ---------------------------------
 let g:javascript_enable_domhtmlcss=1
 " }}}
-" Unite i                       {{{
+" Unite                         {{{
 " ---------------------------------
 nnoremap <leader>p :Unite -no-split -start-insert file_rec/async:!<cr>
 nnoremap <leader>y :Unite history/yank<cr>
