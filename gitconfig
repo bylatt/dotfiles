@@ -2,7 +2,7 @@
 	name = Lattapon Yodsuwan
 	email = i@clozed2u.com
 [core]
-	autocrlf = input
+	autocrlf = false
 	safecrlf = true
 	editor = vim
 [apply]
@@ -20,14 +20,16 @@
 	default = simple
 [alias]
 	aa = add --all
+	bl = blame -C
 	cm = commit -m
 	co = checkout
 	cl = clone
-	df = diff
+	df = diff --word-diff
 	fe = fetch
 	in = init
 	ll = log --color --graph --pretty=format:'%C(red)%h%C(reset) - %C(yellow)%d%C(reset) %s %C(green)%cr%C(reset) %C(bold blue)<%an - %ae>%C(reset)'
 	mg = merge
 	ps = push
 	pu = pull
+	rm = rm -rf
 	st = status -sb

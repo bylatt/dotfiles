@@ -5,13 +5,13 @@ call neobundle#begin(expand($HOME.'/.vim/bundle/'))
 NeoBundleFetch 'shougo/neobundle.vim'
 NeoBundle 'shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'shougo/unite.vim'
-NeoBundle 'goatslacker/mango.vim'
 NeoBundle 'raimondi/delimitmate'
 NeoBundle 'ervandew/supertab'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'tmhedberg/matchit'
 NeoBundle 'sirver/ultisnips'
 NeoBundle 'christoomey/vim-tmux-navigator'
+NeoBundle 'bling/vim-airline'
 NeoBundle 'honza/vim-snippets'
 NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'sickill/vim-pasta'
@@ -21,8 +21,9 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'crusoexia/vim-javascript-lib'
-NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'chriskempson/base16-vim'
 call neobundle#end()
 " }}}
 " Vim Settings                  {{{
@@ -58,7 +59,7 @@ set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
 set completeopt=longest,menuone
 set wildmenu wildmode=list:longest,full wildignore=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*
-set statusline=%1*%{getcwd()}/%2*%f\ %1*%{fugitive#head()}\ %m\ %3*%{SyntasticStatuslineFlag()}\ %1*%=\ →\ %Y
+set statusline=%F%r%h%w\ %{fugitive#head()}\ %m\ %{SyntasticStatuslineFlag()}\ [%l,%c]\ [%L,%p%%]
 set splitbelow splitright
 set ttyfast timeout timeoutlen=1000 ttimeoutlen=200
 set foldenable foldmethod=syntax foldlevel=10
@@ -81,34 +82,43 @@ if has('gui_running')
 endif
 filetype plugin indent on
 syntax on
-colorscheme mango
+colorscheme base16-railscasts
 " }}}
 " Improve color scheme          {{{
 " ---------------------------------
-highlight Normal ctermbg=none
-highlight MatchParen cterm=bold
-highlight TabLineSel cterm=bold
-highlight Title cterm=bold
-highlight DiffText cterm=bold
-highlight DiffDelete cterm=bold
-highlight Keyword cterm=bold
-highlight Todo cterm=bold
-highlight Function cterm=bold
-highlight Statement cterm=bold
-highlight Type cterm=bold
-highlight ErrorMsg cterm=bold
-highlight VisualNOS cterm=bold,underline
-highlight NonText cterm=bold ctermbg=none ctermfg=236
-highlight SpecialKey cterm=none ctermbg=none ctermfg=236
-highlight CursorLine cterm=none ctermbg=none
-highlight CursorLineNr cterm=none ctermbg=none
-highlight LineNr cterm=none ctermbg=none ctermfg=240
-highlight IncSearch cterm=bold ctermbg=220 ctermfg=236
-highlight StatusLine cterm=none ctermbg=15 ctermfg=246
-highlight StatusLineNC cterm=none ctermbg=none ctermfg=232
-highlight User1 cterm=none ctermbg=15 ctermfg=246
-highlight User2 cterm=bold ctermbg=15 ctermfg=232
-highlight User3 cterm=none ctermbg=15 ctermfg=1
+" highlight Normal ctermbg=none
+" highlight MatchParen cterm=bold
+" highlight TabLineSel cterm=bold
+" highlight Title cterm=bold
+" highlight DiffText cterm=bold
+" highlight DiffDelete cterm=bold
+" highlight Keyword cterm=bold
+" highlight Todo cterm=bold
+" highlight Function cterm=bold
+" highlight Statement cterm=bold
+" highlight Type cterm=bold
+" highlight ErrorMsg cterm=bold
+" highlight VisualNOS cterm=bold,underline
+" highlight NonText cterm=bold
+highlight clear SignColumn
+highlight VertSplit ctermbg=236
+highlight ColorColumn ctermbg=237
+highlight LineNr ctermbg=236 ctermfg=240
+highlight CursorLineNr ctermbg=236 ctermfg=240
+highlight CursorLine ctermbg=236
+highlight StatusLineNC ctermbg=238 ctermfg=0
+highlight StatusLine ctermbg=240 ctermfg=12
+highlight IncSearch cterm=bold ctermbg=3 ctermfg=1
+highlight Search ctermbg=1 ctermfg=3
+highlight Visual ctermbg=3 ctermfg=0
+highlight Pmenu ctermbg=240 ctermfg=12
+highlight PmenuSel ctermbg=3 ctermfg=1
+highlight SpellBad ctermbg=0 ctermfg=1
+
+if version >= 700
+  autocmd InsertEnter * highlight StatusLine ctermfg=235 ctermbg=2
+  autocmd InsertLeave * highlight StatusLine ctermbg=240 ctermfg=12
+endif
 " }}}
 " Keys mapping                  {{{
 " ---------------------------------
@@ -192,10 +202,17 @@ let g:UltiSnipsEditSplit='vertical'
 let g:syntastic_check_on_open=1
 let g:syntastic_check_on_wq=0
 let g:syntastic_enable_signs=0
-let g:syntastic_ruby_checkers=['mri', 'rubocop']
 let g:syntastic_haml_checkers=['haml']
 let g:syntastic_sass_checkers=['sass']
+let g:syntastic_ruby_checkers=['mri', 'rubocop']
 let g:syntastic_python_checkers=['python', 'flake8']
+let g:syntastic_javascript_checkers=['standard']
+" }}}
+" Airline                       {{{
+" ---------------------------------
+let g:airline_powerline_fonts=1
+let g:airline_left_sep=''
+let g:airline_right_sep=''
 " }}}
 " JavaScript syntax             {{{
 " ---------------------------------
@@ -275,4 +292,5 @@ autocmd filetype vim setlocal expandtab smartindent shiftwidth=2 tabstop=2 softt
 autocmd filetype php setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
 autocmd filetype ruby setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
 autocmd filetype python setlocal expandtab nosmartindent shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
+autocmd filetype javascript setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
 " }}}

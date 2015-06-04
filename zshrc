@@ -1,6 +1,6 @@
 # Fix duplicate path in TMUX {{{
 # ------------------------------
-if [ -f /etc/profile ]; then
+if [ -f "/etc/profile" ]; then
 	PATH=""
 	source /etc/profile
 fi
@@ -25,6 +25,8 @@ export PATH="$HOME/.rbenv/bin:$HOME/.pyenv/bin:$HOME/.ndenv/bin:/usr/local/php5/
 if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; source "$HOME/.rbenv/completions/rbenv.zsh"; fi
 if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; source "$HOME/.pyenv/completions/pyenv.zsh"; fi
 if (( $+commands[ndenv] )); then eval "$(ndenv init -)"; source "$HOME/.ndenv/completions/ndenv.zsh"; fi
+if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then source "$HOME/.iterm2_shell_integration.zsh"; fi
+if [ -f "$HOME/.zsh-history-substring-search.zsh" ]; then source "$HOME/.zsh-history-substring-search.zsh"; fi
 # }}}
 # Alias                      {{{
 # ------------------------------
@@ -43,199 +45,6 @@ alias ..='cd ../'
 alias ...='cd ../../'
 mcd() { mkdir -p "$1" && cd "$1"; }
 trash() { mv "$@" ~/.Trash; }
-# }}}
-# ZSH substring search       {{{
-# ------------------------------
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=green,fg=white,bold'
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=red,fg=white,bold'
-HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS='i'
-
-function history-substring-search-up() {
-_history-substring-search-begin
-_history-substring-search-up-history ||
-  _history-substring-search-up-buffer ||
-  _history-substring-search-up-search
-_history-substring-search-end
-}
-
-function history-substring-search-down() {
-_history-substring-search-begin
-_history-substring-search-down-history ||
-  _history-substring-search-down-buffer ||
-  _history-substring-search-down-search
-_history-substring-search-end
-}
-
-zle -N history-substring-search-up
-zle -N history-substring-search-down
-
-zmodload -F zsh/parameter
-
-if [[ $+functions[_zsh_highlight] -eq 0 ]]; then
-  function _zsh_highlight() {
-  if [[ $KEYS == [[:print:]] ]]; then
-    region_highlight=()
-  fi
-}
-_zsh_highlight_bind_widgets()
-{
-  zmodload zsh/zleparameter 2>/dev/null || {
-  echo 'zsh-syntax-highlighting: failed loading zsh/zleparameter.' >&2
-  return 1
-}
-local cur_widget
-for cur_widget in ${${(f)"$(builtin zle -la)"}:#(.*|_*|orig-*|run-help|which-command|beep|yank*)}; do
-  case $widgets[$cur_widget] in
-    user:$cur_widget|user:_zsh_highlight_widget_*);;
-    user:*) eval "zle -N orig-$cur_widget ${widgets[$cur_widget]#*:}; \
-      _zsh_highlight_widget_$cur_widget() { builtin zle orig-$cur_widget -- \"\$@\" && _zsh_highlight }; \
-      zle -N $cur_widget _zsh_highlight_widget_$cur_widget";;
-  completion:*) eval "zle -C orig-$cur_widget ${${widgets[$cur_widget]#*:}/:/ }; \
-    _zsh_highlight_widget_$cur_widget() { builtin zle orig-$cur_widget -- \"\$@\" && _zsh_highlight }; \
-    zle -N $cur_widget _zsh_highlight_widget_$cur_widget";;
-builtin) eval "_zsh_highlight_widget_$cur_widget() { builtin zle .$cur_widget -- \"\$@\" && _zsh_highlight }; \
-  zle -N $cur_widget _zsh_highlight_widget_$cur_widget";;
-        *) echo "zsh-syntax-highlighting: unhandled ZLE widget '$cur_widget'" >&2 ;;
-      esac
-    done
-  }
-  _zsh_highlight_bind_widgets
-fi
-
-function _history-substring-search-begin() {
-setopt localoptions extendedglob
-_history_substring_search_refresh_display=
-_history_substring_search_query_highlight=
-if [[ -z $BUFFER || $BUFFER != $_history_substring_search_result ]]; then
-  _history_substring_search_query=$BUFFER
-  _history_substring_search_query_escaped=${BUFFER//(#m)[\][()|\\*?#<>~^]/\\$MATCH}
-  _history_substring_search_matches=(${(kOa)history[(R)(#$HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS)*${_history_substring_search_query_escaped}*]})
-  _history_substring_search_matches_count=$#_history_substring_search_matches
-  _history_substring_search_matches_count_plus=$(( _history_substring_search_matches_count + 1 ))
-  _history_substring_search_matches_count_sans=$(( _history_substring_search_matches_count - 1 ))
-  if [[ $WIDGET == history-substring-search-down ]]; then
-    _history_substring_search_match_index=$_history_substring_search_matches_count
-  else
-    _history_substring_search_match_index=$_history_substring_search_matches_count_plus
-  fi
-fi
-}
-
-function _history-substring-search-end() {
-setopt localoptions extendedglob
-_history_substring_search_result=$BUFFER
-if [[ $_history_substring_search_refresh_display -eq 1 ]]; then
-  region_highlight=()
-  CURSOR=${#BUFFER}
-fi
-_zsh_highlight
-if [[ -n $_history_substring_search_query_highlight && -n $_history_substring_search_query ]]; then
-  : ${(S)BUFFER##(#m$HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS)($_history_substring_search_query##)}
-  local begin=$(( MBEGIN - 1 ))
-  local end=$(( begin + $#_history_substring_search_query ))
-  region_highlight+=("$begin $end $_history_substring_search_query_highlight")
-fi
-return 0
-}
-
-function _history-substring-search-up-buffer() {
-local buflines XLBUFFER xlbuflines
-buflines=(${(f)BUFFER})
-XLBUFFER=$LBUFFER"x"
-xlbuflines=(${(f)XLBUFFER})
-if [[ $#buflines -gt 1 && $CURSOR -ne $#BUFFER && $#xlbuflines -ne 1 ]]; then
-  zle up-line-or-history
-  return 0
-fi
-return 1
-}
-
-function _history-substring-search-down-buffer() {
-local buflines XRBUFFER xrbuflines
-buflines=(${(f)BUFFER})
-XRBUFFER="x"$RBUFFER
-xrbuflines=(${(f)XRBUFFER})
-if [[ $#buflines -gt 1 && $CURSOR -ne $#BUFFER && $#xrbuflines -ne 1 ]]; then
-  zle down-line-or-history
-  return 0
-fi
-return 1
-}
-
-function _history-substring-search-up-history() {
-if [[ -z $_history_substring_search_query ]]; then
-  if [[ $HISTNO -eq 1 ]]; then
-    BUFFER=
-  else
-    zle up-line-or-history
-  fi
-  return 0
-fi
-return 1
-}
-
-function _history-substring-search-down-history() {
-if [[ -z $_history_substring_search_query ]]; then
-  if [[ $HISTNO -eq 1 && -z $BUFFER ]]; then
-    BUFFER=${history[1]}
-    _history_substring_search_refresh_display=1
-  else
-    zle down-line-or-history
-  fi
-  return 0
-fi
-return 1
-}
-
-function _history-substring-search-not-found() {
-_history_substring_search_old_buffer=$BUFFER
-BUFFER=$_history_substring_search_query
-_history_substring_search_query_highlight=$HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND
-}
-
-function _history-substring-search-up-search() {
-_history_substring_search_refresh_display=1
-if [[ $_history_substring_search_match_index -ge 2 ]]; then
-  (( _history_substring_search_match_index-- ))
-  BUFFER=$history[$_history_substring_search_matches[$_history_substring_search_match_index]]
-  _history_substring_search_query_highlight=$HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND
-elif [[ $_history_substring_search_match_index -eq 1 ]]; then
-  (( _history_substring_search_match_index-- ))
-  _history-substring-search-not-found
-elif [[ $_history_substring_search_match_index -eq $_history_substring_search_matches_count_plus ]]; then
-  (( _history_substring_search_match_index-- ))
-  BUFFER=$_history_substring_search_old_buffer
-  _history_substring_search_query_highlight=$HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND
-else
-  _history-substring-search-not-found
-  return
-fi
-if [[ ! -o HIST_IGNORE_ALL_DUPS && -o HIST_FIND_NO_DUPS && $BUFFER == $_history_substring_search_result ]]; then
-  _history-substring-search-up-search
-fi
-}
-
-function _history-substring-search-down-search() {
-_history_substring_search_refresh_display=1
-if [[ $_history_substring_search_match_index -le $_history_substring_search_matches_count_sans ]]; then
-  (( _history_substring_search_match_index++ ))
-  BUFFER=$history[$_history_substring_search_matches[$_history_substring_search_match_index]]
-  _history_substring_search_query_highlight=$HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND
-elif [[ $_history_substring_search_match_index -eq $_history_substring_search_matches_count ]]; then
-  (( _history_substring_search_match_index++ ))
-  _history-substring-search-not-found
-elif [[ $_history_substring_search_match_index -eq 0 ]]; then
-  (( _history_substring_search_match_index++ ))
-  BUFFER=$_history_substring_search_old_buffer
-  _history_substring_search_query_highlight=$HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND
-else
-  _history-substring-search-not-found
-  return
-fi
-if [[ ! -o HIST_IGNORE_ALL_DUPS && -o HIST_FIND_NO_DUPS && $BUFFER == $_history_substring_search_result ]]; then
-  _history-substring-search-down-search
-fi
-}
 # }}}
 # ZSH specific settings      {{{
 # ------------------------------
@@ -300,6 +109,6 @@ zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 local smiley="%(?,:),:()"
 
-PROMPT='%B%F{green}%U%1d%u%f%F{cyan}${smiley}%f%b %{$reset_color%}'
+PROMPT='%B%F{green}%U%1d%u${smiley}%f%b %{$reset_color%}'
 RPROMPT=''
 # }}}
