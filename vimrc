@@ -5,13 +5,15 @@ call neobundle#begin(expand($HOME.'/.vim/bundle/'))
 NeoBundleFetch 'shougo/neobundle.vim'
 NeoBundle 'shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'shougo/unite.vim'
+NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'raimondi/delimitmate'
 NeoBundle 'ervandew/supertab'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'tmhedberg/matchit'
 NeoBundle 'sirver/ultisnips'
 NeoBundle 'christoomey/vim-tmux-navigator'
-NeoBundle 'bling/vim-airline'
+" NeoBundle 'bling/vim-airline'
+NeoBundle 'bronson/vim-trailing-whitespace'
 NeoBundle 'honza/vim-snippets'
 NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'sickill/vim-pasta'
@@ -23,7 +25,7 @@ NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'crusoexia/vim-javascript-lib'
-NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'fatih/vim-go'
 call neobundle#end()
 " }}}
 " Vim Settings                  {{{
@@ -82,6 +84,7 @@ if has('gui_running')
 endif
 filetype plugin indent on
 syntax on
+let g:base16colorspace=256
 colorscheme base16-railscasts
 " }}}
 " Improve color scheme          {{{
@@ -210,9 +213,7 @@ let g:syntastic_javascript_checkers=['standard']
 " }}}
 " Airline                       {{{
 " ---------------------------------
-let g:airline_powerline_fonts=1
-let g:airline_left_sep=''
-let g:airline_right_sep=''
+" let g:airline_powerline_fonts=1
 " }}}
 " JavaScript syntax             {{{
 " ---------------------------------

@@ -1,32 +1,37 @@
-# Fix duplicate path in TMUX {{{
+# Source files               {{{
 # ------------------------------
 if [ -f "/etc/profile" ]; then
 	PATH=""
-	source /etc/profile
+	source "/etc/profile"
+fi
+
+if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then source "$HOME/.iterm2_shell_integration.zsh"; fi
+if [ -f "$HOME/.zsh_search.zsh" ]; then source "$HOME/.zsh_search.zsh"; fi
+if [ -f "/usr/local/share/chruby/chruby.sh" ]; then
+  source "/usr/local/share/chruby/chruby.sh"
+  source "/usr/local/share/chruby/auto.sh"
+  chruby "ruby-2.2.2"
+fi
+if [ -f "/usr/local/share/gem_home/gem_home.sh" ]; then source "/usr/local/share/gem_home/gem_home.sh"; fi
+if [ -d "$HOME/.base16" ]; then
+  BASE16_SHELL="$HOME/.base16/base16-railscasts.dark.sh"
+  [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 fi
 # }}}
 # Export                     {{{
 # ------------------------------
 export LANG="en_US.UTF-8"
-export LC_COLLATE="en_US.UTF-8"
-export LC_CTYPE="en_US.UTF-8"
-export LC_MESSAGES="en_US.UTF-8"
-export LC_MONETARY="en_US.UTF-8"
-export LC_NUMERIC="en_US.UTF-8"
-export LC_TIME="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
-export PATH="$HOME/.rbenv/bin:$HOME/.pyenv/bin:$HOME/.ndenv/bin:/usr/local/php5/bin:$PATH"
-
-if (( $+commands[rbenv] )); then eval "$(rbenv init -)"; source "$HOME/.rbenv/completions/rbenv.zsh"; fi
-if (( $+commands[pyenv] )); then eval "$(pyenv init -)"; source "$HOME/.pyenv/completions/pyenv.zsh"; fi
-if (( $+commands[ndenv] )); then eval "$(ndenv init -)"; source "$HOME/.ndenv/completions/ndenv.zsh"; fi
-if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then source "$HOME/.iterm2_shell_integration.zsh"; fi
-if [ -f "$HOME/.zsh-history-substring-search.zsh" ]; then source "$HOME/.zsh-history-substring-search.zsh"; fi
+export NODEPATH="$HOME/.node"
+export PYTHONPATH="$HOME/.python"
+export GOROOT="$HOME/.go"
+export GOPATH="$HOME/.gocode"
+export PATH="$GOROOT/bin:$GOPATH/bin:$NODEPATH/bin:$PYTHONPATH/bin:$PATH"
 # }}}
 # Alias                      {{{
 # ------------------------------
