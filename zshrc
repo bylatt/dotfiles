@@ -1,21 +1,11 @@
 # Source files               {{{
 # ------------------------------
-if [ -f "/etc/profile" ]; then
-	PATH=""
-	source "/etc/profile"
-fi
-
-if [ -f "$HOME/.iterm2_shell_integration.zsh" ]; then source "$HOME/.iterm2_shell_integration.zsh"; fi
-if [ -f "$HOME/.zsh_search.zsh" ]; then source "$HOME/.zsh_search.zsh"; fi
-if [ -f "/usr/local/share/chruby/chruby.sh" ]; then
+if [ -f "/etc/zprofile" ]; then PATH=""; source "/etc/zprofile"; fi
+if [ -f "$HOME/.zsh_search" ]; then source "$HOME/.zsh_search"; fi
+if [ -d "/usr/local/share/chruby" ]; then
   source "/usr/local/share/chruby/chruby.sh"
   source "/usr/local/share/chruby/auto.sh"
   chruby "ruby-2.2.2"
-fi
-if [ -f "/usr/local/share/gem_home/gem_home.sh" ]; then source "/usr/local/share/gem_home/gem_home.sh"; fi
-if [ -d "$HOME/.base16" ]; then
-  BASE16_SHELL="$HOME/.base16/base16-railscasts.dark.sh"
-  [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 fi
 # }}}
 # Export                     {{{
@@ -27,11 +17,19 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
-export NODEPATH="$HOME/.node"
-export PYTHONPATH="$HOME/.python"
-export GOROOT="$HOME/.go"
-export GOPATH="$HOME/.gocode"
-export PATH="$GOROOT/bin:$GOPATH/bin:$NODEPATH/bin:$PYTHONPATH/bin:$PATH"
+if [ -d "$HOME/.node" ]; then
+  export NODEPATH="$HOME/.node"
+  export PATH="$NODEPATH/bin:$PATH"
+fi
+if [ -d "$HOME/.python" ]; then
+  export PYTHONPATH="$HOME/.python"
+  export PATH="$PYTHONPATH/bin:$PATH"
+fi
+if [ -d "$HOME/.go" ]; then
+  export GOROOT="$HOME/.go"
+  export GOPATH="$HOME/.gocode"
+  export PATH="$GOROOT/bin:$GOPATH/bin:$PATH"
+fi
 # }}}
 # Alias                      {{{
 # ------------------------------

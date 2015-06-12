@@ -5,17 +5,18 @@ call neobundle#begin(expand($HOME.'/.vim/bundle/'))
 NeoBundleFetch 'shougo/neobundle.vim'
 NeoBundle 'shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'shougo/unite.vim'
-NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'itchyny/landscape.vim'
+NeoBundle 'viniciusban/vim-github-colorscheme'
+NeoBundle 'editorconfig/editorconfig-vim'
 NeoBundle 'raimondi/delimitmate'
 NeoBundle 'ervandew/supertab'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'tmhedberg/matchit'
 NeoBundle 'sirver/ultisnips'
+NeoBundle 'majutsushi/tagbar'
 NeoBundle 'christoomey/vim-tmux-navigator'
-" NeoBundle 'bling/vim-airline'
-NeoBundle 'bronson/vim-trailing-whitespace'
 NeoBundle 'honza/vim-snippets'
-NeoBundle 'plasticboy/vim-markdown'
+NeoBundle 'gabrielelana/vim-markdown'
 NeoBundle 'sickill/vim-pasta'
 NeoBundle 'tpope/vim-commentary'
 NeoBundle 'tpope/vim-fugitive'
@@ -25,6 +26,7 @@ NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'crusoexia/vim-javascript-lib'
+NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'fatih/vim-go'
 call neobundle#end()
 " }}}
@@ -33,12 +35,21 @@ call neobundle#end()
 set nocompatible
 set sh=$SHELL
 set term=$TERM
-set encoding=utf-8 termencoding=utf-8 fileencoding=utf-8
+set encoding=utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
 set t_Co=256
 set t_ut=
 set t_vb=
 set background=dark
-set expandtab smarttab shiftwidth=2 tabstop=2 softtabstop=2 autoindent smartindent
+set expandtab
+set smarttab
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+set autoindent
+set smartindent
+set copyindent
 set nowrap nospell
 set backspace=2
 set laststatus=2
@@ -52,26 +63,42 @@ set binary
 set endofline
 set scrolloff=4
 set gdefault
-set incsearch smartcase ignorecase hlsearch infercase
-set showmatch matchtime=10
-set nobackup nowritebackup noswapfile
-set list listchars=tab:\ \ ,trail:\ ,extends:#,eol:\ ,nbsp:.
+set incsearch
+set hlsearch
+set smartcase
+set ignorecase
+set infercase
+set showmatch
+set matchtime=10
+set nobackup
+set nowritebackup
+set noswapfile
+set list
+set listchars=tab:\ \ ,trail:\ ,extends:#,eol:\ ,nbsp:.
 set fillchars=vert:\|,fold:\
 set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
 set completeopt=longest,menuone
-set wildmenu wildmode=list:longest,full wildignore=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*
-set statusline=%F%r%h%w\ %{fugitive#head()}\ %m\ %{SyntasticStatuslineFlag()}\ [%l,%c]\ [%L,%p%%]
-set splitbelow splitright
-set ttyfast timeout timeoutlen=1000 ttimeoutlen=200
-set foldenable foldmethod=syntax foldlevel=10
-set conceallevel=0 concealcursor=i
+set wildmenu
+set wildmode=list:longest,full
+set wildignore=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*
+set statusline=%F%r%h%w\ %{fugitive#head()}\ %m%=\ %{SyntasticStatuslineFlag()}\ [%l,%c]\ [%L,%p%%]
+set statusline=%1*%{getcwd()}/%2*%f\ %1*%{fugitive#head()}\ %m\ %3*%{SyntasticStatuslineFlag()}\ %1*%=\ →\ %Y
+set splitbelow
+set splitright
+set ttyfast
+set timeout
+set timeoutlen=1000
+set ttimeoutlen=200
+set nofoldenable
+set foldmethod=indent
+set foldlevel=1
+set conceallevel=0
+set concealcursor=i
 set history=100
 set clipboard+=unnamed
 set tags=./tags;
-set copyindent
-set path=**
-"" }}}
+" }}}
 " Color and Syntax              {{{
 " ---------------------------------
 if has('gui_running')
@@ -80,48 +107,25 @@ if has('gui_running')
   set guioptions-=T
   set guioptions-=r
   set guioptions-=L
-  set background=light
 endif
 filetype plugin indent on
 syntax on
-let g:base16colorspace=256
-colorscheme base16-railscasts
+colorscheme landscape
 " }}}
 " Improve color scheme          {{{
 " ---------------------------------
-" highlight Normal ctermbg=none
-" highlight MatchParen cterm=bold
-" highlight TabLineSel cterm=bold
-" highlight Title cterm=bold
-" highlight DiffText cterm=bold
-" highlight DiffDelete cterm=bold
-" highlight Keyword cterm=bold
-" highlight Todo cterm=bold
-" highlight Function cterm=bold
-" highlight Statement cterm=bold
-" highlight Type cterm=bold
-" highlight ErrorMsg cterm=bold
-" highlight VisualNOS cterm=bold,underline
-" highlight NonText cterm=bold
-highlight clear SignColumn
-highlight VertSplit ctermbg=236
-highlight ColorColumn ctermbg=237
-highlight LineNr ctermbg=236 ctermfg=240
-highlight CursorLineNr ctermbg=236 ctermfg=240
-highlight CursorLine ctermbg=236
-highlight StatusLineNC ctermbg=238 ctermfg=0
-highlight StatusLine ctermbg=240 ctermfg=12
-highlight IncSearch cterm=bold ctermbg=3 ctermfg=1
-highlight Search ctermbg=1 ctermfg=3
-highlight Visual ctermbg=3 ctermfg=0
-highlight Pmenu ctermbg=240 ctermfg=12
-highlight PmenuSel ctermbg=3 ctermfg=1
-highlight SpellBad ctermbg=0 ctermfg=1
-
-if version >= 700
-  autocmd InsertEnter * highlight StatusLine ctermfg=235 ctermbg=2
-  autocmd InsertLeave * highlight StatusLine ctermbg=240 ctermfg=12
-endif
+highlight Normal ctermbg=none
+highlight NonText cterm=none ctermbg=none ctermfg=236
+highlight SpecialKey cterm=none ctermbg=none ctermfg=236
+highlight CursorLine cterm=none ctermbg=none
+highlight CursorLineNr cterm=none ctermbg=none ctermfg=220
+highlight LineNr cterm=none ctermbg=none ctermfg=236
+highlight StatusLine cterm=none ctermbg=15 ctermfg=242
+highlight StatusLineNC cterm=none ctermbg=none ctermfg=232
+highlight IncSearch cterm=none ctermbg=220 ctermfg=236
+highlight User1 cterm=none ctermbg=15 ctermfg=242
+highlight User2 cterm=bold ctermbg=15 ctermfg=232
+highlight User3 cterm=none ctermbg=15 ctermfg=1
 " }}}
 " Keys mapping                  {{{
 " ---------------------------------
@@ -213,7 +217,7 @@ let g:syntastic_javascript_checkers=['standard']
 " }}}
 " Airline                       {{{
 " ---------------------------------
-" let g:airline_powerline_fonts=1
+let g:airline_powerline_fonts=1
 " }}}
 " JavaScript syntax             {{{
 " ---------------------------------
@@ -292,6 +296,6 @@ autocmd filetype zsh setlocal expandtab smartindent shiftwidth=2 tabstop=2 softt
 autocmd filetype vim setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=marker foldlevel=0
 autocmd filetype php setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
 autocmd filetype ruby setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
-autocmd filetype python setlocal expandtab nosmartindent shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
+autocmd filetype python setlocal expandtab nosmartindent shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=indent
 autocmd filetype javascript setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
 " }}}
