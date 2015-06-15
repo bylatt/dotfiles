@@ -112,6 +112,6 @@ zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 local smiley="%(?,:),:()"
 
-PROMPT='%B%F{green}%U%1d%u${smiley}%f%b %{$reset_color%}'
+PROMPT='%B%F{cyan}%U%1d%u${smiley}%f%b %{$reset_color%}'
 RPROMPT=''
 # }}}

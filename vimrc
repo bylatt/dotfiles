@@ -5,9 +5,6 @@ call neobundle#begin(expand($HOME.'/.vim/bundle/'))
 NeoBundleFetch 'shougo/neobundle.vim'
 NeoBundle 'shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'shougo/unite.vim'
-NeoBundle 'itchyny/landscape.vim'
-NeoBundle 'viniciusban/vim-github-colorscheme'
-NeoBundle 'editorconfig/editorconfig-vim'
 NeoBundle 'raimondi/delimitmate'
 NeoBundle 'ervandew/supertab'
 NeoBundle 'scrooloose/syntastic'
@@ -15,6 +12,7 @@ NeoBundle 'tmhedberg/matchit'
 NeoBundle 'sirver/ultisnips'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'christoomey/vim-tmux-navigator'
+NeoBundle 'bling/vim-airline'
 NeoBundle 'honza/vim-snippets'
 NeoBundle 'gabrielelana/vim-markdown'
 NeoBundle 'sickill/vim-pasta'
@@ -24,9 +22,8 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'crusoexia/vim-javascript-lib'
 NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'mxw/vim-jsx'
 NeoBundle 'fatih/vim-go'
 call neobundle#end()
 " }}}
@@ -41,7 +38,7 @@ set fileencoding=utf-8
 set t_Co=256
 set t_ut=
 set t_vb=
-set background=dark
+set background=light
 set expandtab
 set smarttab
 set shiftwidth=2
@@ -82,8 +79,8 @@ set completeopt=longest,menuone
 set wildmenu
 set wildmode=list:longest,full
 set wildignore=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*
-set statusline=%F%r%h%w\ %{fugitive#head()}\ %m%=\ %{SyntasticStatuslineFlag()}\ [%l,%c]\ [%L,%p%%]
-set statusline=%1*%{getcwd()}/%2*%f\ %1*%{fugitive#head()}\ %m\ %3*%{SyntasticStatuslineFlag()}\ %1*%=\ →\ %Y
+set statusline=%{getcwd()}/%f\ %{fugitive#head()}\ %m\ %{SyntasticStatuslineFlag()}\ %=\ [%l,%c]\ [%L,%p%%]
+" set statusline=%1*%{getcwd()}/%2*%f\ %1*%{fugitive#head()}\ %m\ %3*%{SyntasticStatuslineFlag()}\ %1*%=\ [%l,%c]\ [%L,%p%%]
 set splitbelow
 set splitright
 set ttyfast
@@ -102,7 +99,7 @@ set tags=./tags;
 " Color and Syntax              {{{
 " ---------------------------------
 if has('gui_running')
-  set guifont=Inconsolata\ LGC:h14
+  set guifont=Inconsolata\ LGC\ for\ Powerline:h14
   set guioptions-=m
   set guioptions-=T
   set guioptions-=r
@@ -110,22 +107,24 @@ if has('gui_running')
 endif
 filetype plugin indent on
 syntax on
-colorscheme landscape
+colorscheme solarized
 " }}}
 " Improve color scheme          {{{
 " ---------------------------------
 highlight Normal ctermbg=none
-highlight NonText cterm=none ctermbg=none ctermfg=236
-highlight SpecialKey cterm=none ctermbg=none ctermfg=236
 highlight CursorLine cterm=none ctermbg=none
-highlight CursorLineNr cterm=none ctermbg=none ctermfg=220
-highlight LineNr cterm=none ctermbg=none ctermfg=236
-highlight StatusLine cterm=none ctermbg=15 ctermfg=242
-highlight StatusLineNC cterm=none ctermbg=none ctermfg=232
-highlight IncSearch cterm=none ctermbg=220 ctermfg=236
-highlight User1 cterm=none ctermbg=15 ctermfg=242
-highlight User2 cterm=bold ctermbg=15 ctermfg=232
-highlight User3 cterm=none ctermbg=15 ctermfg=1
+highlight CursorLineNr cterm=none ctermbg=none
+" highlight NonText cterm=none ctermbg=none ctermfg=236
+" highlight SpecialKey cterm=none ctermbg=none ctermfg=236
+" highlight CursorLine cterm=none ctermbg=none
+" highlight CursorLineNr cterm=none ctermbg=none ctermfg=220
+" highlight LineNr cterm=none ctermbg=none ctermfg=236
+" highlight StatusLine cterm=none ctermbg=15 ctermfg=242
+" highlight StatusLineNC cterm=none ctermbg=none ctermfg=232
+" highlight IncSearch cterm=none ctermbg=220 ctermfg=236
+" highlight User1 cterm=none ctermbg=15 ctermfg=242
+" highlight User2 cterm=bold ctermbg=15 ctermfg=232
+" highlight User3 cterm=none ctermbg=15 ctermfg=1
 " }}}
 " Keys mapping                  {{{
 " ---------------------------------
@@ -207,13 +206,29 @@ let g:UltiSnipsEditSplit='vertical'
 " Syntastic                     {{{
 " ---------------------------------
 let g:syntastic_check_on_open=1
+let g:syntastic_aggregate_errors=1
+let g:syntastic_auto_jump=1
+let g:syntastic_auto_loc_list=1
 let g:syntastic_check_on_wq=0
 let g:syntastic_enable_signs=0
 let g:syntastic_haml_checkers=['haml']
 let g:syntastic_sass_checkers=['sass']
 let g:syntastic_ruby_checkers=['mri', 'rubocop']
 let g:syntastic_python_checkers=['python', 'flake8']
-let g:syntastic_javascript_checkers=['standard']
+let g:syntastic_javascript_checkers=['node', 'standard']
+let g:syntastic_php_checkers=['php', 'phpcs']
+let g:syntastic_error_symbol='✗'
+let g:syntastic_style_error_symbol='✠'
+let g:syntastic_warning_symbol='∆'
+let g:syntastic_style_warning_symbol='≈'
+" }}}
+" Tagbar                     {{{
+" ---------------------------------
+nnoremap <leader>t :TagbarToggle<cr>
+let g:tagbar_autofocus=1
+let g:tagbar_expand=1
+let g:tagbar_foldlevel=2
+let g:tagbar_autoshowtag=1
 " }}}
 " Airline                       {{{
 " ---------------------------------
@@ -279,12 +294,13 @@ autocmd filetype unite call s:unite_settings()
 " Note                          {{{
 " ---------------------------------
 " Default vim key binding for autocomplete
-" <c-x><c-f> for pathcompletion
+" <c-x><c-f> for path completion
 " <c-x><c-l> for whole line completion
-" <c-x><c-o> for omnifunc
-" <c-x><c-u> for completefunc
-" <c-n> for next match keyword
-" <c-p> for previous match keyword
+" <c-x><c-o> for omnifunc completion
+" <c-x><c-u> for completefunc completion
+" <c-x><c-]> for tag conpletion
+" <c-n> for completion for next match keyword
+" <c-p> for completion for previous match keyword
 " When stage is on option list
 " <c-n> for next option
 " <c-p> for previous option
@@ -294,7 +310,7 @@ autocmd filetype unite call s:unite_settings()
 autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd filetype zsh setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=marker foldlevel=0
 autocmd filetype vim setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=marker foldlevel=0
-autocmd filetype php setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
+autocmd filetype php setlocal expandtab smartindent shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
 autocmd filetype ruby setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
 autocmd filetype python setlocal expandtab nosmartindent shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=indent
 autocmd filetype javascript setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
