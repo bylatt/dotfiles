@@ -21,6 +21,7 @@
 [alias]
 	aa = add --all
 	bl = blame -C
+	br = branch
 	cm = commit -m
 	co = checkout
 	cl = clone

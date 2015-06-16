@@ -5,6 +5,7 @@ call neobundle#begin(expand($HOME.'/.vim/bundle/'))
 NeoBundleFetch 'shougo/neobundle.vim'
 NeoBundle 'shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'shougo/unite.vim'
+NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'raimondi/delimitmate'
 NeoBundle 'ervandew/supertab'
 NeoBundle 'scrooloose/syntastic'
@@ -16,14 +17,15 @@ NeoBundle 'bling/vim-airline'
 NeoBundle 'honza/vim-snippets'
 NeoBundle 'gabrielelana/vim-markdown'
 NeoBundle 'sickill/vim-pasta'
-NeoBundle 'tpope/vim-commentary'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'vim-ruby/vim-ruby'
+NeoBundle 'justmao945/vim-clang'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'mxw/vim-jsx'
+NeoBundle 'kballard/vim-swift'
 NeoBundle 'fatih/vim-go'
 call neobundle#end()
 " }}}
@@ -114,6 +116,8 @@ colorscheme solarized
 highlight Normal ctermbg=none
 highlight CursorLine cterm=none ctermbg=none
 highlight CursorLineNr cterm=none ctermbg=none
+highlight NonText cterm=none ctermbg=none
+highlight SpecialKey cterm=none ctermbg=none
 " highlight NonText cterm=none ctermbg=none ctermfg=236
 " highlight SpecialKey cterm=none ctermbg=none ctermfg=236
 " highlight CursorLine cterm=none ctermbg=none
@@ -232,7 +236,9 @@ let g:tagbar_autoshowtag=1
 " }}}
 " Airline                       {{{
 " ---------------------------------
-let g:airline_powerline_fonts=1
+let g:airline_powerline_fonts=0
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
 " }}}
 " JavaScript syntax             {{{
 " ---------------------------------

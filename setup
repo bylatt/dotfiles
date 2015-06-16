@@ -1,21 +1,23 @@
 #!/usr/bin/env sh
 
-# This script creates symlinks from the home directory to any desired dotfiles in ~/.dotfiles
+# This script will creates symlinks from any desired dotfiles in ~/.dotfiles to home directory
 
-dir=~/.dotfiles
-olddir=~/.dotfiles_old
-files="zshrc vimrc gemrc irbrc railsrc gitconfig tmux.conf ctags"
+newdir=$HOME/.dotfiles
+olddir=$HOME/.dotfiles_old
+files="zshrc vimrc gemrc irbrc railsrc gitconfig agignore tmux.conf ctags"
 
-echo "Creating $olddir for backup of any existing dotfiles in home directory"
+echo "\nCreating $olddir for backup of any existing dotfiles in home directory\n"
 mkdir -p $olddir
-echo "...done"
+echo "...done\n"
 
-echo "Changing to the $dir directory"
-cd $dir
+echo "Changing to the $newdir directory\n"
+cd $newdir
 
 for file in $files; do
-	echo "Moving any existing dotfiles from ~ to $olddir"
-	mv ~/.$file $olddir
+	echo "Moving .$file dotfiles from home directory to $olddir if existing"
+	mv $HOME/.$file $olddir
 	echo "Creating symlink to $file in home directory."
-	ln -s $dir/$file ~/.$file
+	ln -s $newdir/$file $HOME/.$file
 done
+
+echo "\nDone!!\n"
