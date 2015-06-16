@@ -4,7 +4,7 @@
 
 newdir=$HOME/.dotfiles
 olddir=$HOME/.dotfiles_old
-files="zshrc vimrc gemrc irbrc railsrc gitconfig agignore tmux.conf ctags"
+files="zshrc vimrc gemrc irbrc railsrc gitconfig gitignore agignore tmux.conf ctags"
 
 echo "\nCreating $olddir for backup of any existing dotfiles in home directory\n"
 mkdir -p $olddir
