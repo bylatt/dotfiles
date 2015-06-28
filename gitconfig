@@ -2,7 +2,7 @@
 	name = Lattapon Yodsuwan
 	email = i@clozed2u.com
 [core]
-	autocrlf = false
+	autocrlf = input
 	safecrlf = true
 	editor = vim
 [apply]

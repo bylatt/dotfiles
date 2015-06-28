@@ -1,46 +1,47 @@
-" NeoBundle Settings            {{{
-" ---------------------------------
+" NeoBundle Settings {{{
 set rtp+=$HOME/.vim/bundle/neobundle.vim/
 call neobundle#begin(expand($HOME.'/.vim/bundle/'))
-NeoBundleFetch 'shougo/neobundle.vim'
+NeoBundle 'shougo/neobundle.vim'
 NeoBundle 'shougo/vimproc.vim', {'build': {'unix': 'make'}}
-NeoBundle 'shougo/unite.vim'
-NeoBundle 'tomtom/tcomment_vim'
-NeoBundle 'raimondi/delimitmate'
+NeoBundle 'shougo/unite.vim', {'depends': 'shougo/vimproc.vim'}
+NeoBundle 'shougo/vimfiler.vim', {'depends': 'shougo/unite.vim'}
+NeoBundle 'troydm/asyncfinder.vim'
+NeoBundle 'troydm/easytree.vim'
+NeoBundle 'vim-scripts/xoria256.vim'
+NeoBundle 'vim-scripts/zoomwin'
 NeoBundle 'ervandew/supertab'
-NeoBundle 'scrooloose/syntastic'
+NeoBundle 'ervandew/matchem'
 NeoBundle 'tmhedberg/matchit'
-NeoBundle 'sirver/ultisnips'
 NeoBundle 'majutsushi/tagbar'
+NeoBundle 'scrooloose/syntastic'
 NeoBundle 'christoomey/vim-tmux-navigator'
-NeoBundle 'bling/vim-airline'
-NeoBundle 'honza/vim-snippets'
+NeoBundle 'junegunn/vim-easy-align'
 NeoBundle 'gabrielelana/vim-markdown'
 NeoBundle 'sickill/vim-pasta'
+NeoBundle 'vim-ruby/vim-ruby'
+NeoBundle 'tpope/vim-commentary'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-repeat'
-NeoBundle 'vim-ruby/vim-ruby'
-NeoBundle 'justmao945/vim-clang'
+NeoBundle 'tpope/vim-rails'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'mxw/vim-jsx'
-NeoBundle 'kballard/vim-swift'
+NeoBundle 'mxw/vim-jsx', {'depends': 'pangloss/vim-javascript'}
+NeoBundle 'mtscout6/vim-cjsx', {'depends': 'kchmck/vim-coffee-script'}
 NeoBundle 'fatih/vim-go'
 call neobundle#end()
 " }}}
-" Vim Settings                  {{{
-" ---------------------------------
+" Vim Settings {{{
 set nocompatible
 set sh=$SHELL
 set term=$TERM
 set encoding=utf-8
-set termencoding=utf-8
 set fileencoding=utf-8
+set termencoding=utf-8
 set t_Co=256
 set t_ut=
 set t_vb=
-set background=light
+set background=dark
 set expandtab
 set smarttab
 set shiftwidth=2
@@ -49,17 +50,16 @@ set softtabstop=2
 set autoindent
 set smartindent
 set copyindent
-set nowrap nospell
+set cindent
+set autowrite
+set autoread
+set nowrap
 set backspace=2
 set laststatus=2
-set showtabline=0
-set showmode showcmd
-set noruler number norelativenumber
-set cursorline nocursorcolumn
-set noerrorbells novisualbell
-set hidden
-set binary
-set endofline
+set showtabline=2
+set showcmd
+set number
+set cursorline
 set scrolloff=4
 set gdefault
 set incsearch
@@ -81,27 +81,21 @@ set completeopt=longest,menuone
 set wildmenu
 set wildmode=list:longest,full
 set wildignore=*.png,*.jpg,*gif,*DS_Store*,*.gem,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*
-set statusline=%{getcwd()}/%f\ %{fugitive#head()}\ %m\ %{SyntasticStatuslineFlag()}\ %=\ [%l,%c]\ [%L,%p%%]
-" set statusline=%1*%{getcwd()}/%2*%f\ %1*%{fugitive#head()}\ %m\ %3*%{SyntasticStatuslineFlag()}\ %1*%=\ [%l,%c]\ [%L,%p%%]
+set statusline=%1*%{getcwd()}/%2*%f\ %1*%{fugitive#head()}\ %m\ %3*%{SyntasticStatuslineFlag()}\ %1*%=\ [%l,%c]\ [%L,%p%%]
 set splitbelow
 set splitright
-set ttyfast
-set timeout
-set timeoutlen=1000
+set timeoutlen=2000
 set ttimeoutlen=200
 set nofoldenable
 set foldmethod=indent
 set foldlevel=1
-set conceallevel=0
 set concealcursor=i
-set history=100
+set history=1000
 set clipboard+=unnamed
-set tags=./tags;
 " }}}
-" Color and Syntax              {{{
-" ---------------------------------
+" Color and Syntax {{{
 if has('gui_running')
-  set guifont=Inconsolata\ LGC\ for\ Powerline:h14
+  set guifont=Source\ Code\ Pro:h15
   set guioptions-=m
   set guioptions-=T
   set guioptions-=r
@@ -109,106 +103,44 @@ if has('gui_running')
 endif
 filetype plugin indent on
 syntax on
-colorscheme solarized
+colorscheme xoria256
 " }}}
-" Improve color scheme          {{{
-" ---------------------------------
-highlight Normal ctermbg=none
-highlight CursorLine cterm=none ctermbg=none
+" Improve color scheme {{{
+highlight Normal       ctermbg=none
+highlight NonText      cterm=none ctermbg=none
+highlight SpecialKey   cterm=none ctermbg=none
+highlight CursorLine   cterm=none ctermbg=none
 highlight CursorLineNr cterm=none ctermbg=none
-highlight NonText cterm=none ctermbg=none
-highlight SpecialKey cterm=none ctermbg=none
-" highlight NonText cterm=none ctermbg=none ctermfg=236
-" highlight SpecialKey cterm=none ctermbg=none ctermfg=236
-" highlight CursorLine cterm=none ctermbg=none
-" highlight CursorLineNr cterm=none ctermbg=none ctermfg=220
-" highlight LineNr cterm=none ctermbg=none ctermfg=236
-" highlight StatusLine cterm=none ctermbg=15 ctermfg=242
-" highlight StatusLineNC cterm=none ctermbg=none ctermfg=232
-" highlight IncSearch cterm=none ctermbg=220 ctermfg=236
-" highlight User1 cterm=none ctermbg=15 ctermfg=242
-" highlight User2 cterm=bold ctermbg=15 ctermfg=232
-" highlight User3 cterm=none ctermbg=15 ctermfg=1
+highlight LineNr       cterm=none ctermbg=none
+highlight StatusLine   cterm=none ctermbg=15  ctermfg=242
+highlight StatusLineNC cterm=none ctermbg=232 ctermfg=242
+highlight User1        cterm=none ctermbg=15  ctermfg=242
+highlight User2        cterm=bold ctermbg=15  ctermfg=232
+highlight User3        cterm=none ctermbg=15  ctermfg=1
 " }}}
-" Keys mapping                  {{{
-" ---------------------------------
+" Keys mapping {{{
 let g:mapleader=' '
-nmap <c-j> <c-w>j
-nmap <c-k> <c-w>k
-nmap <c-h> <c-w>h
-nmap <c-l> <c-w>l
+noremap <c-j> <c-w>j
+noremap <c-k> <c-w>k
+noremap <c-h> <c-w>h
+noremap <c-l> <c-w>l
 vmap <  <gv
 vmap > >gv
 nmap <cr> :noh<cr>
 inoremap jk <esc>
-inoremap kj <esc>
 nnoremap ; :
 nnoremap ! :!
 " }}}
-" Netrw                         {{{
-" ---------------------------------
-function! VexToggle(dir)
-  if exists('t:vex_buf_nr')
-    call VexClose()
-  else
-    call VexOpen(a:dir)
-  endif
-endfunction
-
-function! VexOpen(dir)
-  let g:netrw_browse_split=4
-  let vex_width=30
-  execute 'Vexplore '.a:dir
-  let t:vex_buf_nr=bufnr('%')
-  wincmd H
-  call VexSize(vex_width)
-endfunction
-
-function! VexClose()
-  let cur_win_nr=winnr()
-  let target_nr=(cur_win_nr==1?winnr('#'):cur_win_nr)
-  1wincmd w
-  close
-  unlet t:vex_buf_nr
-  execute (target_nr-1).'wincmd w'
-  call NormalizeWidths()
-endfunction
-
-function! VexSize(vex_width)
-  execute 'vertical resize'.a:vex_width
-  set winfixwidth
-  call NormalizeWidths()
-endfunction
-
-function! NormalizeWidths()
-  let eadir_pref=&eadirection
-  set eadirection=hor
-  set equalalways! equalalways!
-  let &eadirection=eadir_pref
-endfunction
-
-augroup NetrwGroup
-  autocmd! bufenter * call NormalizeWidths()
-augroup END
-
-let g:netrw_browse_split=4
-let g:netrw_altv=1
-let g:netrw_liststyle=3
-let g:netrw_winsize=30
-let g:netrw_banner=0
-let g:netrw_list_hide=&wildignore
-
-noremap <leader>n :call VexToggle(getcwd())<cr>
+" Easy align {{{
+vmap <enter> <plug>(EasyAlign)
 " }}}
-" UltiSnips                     {{{
-" ---------------------------------
+" UltiSnips {{{
 let g:UltiSnipsExpandTrigger='<tab>'
 let g:UltiSnipsJumpForwardTrigger='<c-b>'
 let g:UltiSnipsJumpBackwardTrigger='<c-z>'
 let g:UltiSnipsEditSplit='vertical'
 " }}}
-" Syntastic                     {{{
-" ---------------------------------
+" Syntastic {{{
 let g:syntastic_check_on_open=1
 let g:syntastic_aggregate_errors=1
 let g:syntastic_auto_jump=1
@@ -226,32 +158,29 @@ let g:syntastic_style_error_symbol='✠'
 let g:syntastic_warning_symbol='∆'
 let g:syntastic_style_warning_symbol='≈'
 " }}}
-" Tagbar                     {{{
-" ---------------------------------
+" Tagbar {{{
 nnoremap <leader>t :TagbarToggle<cr>
 let g:tagbar_autofocus=1
 let g:tagbar_expand=1
 let g:tagbar_foldlevel=2
 let g:tagbar_autoshowtag=1
 " }}}
-" Airline                       {{{
-" ---------------------------------
-let g:airline_powerline_fonts=0
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
+" UltiSnips {{{
+let g:UltiSnipsExpandTrigger='<tab>'
+let g:UltiSnipsJumpForwardTrigger='<c-b>'
+let g:UltiSnipsJumpBackwardTrigger='<c-z>'
+let g:UltiSnipsEditSplit='vertical'
 " }}}
-" JavaScript syntax             {{{
-" ---------------------------------
+" JavaScript syntax {{{
 let g:javascript_enable_domhtmlcss=1
 " }}}
-" Unite                         {{{
-" ---------------------------------
+" Unite {{{
 nnoremap <leader>p :Unite -no-split -start-insert file_rec/async:!<cr>
 nnoremap <leader>y :Unite history/yank<cr>
 nnoremap <leader>s :Unite -quick-match buffer<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 let g:unite_source_history_yank_enable=1
-let g:unite_prompt='→ '
+let g:unite_prompt='>>> '
 let g:unite_split_rule='topleft'
 let g:unite_data_directory=$HOME.'/.vim/tmp/unite'
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
@@ -297,8 +226,32 @@ endfunction
 
 autocmd filetype unite call s:unite_settings()
 " }}}
-" Note                          {{{
-" ---------------------------------
+" Vimfiler {{{
+let g:vimfiler_as_default_explorer=1
+let g:vimfiler_safe_mode_by_default=0
+let g:vimfiler_tree_leaf_icon=" "
+let g:vimfiler_tree_opened_icon='▾'
+let g:vimfiler_tree_closed_icon='▸'
+let g:vimfiler_file_icon='-'
+let g:vimfiler_marked_file_icon='✓'
+let g:vimfiler_readonly_file_icon='✗'
+let g:vimfiler_time_format='%m-%d-%y %H:%M:%S'
+let g:vimfiler_expand_jump_to_first_child=0
+let g:vimfiler_ignore_pattern='\.git\|\.DS_Store\|\.pyc'
+
+nnoremap <leader>n :<c-u>VimFilerExplorer -split -simple -parent -winwidth=35 -toggle -no-quit<cr>
+nnoremap <leader>jf :<c-u>VimFilerExplorer -split -simple -parent -winwidth=35 -no-quit -find<cr>
+autocmd FileType vimfiler nunmap <buffer> x
+autocmd FileType vimfiler nmap <buffer> x <plug>(vimfiler_toggle_mark_current_line)
+autocmd FileType vimfiler vmap <buffer> x <plug>(vimfiler_toggle_mark_selected_lines)
+autocmd FileType vimfiler nunmap <buffer> l
+autocmd FileType vimfiler nmap <buffer> l <plug>(vimfiler_cd_or_edit)
+autocmd FileType vimfiler nmap <buffer> h <plug>(vimfiler_switch_to_parent_directory)
+autocmd FileType vimfiler nunmap <buffer> <c-l>
+autocmd FileType vimfiler nmap <buffer> <c-r> <plug>(vimfiler_redraw_screen)
+autocmd FileType vimfiler nmap <silent><buffer><expr> <cr> vimfiler#smart_cursor_map("\<plug>(vimfiler_expand_tree)", "\<plug>(vimfiler_edit_file)")
+" }}}
+" Note {{{
 " Default vim key binding for autocomplete
 " <c-x><c-f> for path completion
 " <c-x><c-l> for whole line completion
@@ -311,8 +264,7 @@ autocmd filetype unite call s:unite_settings()
 " <c-n> for next option
 " <c-p> for previous option
 " }}}
-" Filetype                      {{{
-" ---------------------------------
+" Filetype {{{
 autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd filetype zsh setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=marker foldlevel=0
 autocmd filetype vim setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=marker foldlevel=0
