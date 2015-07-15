@@ -1,2 +1,2 @@
---database=postgresql
+--database=sqlite3
 --skip-test-unit

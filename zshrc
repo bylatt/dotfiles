@@ -1,30 +1,31 @@
 # Source files {{{
-if [ -f "/etc/zprofile" ]; then PATH=""; source "/etc/zprofile"; fi
+if [ -f '/etc/zprofile' ]; then PATH=''; source '/etc/zprofile'; fi
 if [ -f "$HOME/.zsh_search" ]; then source "$HOME/.zsh_search"; fi
-if [ -d "/usr/local/share/chruby/" ]; then
-  source "/usr/local/share/chruby/chruby.sh"
-  source "/usr/local/share/chruby/auto.sh"
-  chruby "ruby-2.2.2"
+if [ -f "$HOME/.zsh_itermshell" ]; then source "$HOME/.zsh_itermshell"; fi
+if [ -d '/usr/local/share/chruby/' ]; then
+  source '/usr/local/share/chruby/chruby.sh'
+  source '/usr/local/share/chruby/auto.sh'
+  chruby 'ruby-2.2.2'
 fi
 # }}}
 # Export {{{
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
+export LANG='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
 export TERM=xterm-256color
 export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
-if [ -d "/usr/local/node" ]; then
-  export NODEPATH="/usr/local/node"
+if [ -d '/usr/local/node' ]; then
+  export NODEPATH='/usr/local/node'
   PATH="$NODEPATH/bin:$PATH";
 fi
-if [ -d "/usr/local/python" ]; then
-  export PYTHONPATH="/usr/local/python"
+if [ -d '/usr/local/python' ]; then
+  export PYTHONPATH='/usr/local/python'
   PATH="$PYTHONPATH/bin:$PATH";
 fi
-if [ -d "/usr/local/go" ]; then
-  export GOROOT="/usr/local/go/"
+if [ -d '/usr/local/go' ]; then
+  export GOROOT='/usr/local/go'
   export GOPATH="$HOME/.go"
   PATH="$GOROOT/bin:$GOPATH/bin:$PATH";
 fi
@@ -109,6 +110,6 @@ zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
 local smiley="%(?,:),:()"
 
-PROMPT='%F{green}%B%U%1d%u%b%f${vcs_info_msg_0_} $ %{$reset_color%}'
+PROMPT='%F{green}%B%U%1d${smiley}%u%b%f %{$reset_color%}'
 RPROMPT=''
 # }}}
