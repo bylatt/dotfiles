@@ -45,6 +45,9 @@ alias mv='mv -iv'
 alias mkdir='mkdir -pv'
 alias ..='cd ../'
 alias ...='cd ../../'
+alias pipupdate="pip freeze | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip install -U --no-cache-dir"
+alias gemupdate="gem update --system && gem updatte && gem cleanup"
+alias npmupdate="npm up -g"
 mcd() { mkdir -p "$1" && cd "$1"; }
 trash() { mv "$@" ~/.Trash; }
 # }}}

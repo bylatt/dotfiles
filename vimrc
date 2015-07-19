@@ -5,6 +5,7 @@ NeoBundle 'shougo/neobundle.vim'
 NeoBundle 'shougo/vimproc.vim', {'build': {'unix': 'make'}}
 NeoBundle 'shougo/unite.vim', {'depends': 'shougo/vimproc.vim'}
 NeoBundle 'shougo/vimfiler.vim', {'depends': 'shougo/unite.vim'}
+NeoBundle 'vim-scripts/xoria256.vim'
 NeoBundle 'raimondi/delimitmate'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'godlygeek/tabular'
@@ -102,7 +103,7 @@ if has('gui_running')
 endif
 filetype plugin indent on
 syntax on
-colorscheme vimbrant
+colorscheme xoria256
 " }}}
 " Improve color scheme {{{
 highlight Normal                   ctermbg=none
@@ -124,6 +125,26 @@ nmap <cr> :noh<cr>
 inoremap jk <esc>
 nnoremap ; :
 nnoremap ! :!
+
+" Function for highlight the current position of search result
+nnoremap <silent> n n:call HLNext(0.1)<cr>
+nnoremap <silent> N N:call HLNext(0.1)<cr>
+highlight WhiteOnRed ctermbg=white guibg=red
+function! HLNext (blinktime)
+  let [bufnum, lnum, col, off] = getpos('.')
+  let matchlen = strlen(matchstr(strpart(getline('.'),col-1),@/))
+  let target_pat = '\c\%#'.@/
+  let blinks = 3
+  for n in range(1,blinks)
+    let red = matchadd('WhiteOnRed', target_pat, 101)
+    redraw
+    exec 'sleep ' . float2nr(a:blinktime / (2*blinks) * 1000) . 'm'
+    call matchdelete(red)
+    redraw
+    exec 'sleep ' . float2nr(a:blinktime / (2*blinks) * 1000) . 'm'
+  endfor
+endfunction
+
 " }}}
 " Unite {{{
 nnoremap <leader>p :Unite -no-split -start-insert file_rec/async:!<cr>
