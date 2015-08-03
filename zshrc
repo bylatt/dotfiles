@@ -1,7 +1,6 @@
 # Source files {{{
 if [ -f '/etc/zprofile' ]; then PATH=''; source '/etc/zprofile'; fi
 if [ -f "$HOME/.zsh_search" ]; then source "$HOME/.zsh_search"; fi
-if [ -f "$HOME/.zsh_itermshell" ]; then source "$HOME/.zsh_itermshell"; fi
 if [ -d '/usr/local/share/chruby/' ]; then
   source '/usr/local/share/chruby/chruby.sh'
   source '/usr/local/share/chruby/auto.sh'
@@ -45,9 +44,6 @@ alias mv='mv -iv'
 alias mkdir='mkdir -pv'
 alias ..='cd ../'
 alias ...='cd ../../'
-alias pipupdate="pip freeze | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip install -U --no-cache-dir"
-alias gemupdate="gem update --system && gem updatte && gem cleanup"
-alias npmupdate="npm up -g"
 mcd() { mkdir -p "$1" && cd "$1"; }
 trash() { mv "$@" ~/.Trash; }
 # }}}
