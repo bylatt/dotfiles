@@ -1,37 +1,34 @@
 " NeoBundle Settings {{{
-set rtp+=$HOME/.vim/bundle/neobundle.vim/
-call neobundle#begin(expand($HOME.'/.vim/bundle/'))
-NeoBundle 'shougo/neobundle.vim'
-NeoBundle 'shougo/vimproc.vim', {'build':{'unix': 'make'}}
-NeoBundle 'shougo/unite.vim', {'depends': 'shougo/vimproc.vim'}
-" NeoBundle 'shougo/vimfiler.vim', {'depends': 'shougo/unite.vim'}
-NeoBundle 'wellle/targets.vim'
-NeoBundle 'raimondi/delimitmate'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'godlygeek/tabular'
-NeoBundle 'ervandew/supertab'
-NeoBundle 'tmhedberg/matchit'
-NeoBundle 'majutsushi/tagbar'
-NeoBundle 'christoomey/vim-tmux-navigator'
-NeoBundle 'gabrielelana/vim-markdown'
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'wakatime/vim-wakatime'
-NeoBundle 'thoughtbot/vim-rspec'
-NeoBundle 'tpope/vim-commentary'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'kana/vim-arpeggio', {'build': {'unix': 'make'}}
-NeoBundle 'sickill/vim-pasta'
-NeoBundle 'vim-ruby/vim-ruby'
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-rails'
-NeoBundle 'mtscout6/vim-cjsx', {'depends': 'kchmck/vim-coffee-script'}
-NeoBundle 'mxw/vim-jsx', {'depends': 'pangloss/vim-javascript'}
-NeoBundle 'fatih/vim-go'
-call neobundle#end()
+call plug#begin($HOME.'/.vim/bundle')
+Plug 'shougo/vimproc.vim', {'do': 'yes \| make'}
+Plug 'shougo/unite.vim'
+" Plug 'shougo/vimfiler.vim'
+Plug 'raimondi/delimitmate'
+Plug 'benekastah/neomake'
+Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
+Plug 'ervandew/supertab'
+Plug 'tmhedberg/matchit'
+Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
+Plug 'wincent/terminus'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'gabrielelana/vim-markdown'
+Plug 'kchmck/vim-coffee-script'
+Plug 'pangloss/vim-javascript'
+Plug 'wakatime/vim-wakatime'
+Plug 'thoughtbot/vim-rspec'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-endwise'
+Plug 'kana/vim-arpeggio'
+Plug 'sickill/vim-pasta'
+Plug 'vim-ruby/vim-ruby'
+Plug 'junegunn/vim-plug'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-rails'
+Plug 'fatih/vim-go'
+call plug#end()
 " }}}
 " Vim Settings {{{
 set nocompatible
@@ -85,7 +82,7 @@ set completeopt=longest,menuone
 set wildmenu
 set wildmode=list:longest,full
 set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*,.composer/*,.gem/*
-set statusline=%{getcwd()}/%f\ %{fugitive#head()}\ %m\ %{SyntasticStatuslineFlag()}\ %=\ [%l,%c]\ [%L,%p%%]
+set statusline=%{getcwd()}/%f\ %m\ %=\ [%l,%c]\ [%L,%p%%]
 set splitbelow
 set splitright
 set timeoutlen=2000
@@ -200,36 +197,28 @@ autocmd filetype unite call s:unite_settings()
 " autocmd FileType vimfiler nmap <buffer> h <plug>(vimfiler_switch_to_parent_directory)
 " autocmd FileType vimfiler nunmap <buffer> <c-l>
 " autocmd FileType vimfiler nmap <buffer> <c-r> <plug>(vimfiler_redraw_screen)
-" autocmd FileType vimfiler nmap <silent><buffer><expr> <cr> vimfiler#smart_cursor_map("\<plug>(vimfiler_expand_tree)", "\<plug>(vimfiler_edit_file)")
+" autocmd FileType vimfiler nmap <silent><buffer><expr> <cr> vimfiler#smart_cursor_map("\<plug>(vimfiler_expand_tree)", '"\<plug>(vimfiler_edit_file)")
 " }}}
-" Syntastic {{{
-let g:syntastic_check_on_open=0
-let g:syntastic_aggregate_errors=1
-let g:syntastic_auto_jump=1
-let g:syntastic_auto_loc_list=0
-let g:syntastic_check_on_wq=0
-let g:syntastic_enable_signs=1
-let g:syntastic_haml_checkers=['haml']
-let g:syntastic_sass_checkers=['sass']
-let g:syntastic_ruby_checkers=['mri', 'rubocop']
-let g:syntastic_python_checkers=['python', 'flake8']
-let g:syntastic_javascript_checkers=['standard']
-let g:syntastic_php_checkers=['php', 'phpcs']
-let g:syntastic_disabled_filetypes=['go']
-let g:syntastic_error_symbol='✗'
-let g:syntastic_style_error_symbol='✠'
-let g:syntastic_warning_symbol='∆'
-let g:syntastic_style_warning_symbol='≈'
-autocmd bufwritepost *.js silent !standard % --forMath
+" Neomake {{{
+let g:neomake_open_list=0
+let g:neomake_echo_current_error=1
+let g:neomake_php_enabled_makers=['phpcs']
+let g:neomake_ruby_enabled_makers=['rubocop']
+let g:neomake_python_enabled_makers=['flake8']
+let g:neomake_javascript_enabled_makers=['jscs']
+let g:neomake_error_sign={'text': '>>','texthl': 'ErrorMsg'}
+let g:neomake_warning_sign = {'text': '>>','texthl': 'WarningMsg'}
+autocmd! BufWritePost * Neomake
 " }}}
 " Arpeggio {{{
 function! s:javascript()
-  Arpeggio inoremap fin function<space>
-  Arpeggio inoremap con console.log
-  Arpeggio inoremap thi this
-  Arpeggio inoremap ten .then
-  Arpeggio inoremap req require('')<left><left>
-  Arpeggio inoremap var var<space>
+  Arpeggio inoremap fin function<space>()<space>{<cr>}<esc>k$F(a
+  Arpeggio inoremap foe .forEach(function<space>() {<cr>})<esc>k$F(a
+  Arpeggio inoremap con console.log()<left>
+  Arpeggio inoremap thi this.
+  Arpeggio inoremap ten .then()<left>
+  Arpeggio inoremap req require('')<esc>F'i
+  Arpeggio inoremap vai var<space>
   Arpeggio inoremap doc document.
   Arpeggio inoremap win window.
   Arpeggio inoremap pro .prototype.
@@ -248,12 +237,12 @@ endfunction
 
 function! s:ruby()
   Arpeggio inoremap put puts<space>
-  Arpeggio inoremap xv, cases do<cr>end<esc>O<tab>
-  Arpeggio inoremap xv. loop do<cr>end<esc>O<tab>
+  Arpeggio inoremap xv, cases<space>do<cr>end<esc>O
+  Arpeggio inoremap xv. loop<space>do<cr>end<esc>O
   Arpeggio inoremap req require ''<left>
   Arpeggio inoremap whi while<cr>end<esc>kA<space>
   Arpeggio inoremap fin def<cr>end<esc>kA<space>
-  Arpeggio inoremap cla class
+  Arpeggio inoremap cla class<cr>end<esc>kA<space>
   Arpeggio inoremap ges gets
   Arpeggio inoremap ife if<cr>end<esc>kA<space>
   Arpeggio inoremap els else
@@ -264,38 +253,53 @@ function! s:php()
   Arpeggio inoremap put echo<space>
   Arpeggio inoremap pub public<space>
   Arpeggio inoremap pri private<space>
+  Arpeggio inoremap pam param<space>
   Arpeggio inoremap fin function<space>()<cr>{<cr>}<esc>2kf(i
   Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>kf(a
   Arpeggio inoremap foe foreach<space>()<space>{<cr>}<esc>kf(a
-  Arpeggio inoremap els else
+  Arpeggio inoremap els else<space>
   Arpeggio inoremap whi while<space>()<space>{<cr>}<esc>kf(a
   Arpeggio inoremap doc /**<cr>*<cr>*/<esc>ka<space>
   Arpeggio inoremap cla class<space><cr>{<cr>}<esc>2k$a
+  Arpeggio inoremap req require_once<space>'';<left><left>
+  Arpeggio inoremap ary array()<left>
+  Arpeggio inoremap vai var<space>
+endfunction
+
+function! s:python()
+  Arpeggio inoremap put print<space>
+  Arpeggio inoremap fin def<space>(self):<esc>F(i
+  Arpeggio inoremap ife if<space>:<left>
+  Arpeggio inoremap foe for<space>i<space>in<space>:<left>
+  Arpeggio inoremap els else:<cr>
+  Arpeggio inoremap whi while<space>:<left>
+  Arpeggio inoremap doc """<space>"""<left><left><left>
+  Arpeggio inoremap cla class<space>():<left><left><left>
+  Arpeggio inoremap fom from<space>
+  Arpeggio inoremap imp import<space>
 endfunction
 
 function! s:common()
   Arpeggio inoremap tui true
   Arpeggio inoremap fal false
   Arpeggio inoremap mat Math
-  Arpeggio inoremap ret return<space>
+  Arpeggio inoremap wer return<space>
   Arpeggio inoremap jk <esc>
 endfunction
 
 autocmd vimenter * call s:common()
 autocmd filetype php call s:php()
 autocmd filetype ruby call s:ruby()
+autocmd filetype python call s:python()
 autocmd filetype javascript call s:javascript()
-let g:arpeggio_timeoutlen=30
+let g:arpeggio_timeoutlen=50
 " }}}
 " NERDTree {{{
-let g:NERDTreeHijackNreturn=1
+let g:NERDTreeHijackNetrw=1
 let g:NERDTreeWinPos=1
 let g:NERDTreeMinimalUI=1
 let g:NERDTreeAutoDeleteBuffer=1
 nnoremap <leader>n :NERDTreeToggle<cr>
-" }}}
-" Tabular {{{
-vmap <cr> :Tabularize /
 " }}}
 " Tagbar {{{
 nnoremap <leader>t :TagbarToggle<cr>
@@ -305,27 +309,27 @@ let g:tagbar_foldlevel=2
 let g:tagbar_autoshowtag=1
 let g:tagbar_type_go = {
       \ 'ctagstype' : 'go',
-      \ 'kinds'     : [
-      \ 'p:package',
-      \ 'i:imports:1',
-      \ 'c:constants',
-      \ 'v:variables',
-      \ 't:types',
-      \ 'n:interfaces',
-      \ 'w:fields',
-      \ 'e:embedded',
-      \ 'm:methods',
-      \ 'r:constructor',
-      \ 'f:functions'
+      \ 'kinds' : [
+      \   'p:package',
+      \   'i:imports:1',
+      \   'c:constants',
+      \   'v:variables',
+      \   't:types',
+      \   'n:interfaces',
+      \   'w:fields',
+      \   'e:embedded',
+      \   'm:methods',
+      \   'r:constructor',
+      \   'f:functions'
       \ ],
       \ 'sro' : '.',
       \ 'kind2scope' : {
-      \ 't' : 'ctype',
-      \ 'n' : 'ntype'
+      \   't' : 'ctype',
+      \   'n' : 'ntype'
       \ },
       \ 'scope2kind' : {
-      \ 'ctype' : 't',
-      \ 'ntype' : 'n'
+      \   'ctype' : 't',
+      \   'ntype' : 'n'
       \ },
       \ 'ctagsbin'  : 'gotags',
       \ 'ctagsargs' : '-sort -silent'
@@ -333,6 +337,10 @@ let g:tagbar_type_go = {
 " }}}
 " JavaScript syntax {{{
 let g:javascript_enable_domhtmlcss=1
+let g:jsx_ext_required=0
+" }}}
+" Terminus {{{
+let g:TerminusCursorShape=0
 " }}}
 " Note {{{
 " Default vim key binding for autocomplete
