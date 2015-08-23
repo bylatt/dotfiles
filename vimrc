@@ -1,5 +1,5 @@
 " NeoBundle Settings {{{
-call plug#begin($HOME.'/.vim/bundle')
+call plug#begin($HOME.'/.nim/bundle')
 Plug 'shougo/vimproc.vim', {'do': 'yes \| make'}
 Plug 'shougo/unite.vim'
 " Plug 'shougo/vimfiler.vim'
@@ -41,7 +41,7 @@ set nobomb
 set t_Co=256
 set t_ut=
 set t_vb=
-set background=dark
+set background=light
 set expandtab
 set smarttab
 set shiftwidth=2
@@ -94,13 +94,6 @@ set concealcursor=i
 set clipboard+=unnamed,unnamedplus
 " }}}
 " Color and Syntax {{{
-if has('gui_running')
-  set guifont=Inconsolata\ LGC:h14
-  set guioptions-=m
-  set guioptions-=T
-  set guioptions-=r
-  set guioptions-=L
-endif
 filetype plugin indent on
 syntax on
 colorscheme xoria256
@@ -277,6 +270,10 @@ function! s:python()
   Arpeggio inoremap cla class<space>():<left><left><left>
   Arpeggio inoremap fom from<space>
   Arpeggio inoremap imp import<space>
+endfunction
+
+function! s:go()
+  Arpeggio inoremap vai var<space>
 endfunction
 
 function! s:common()

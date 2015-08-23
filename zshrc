@@ -15,12 +15,11 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
-export GOROOT="$HOME/go"
-export PATH="$GOROOT/bin:$PATH"
-# if (( $+commands[go] )); then
-#   export GOPATH=$HOME/.go
-#   export PATH="$GOPATH/bin:$PATH"
-# fi
+if (( $+commands[go] )); then
+  export GOPATH="$HOME/.go"
+  export GOBIN="$GOPATH/bin"
+  export PATH="$GOBIN:$PATH"
+fi
 # }}}
 # Alias {{{
 alias a='ag'
