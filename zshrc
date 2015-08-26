@@ -2,10 +2,6 @@
 if [ -f '/etc/zprofile' ]; then PATH=''; source '/etc/zprofile'; fi
 if [ -f "$HOME/.zsh_iterm2" ]; then source "$HOME/.zsh_iterm2"; fi
 if [ -f "$HOME/.zsh_search" ]; then source "$HOME/.zsh_search"; fi
-if [ -d '/usr/local/opt/chruby/share/chruby/' ]; then
-  source '/usr/local/opt/chruby/share/chruby/chruby.sh'
-  chruby 2.2.2
-fi
 # }}}
 # Export {{{
 export LANG='en_US.UTF-8'
@@ -15,21 +11,14 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
-if (( $+commands[go] )); then
-  export GOPATH="$HOME/.go"
-  export GOBIN="$GOPATH/bin"
-  export PATH="$GOBIN:$PATH"
+if (( $+commands[rbenv] )); then
+  eval "$(rbenv init -)"
 fi
 # }}}
 # Alias {{{
-alias a='ag'
-alias c='clear'
-alias d='df -h'
-alias e='exit'
-alias g='git'
-alias l='ls -GFlAhp'
-alias t='tmux'
-alias v='vim'
+alias df='df -h'
+alias ll='ls -GFlAhp'
+alias vi='vim'
 alias cp='cp -ivR'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'
@@ -78,11 +67,12 @@ setopt nohashdirs
 bindkey -v
 bindkey -M viins 'jk' vi-cmd-mode
 bindkey '^r' history-incremental-search-backward
+# Command from zsh-hitory-substring-search
 bindkey '^u' history-substring-search-up
 bindkey '^d' history-substring-search-down
 
 HISTFILE=$HOME/.zsh_history
-HISTSIZE=1024
+HISTSIZE=5120
 SAVEHIST=1024
 
 zstyle ':completion::complete:*' use-cache on
@@ -98,8 +88,7 @@ zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*:*' branchformats '%r'
 zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
 precmd() {vcs_info}
-local smiley="%(?,:),:()"
 
-PROMPT='%F{green}%B%U%1d${smiley}%u%b%f %{$reset_color%}'
+PROMPT='%F{green}%B%U%n%u%b%f:%1~$vcs_info_msg_0_ $ %{$reset_color%}'
 RPROMPT=''
 # }}}

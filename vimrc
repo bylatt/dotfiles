@@ -1,5 +1,5 @@
 " NeoBundle Settings {{{
-call plug#begin($HOME.'/.nim/bundle')
+call plug#begin($HOME.'/.vim/bundle')
 Plug 'shougo/vimproc.vim', {'do': 'yes \| make'}
 Plug 'shougo/unite.vim'
 " Plug 'shougo/vimfiler.vim'
@@ -41,7 +41,7 @@ set nobomb
 set t_Co=256
 set t_ut=
 set t_vb=
-set background=light
+set background=dark
 set expandtab
 set smarttab
 set shiftwidth=2
@@ -55,7 +55,7 @@ set autowrite
 set autoread
 set nowrap
 set backspace=2
-set laststatus=0
+set laststatus=2
 set showtabline=0
 set showcmd
 set number
@@ -96,15 +96,7 @@ set clipboard+=unnamed,unnamedplus
 " Color and Syntax {{{
 filetype plugin indent on
 syntax on
-colorscheme xoria256
-" }}}
-" Improve color scheme {{{
-highlight Normal                   ctermbg=none
-highlight NonText      cterm=none  ctermbg=none
-highlight SpecialKey   cterm=none  ctermbg=none
-highlight CursorLine   cterm=none  ctermbg=none
-highlight CursorLineNr cterm=none  ctermbg=none
-highlight LineNr       cterm=none  ctermbg=none
+colorscheme c256
 " }}}
 " Keys mapping {{{
 let g:mapleader=' '
@@ -201,12 +193,13 @@ let g:neomake_python_enabled_makers=['flake8']
 let g:neomake_javascript_enabled_makers=['jscs']
 let g:neomake_error_sign={'text': '>>','texthl': 'ErrorMsg'}
 let g:neomake_warning_sign = {'text': '>>','texthl': 'WarningMsg'}
-autocmd! BufWritePost * Neomake
+noremap <c-c> :Neomake<cr>
+" autocmd! BufWritePost * Neomake
 " }}}
 " Arpeggio {{{
 function! s:javascript()
-  Arpeggio inoremap fin function<space>()<space>{<cr>}<esc>k$F(a
-  Arpeggio inoremap foe .forEach(function<space>() {<cr>})<esc>k$F(a
+  Arpeggio inoremap fin function()<space>{<cr>}<esc>k$F(a
+  Arpeggio inoremap foe .forEach(function() {<cr>})<esc>k$F(a
   Arpeggio inoremap con console.log()<left>
   Arpeggio inoremap thi this.
   Arpeggio inoremap ten .then()<left>
@@ -225,7 +218,7 @@ function! s:javascript()
   Arpeggio inoremap bin .bind
   Arpeggio inoremap mep module.exports
   Arpeggio inoremap new new<space>
-  Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>kf(a
+  Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>k$<left><left>i
 endfunction
 
 function! s:ruby()
@@ -243,7 +236,7 @@ function! s:ruby()
 endfunction
 
 function! s:php()
-  Arpeggio inoremap put echo<space>
+  Arpeggio inoremap put print<space>
   Arpeggio inoremap pub public<space>
   Arpeggio inoremap pri private<space>
   Arpeggio inoremap pam param<space>
@@ -256,7 +249,8 @@ function! s:php()
   Arpeggio inoremap cla class<space><cr>{<cr>}<esc>2k$a
   Arpeggio inoremap req require_once<space>'';<left><left>
   Arpeggio inoremap ary array()<left>
-  Arpeggio inoremap vai var<space>
+  Arpeggio inoremap vai var_dump()<left>
+  Arpeggio inoremap len strlen()<left>
 endfunction
 
 function! s:python()
@@ -270,10 +264,6 @@ function! s:python()
   Arpeggio inoremap cla class<space>():<left><left><left>
   Arpeggio inoremap fom from<space>
   Arpeggio inoremap imp import<space>
-endfunction
-
-function! s:go()
-  Arpeggio inoremap vai var<space>
 endfunction
 
 function! s:common()
