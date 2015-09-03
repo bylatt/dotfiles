@@ -1,6 +1,7 @@
 [user]
 	name = Lattapon Yodsuwan
 	email = i@clozed2u.com
+	username = clozed2u
 [core]
 	autocrlf = input
 	safecrlf = true

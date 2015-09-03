@@ -4,7 +4,7 @@ Plug 'shougo/vimproc.vim', {'do': 'yes \| make'}
 Plug 'shougo/unite.vim'
 " Plug 'shougo/vimfiler.vim'
 Plug 'raimondi/delimitmate'
-Plug 'benekastah/neomake'
+Plug 'scrooloose/syntastic', {'on': 'SyntasticCheck'}
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 Plug 'ervandew/supertab'
 Plug 'tmhedberg/matchit'
@@ -17,6 +17,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'wakatime/vim-wakatime'
 Plug 'thoughtbot/vim-rspec'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
@@ -94,9 +95,18 @@ set concealcursor=i
 set clipboard+=unnamed,unnamedplus
 " }}}
 " Color and Syntax {{{
-filetype plugin indent on
+filetype plugin on
+filetype indent on
 syntax on
-colorscheme c256
+colorscheme grb
+" }}}
+" Improve color scheme {{{
+highlight Normal                   ctermbg=none
+highlight NonText      cterm=none  ctermbg=none
+highlight SpecialKey   cterm=none  ctermbg=none
+highlight CursorLine   cterm=none  ctermbg=none
+highlight CursorLineNr cterm=none  ctermbg=none
+highlight LineNr       cterm=none  ctermbg=none
 " }}}
 " Keys mapping {{{
 let g:mapleader=' '
@@ -184,17 +194,26 @@ autocmd filetype unite call s:unite_settings()
 " autocmd FileType vimfiler nmap <buffer> <c-r> <plug>(vimfiler_redraw_screen)
 " autocmd FileType vimfiler nmap <silent><buffer><expr> <cr> vimfiler#smart_cursor_map("\<plug>(vimfiler_expand_tree)", '"\<plug>(vimfiler_edit_file)")
 " }}}
-" Neomake {{{
-let g:neomake_open_list=0
-let g:neomake_echo_current_error=1
-let g:neomake_php_enabled_makers=['phpcs']
-let g:neomake_ruby_enabled_makers=['rubocop']
-let g:neomake_python_enabled_makers=['flake8']
-let g:neomake_javascript_enabled_makers=['jscs']
-let g:neomake_error_sign={'text': '>>','texthl': 'ErrorMsg'}
-let g:neomake_warning_sign = {'text': '>>','texthl': 'WarningMsg'}
-noremap <c-c> :Neomake<cr>
-" autocmd! BufWritePost * Neomake
+" Syntastic {{{
+let g:syntastic_auto_jump=0
+let g:syntastic_check_on_wq=0
+let g:syntastic_enable_signs=1
+let g:syntastic_check_on_open=0
+let g:syntastic_auto_loc_list=0
+let g:syntastic_aggregate_errors=1
+let g:syntastic_go_checkers=['']
+let g:syntastic_php_checkers=['php', 'phpcs']
+let g:syntastic_ruby_checkers=['mri', 'rubocop']
+let g:syntastic_haml_checkers=['haml']
+let g:syntastic_sass_checkers=['sass']
+let g:syntastic_python_checkers=['python', 'flake8']
+let g:syntastic_javascript_checkers=['jscs']
+let g:syntastic_error_symbol='✗'
+let g:syntastic_style_error_symbol='✠'
+let g:syntastic_warning_symbol='∆'
+let g:syntastic_style_warning_symbol='≈'
+let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
+nnoremap <leader>c :SyntasticCheck<cr>
 " }}}
 " Arpeggio {{{
 function! s:javascript()

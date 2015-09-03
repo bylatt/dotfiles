@@ -18,6 +18,7 @@ fi
 # Alias {{{
 alias df='df -h'
 alias ll='ls -GFlAhp'
+alias lr='ls -alR'
 alias vi='vim'
 alias cp='cp -ivR'
 alias mv='mv -iv'

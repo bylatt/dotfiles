@@ -1,4 +1,6 @@
 {
     "preset": "airbnb",
-    "requireCurlyBraces": null
+    "requireSemicolons": null,
+    "requireCurlyBraces": null,
+    "requireCamelCaseOrUpperCaseIdentifiers": "ignoreProperties"
 }
