@@ -11,6 +11,9 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
+if (( $+commands[go] )); then
+  export GOPATH=$HOME/.go
+fi
 if (( $+commands[rbenv] )); then
   eval "$(rbenv init -)"
 fi
@@ -19,7 +22,7 @@ fi
 alias df='df -h'
 alias ll='ls -GFlAhp'
 alias lr='ls -alR'
-alias vi='vim'
+alias vi='nvim'
 alias cp='cp -ivR'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'

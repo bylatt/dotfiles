@@ -1,5 +1,5 @@
 " NeoBundle Settings {{{
-call plug#begin($HOME.'/.vim/bundle')
+call plug#begin($HOME.'/.nvim/bundle')
 Plug 'shougo/vimproc.vim', {'do': 'yes \| make'}
 Plug 'shougo/unite.vim'
 " Plug 'shougo/vimfiler.vim'
@@ -32,16 +32,10 @@ Plug 'fatih/vim-go'
 call plug#end()
 " }}}
 " Vim Settings {{{
-set nocompatible
 set sh=$SHELL
-set term=$TERM
 set encoding=utf-8
 set fileencoding=utf-8
-set termencoding=utf-8
 set nobomb
-set t_Co=256
-set t_ut=
-set t_vb=
 set background=dark
 set expandtab
 set smarttab
@@ -69,7 +63,7 @@ set smartcase
 set ignorecase
 set infercase
 set showmatch
-set matchtime=10
+set matchtime=0
 set nobackup
 set nowritebackup
 set noswapfile
@@ -86,13 +80,14 @@ set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cac
 set statusline=%{getcwd()}/%f\ %m\ %=\ [%l,%c]\ [%L,%p%%]
 set splitbelow
 set splitright
-set timeoutlen=2000
-set ttimeoutlen=200
+set timeout
+set nottimeout
 set nofoldenable
 set foldmethod=indent
 set foldlevel=1
 set concealcursor=i
-set clipboard+=unnamed,unnamedplus
+set magic
+set clipboard+=unnamedplus
 " }}}
 " Color and Syntax {{{
 filetype plugin on
@@ -109,7 +104,7 @@ highlight CursorLineNr cterm=none  ctermbg=none
 highlight LineNr       cterm=none  ctermbg=none
 " }}}
 " Keys mapping {{{
-let g:mapleader=' '
+let g:mapleader="\<space>"
 noremap <c-j> <c-w>j
 noremap <c-k> <c-w>k
 noremap <c-h> <c-w>h
@@ -298,7 +293,7 @@ autocmd filetype php call s:php()
 autocmd filetype ruby call s:ruby()
 autocmd filetype python call s:python()
 autocmd filetype javascript call s:javascript()
-let g:arpeggio_timeoutlen=50
+let g:arpeggio_timeoutlen=30
 " }}}
 " NERDTree {{{
 let g:NERDTreeHijackNetrw=1
