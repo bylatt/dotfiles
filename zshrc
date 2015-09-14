@@ -22,7 +22,7 @@ fi
 alias df='df -h'
 alias ll='ls -GFlAhp'
 alias lr='ls -alR'
-alias vi='nvim'
+alias vi='vim'
 alias cp='cp -ivR'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'

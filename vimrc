@@ -1,10 +1,10 @@
 " NeoBundle Settings {{{
-call plug#begin($HOME.'/.nvim/bundle')
+call plug#begin($HOME.'/.vim/bundle')
 Plug 'shougo/vimproc.vim', {'do': 'yes \| make'}
 Plug 'shougo/unite.vim'
 " Plug 'shougo/vimfiler.vim'
 Plug 'raimondi/delimitmate'
-Plug 'scrooloose/syntastic', {'on': 'SyntasticCheck'}
+Plug 'scrooloose/syntastic'
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 Plug 'ervandew/supertab'
 Plug 'tmhedberg/matchit'
@@ -32,10 +32,16 @@ Plug 'fatih/vim-go'
 call plug#end()
 " }}}
 " Vim Settings {{{
+set nocompatible
 set sh=$SHELL
+set term=$TERM
 set encoding=utf-8
 set fileencoding=utf-8
+set termencoding=utf-8
 set nobomb
+set t_Co=256
+set t_ut=
+set t_vb=
 set background=dark
 set expandtab
 set smarttab
@@ -63,7 +69,7 @@ set smartcase
 set ignorecase
 set infercase
 set showmatch
-set matchtime=0
+set matchtime=10
 set nobackup
 set nowritebackup
 set noswapfile
@@ -77,23 +83,24 @@ set completeopt=longest,menuone
 set wildmenu
 set wildmode=list:longest,full
 set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*,.composer/*,.gem/*
-set statusline=%{getcwd()}/%f\ %m\ %=\ [%l,%c]\ [%L,%p%%]
+set statusline=%{getcwd()}/%f\ %{fugitive#head()}\ %m\ %{SyntasticStatuslineFlag()}\ %=\ [%l,%c]\ [%L,%p%%]
 set splitbelow
 set splitright
 set timeout
-set nottimeout
+set timeoutlen=300
+set ttimeout
+set ttimeoutlen=0
 set nofoldenable
 set foldmethod=indent
 set foldlevel=1
 set concealcursor=i
-set magic
-set clipboard+=unnamedplus
+set clipboard+=unnamed,unnamedplus
 " }}}
 " Color and Syntax {{{
 filetype plugin on
 filetype indent on
 syntax on
-colorscheme grb
+colorscheme xoria
 " }}}
 " Improve color scheme {{{
 highlight Normal                   ctermbg=none
@@ -104,7 +111,7 @@ highlight CursorLineNr cterm=none  ctermbg=none
 highlight LineNr       cterm=none  ctermbg=none
 " }}}
 " Keys mapping {{{
-let g:mapleader="\<space>"
+let g:mapleader=' '
 noremap <c-j> <c-w>j
 noremap <c-k> <c-w>k
 noremap <c-h> <c-w>h
@@ -117,8 +124,8 @@ nnoremap ! :!
 " }}}
 " Unite {{{
 nnoremap <leader>p :Unite -no-split -start-insert file_rec/async:!<cr>
-nnoremap <leader>y :Unite history/yank<cr>
-nnoremap <leader>s :Unite -quick-match buffer<cr>
+nnoremap <leader>y :Unite -no-split history/yank<cr>
+nnoremap <leader>s :Unite -no-split -quick-match buffer<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 let g:unite_winheight=15
 let g:unite_prompt='>> '
@@ -233,6 +240,7 @@ function! s:javascript()
   Arpeggio inoremap mep module.exports
   Arpeggio inoremap new new<space>
   Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>k$<left><left>i
+  Arpeggio inoremap pam .params.
 endfunction
 
 function! s:ruby()
@@ -293,7 +301,7 @@ autocmd filetype php call s:php()
 autocmd filetype ruby call s:ruby()
 autocmd filetype python call s:python()
 autocmd filetype javascript call s:javascript()
-let g:arpeggio_timeoutlen=30
+let g:arpeggio_timeoutlen=50
 " }}}
 " NERDTree {{{
 let g:NERDTreeHijackNetrw=1
