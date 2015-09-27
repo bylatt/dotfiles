@@ -11,10 +11,7 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
-if (( $+commands[go] )); then
-  export GOPATH=$HOME/.go
-fi
-if (( $+commands[rbenv] )); then
+if (($+commands[rbenv])); then
   eval "$(rbenv init -)"
 fi
 # }}}
@@ -26,8 +23,6 @@ alias vi='vim'
 alias cp='cp -ivR'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'
-alias ..='cd ../'
-alias ...='cd ../../'
 mcd() { mkdir -p "$1" && cd "$1"; }
 trash() { mv "$@" ~/.Trash; }
 # }}}

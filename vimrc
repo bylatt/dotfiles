@@ -1,23 +1,16 @@
-" NeoBundle Settings {{{
+" cloze2u's vim
+" Plug Settings {{{
 call plug#begin($HOME.'/.vim/bundle')
-Plug 'shougo/vimproc.vim', {'do': 'yes \| make'}
-Plug 'shougo/unite.vim'
-" Plug 'shougo/vimfiler.vim'
-Plug 'raimondi/delimitmate'
-Plug 'scrooloose/syntastic'
-Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
+Plug 'ervandew/matchem'
 Plug 'ervandew/supertab'
-Plug 'tmhedberg/matchit'
-Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
-Plug 'wincent/terminus'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'gabrielelana/vim-markdown'
 Plug 'kchmck/vim-coffee-script'
 Plug 'pangloss/vim-javascript'
 Plug 'wakatime/vim-wakatime'
-Plug 'thoughtbot/vim-rspec'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
@@ -26,9 +19,7 @@ Plug 'sickill/vim-pasta'
 Plug 'vim-ruby/vim-ruby'
 Plug 'junegunn/vim-plug'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-rails'
-Plug 'fatih/vim-go'
 call plug#end()
 " }}}
 " Vim Settings {{{
@@ -50,8 +41,6 @@ set tabstop=2
 set softtabstop=2
 set autoindent
 set smartindent
-set copyindent
-set cindent
 set autowrite
 set autoread
 set nowrap
@@ -69,13 +58,13 @@ set smartcase
 set ignorecase
 set infercase
 set showmatch
-set matchtime=10
+set matchtime=0
 set nobackup
 set nowritebackup
 set noswapfile
 set list
 set endofline
-set listchars=tab:\ \ ,trail:\ ,extends:#,eol:\ ,nbsp:.
+set listchars=tab:›\ ,trail:•,extends:>,eol:\ ,nbsp:.
 set fillchars=vert:\|,fold:\
 set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
@@ -122,79 +111,12 @@ nmap <cr> :noh<cr>
 nnoremap ; :
 nnoremap ! :!
 " }}}
-" Unite {{{
-nnoremap <leader>p :Unite -no-split -start-insert file_rec/async:!<cr>
-nnoremap <leader>y :Unite -no-split history/yank<cr>
-nnoremap <leader>s :Unite -no-split -quick-match buffer<cr>
-nnoremap <leader>/ :Unite grep:.<cr>
-let g:unite_winheight=15
-let g:unite_prompt='>> '
-let g:unite_split_rule='topleft'
-let g:unite_data_directory=$HOME.'/.vim/tmp/unite'
-let g:unite_source_rec_max_cache_files=0
-let g:unite_source_history_yank_enable=1
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-call unite#custom_source('file_rec/async',
-      \ 'ignore_pattern', join([
-      \ '\.git/',
-      \ '\.svn/',
-      \ '\.hg/',
-      \ '\.cache/',
-      \ '\.composer/',
-      \ '\.gem/',
-      \ '\.sass-cache',
-      \ '\.config/',
-      \ 'tmp/',
-      \ 'node_modules/',
-      \ 'vendor/',
-      \ 'bower_components/',
-      \ ], '\|'))
-call unite#custom#source('file_rec/async', 'converters', [])
-call unite#custom#source('file_rec/async', 'sorters', [])
-call unite#custom#source('file_rec/async', 'max_candidates', 15)
-if executable('ag')
-  let s:ag_opts = '-SU --hidden --nocolor --nogroup'
-  let g:unite_source_rec_async_command='ag --follow '.s:ag_opts.' -g ""'
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '-i --line-numbers '.s:ag_opts
-  let g:unite_source_grep_recursive_opt = ''
-endif
-
-function! s:unite_settings()
-  Arpeggio inoremap jk <esc>
-  imap <buffer> <esc> <plug>(unite_exit)
-  imap <buffer> <c-j> <plug>(unite_select_next_line)
-  imap <buffer> <c-k> <plug>(unite_select_previous_line)
-endfunction
-
-autocmd filetype unite call s:unite_settings()
-" }}}
-" Vimfiler {{{
-" let g:vimfiler_data_directory=$HOME.'/.vim/tmp/vimfiler'
-" let g:vimfiler_as_default_explorer=1
-" let g:vimfiler_safe_mode_by_default=0
-" let g:vimfiler_tree_leaf_icon=" "
-" let g:vimfiler_tree_opened_icon='▾'
-" let g:vimfiler_tree_closed_icon='▸'
-" let g:vimfiler_file_icon='-'
-" let g:vimfiler_marked_file_icon='✓'
-" let g:vimfiler_readonly_file_icon='✗'
-" let g:vimfiler_time_format='%m-%d-%y %H:%M:%S'
-" let g:vimfiler_expand_jump_to_first_child=0
-" let g:vimfiler_ignore_pattern='\.git\|\.DS_Store\|\.pyc'
-
-" nnoremap <leader>n :<c-u>VimFilerExplorer -split -simple -parent -winwidth=35 -toggle -no-quit<cr>
-" nnoremap <leader>jf :<c-u>VimFilerExplorer -split -simple -parent -winwidth=35 -no-quit -find<cr>
-" autocmd FileType vimfiler nunmap <buffer> x
-" autocmd FileType vimfiler nmap <buffer> x <plug>(vimfiler_toggle_mark_current_line)
-" autocmd FileType vimfiler vmap <buffer> x <plug>(vimfiler_toggle_mark_selected_lines)
-" autocmd FileType vimfiler nunmap <buffer> l
-" autocmd FileType vimfiler nmap <buffer> l <plug>(vimfiler_cd_or_edit)
-" autocmd FileType vimfiler nmap <buffer> h <plug>(vimfiler_switch_to_parent_directory)
-" autocmd FileType vimfiler nunmap <buffer> <c-l>
-" autocmd FileType vimfiler nmap <buffer> <c-r> <plug>(vimfiler_redraw_screen)
-" autocmd FileType vimfiler nmap <silent><buffer><expr> <cr> vimfiler#smart_cursor_map("\<plug>(vimfiler_expand_tree)", '"\<plug>(vimfiler_edit_file)")
+" NERDTree {{{
+let g:NERDTreeHijackNetrw=1
+let g:NERDTreeWinPos=1
+let g:NERDTreeMinimalUI=1
+let g:NERDTreeAutoDeleteBuffer=1
+nnoremap <c-n> :NERDTreeToggle<cr>
 " }}}
 " Syntastic {{{
 let g:syntastic_auto_jump=0
@@ -203,24 +125,21 @@ let g:syntastic_enable_signs=1
 let g:syntastic_check_on_open=0
 let g:syntastic_auto_loc_list=0
 let g:syntastic_aggregate_errors=1
-let g:syntastic_go_checkers=['']
-let g:syntastic_php_checkers=['php', 'phpcs']
+let g:syntastic_javascript_checkers=['standard']
 let g:syntastic_ruby_checkers=['mri', 'rubocop']
 let g:syntastic_haml_checkers=['haml']
 let g:syntastic_sass_checkers=['sass']
-let g:syntastic_python_checkers=['python', 'flake8']
-let g:syntastic_javascript_checkers=['jscs']
 let g:syntastic_error_symbol='✗'
 let g:syntastic_style_error_symbol='✠'
 let g:syntastic_warning_symbol='∆'
 let g:syntastic_style_warning_symbol='≈'
 let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
-nnoremap <leader>c :SyntasticCheck<cr>
+nnoremap <c-c> :SyntasticCheck<cr>
 " }}}
 " Arpeggio {{{
 function! s:javascript()
-  Arpeggio inoremap fin function()<space>{<cr>}<esc>k$F(a
-  Arpeggio inoremap foe .forEach(function() {<cr>})<esc>k$F(a
+  Arpeggio inoremap fin function<space>()<space>{<cr>}<esc>k$F(a
+  Arpeggio inoremap foe .forEach(function<space>()<space>{<cr>})<esc>k$F(a
   Arpeggio inoremap con console.log()<left>
   Arpeggio inoremap thi this.
   Arpeggio inoremap ten .then()<left>
@@ -257,37 +176,6 @@ function! s:ruby()
   Arpeggio inoremap new .new
 endfunction
 
-function! s:php()
-  Arpeggio inoremap put print<space>
-  Arpeggio inoremap pub public<space>
-  Arpeggio inoremap pri private<space>
-  Arpeggio inoremap pam param<space>
-  Arpeggio inoremap fin function<space>()<cr>{<cr>}<esc>2kf(i
-  Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>kf(a
-  Arpeggio inoremap foe foreach<space>()<space>{<cr>}<esc>kf(a
-  Arpeggio inoremap els else<space>
-  Arpeggio inoremap whi while<space>()<space>{<cr>}<esc>kf(a
-  Arpeggio inoremap doc /**<cr>*<cr>*/<esc>ka<space>
-  Arpeggio inoremap cla class<space><cr>{<cr>}<esc>2k$a
-  Arpeggio inoremap req require_once<space>'';<left><left>
-  Arpeggio inoremap ary array()<left>
-  Arpeggio inoremap vai var_dump()<left>
-  Arpeggio inoremap len strlen()<left>
-endfunction
-
-function! s:python()
-  Arpeggio inoremap put print<space>
-  Arpeggio inoremap fin def<space>(self):<esc>F(i
-  Arpeggio inoremap ife if<space>:<left>
-  Arpeggio inoremap foe for<space>i<space>in<space>:<left>
-  Arpeggio inoremap els else:<cr>
-  Arpeggio inoremap whi while<space>:<left>
-  Arpeggio inoremap doc """<space>"""<left><left><left>
-  Arpeggio inoremap cla class<space>():<left><left><left>
-  Arpeggio inoremap fom from<space>
-  Arpeggio inoremap imp import<space>
-endfunction
-
 function! s:common()
   Arpeggio inoremap tui true
   Arpeggio inoremap fal false
@@ -297,59 +185,21 @@ function! s:common()
 endfunction
 
 autocmd vimenter * call s:common()
-autocmd filetype php call s:php()
 autocmd filetype ruby call s:ruby()
-autocmd filetype python call s:python()
 autocmd filetype javascript call s:javascript()
 let g:arpeggio_timeoutlen=50
 " }}}
-" NERDTree {{{
-let g:NERDTreeHijackNetrw=1
-let g:NERDTreeWinPos=1
-let g:NERDTreeMinimalUI=1
-let g:NERDTreeAutoDeleteBuffer=1
-nnoremap <leader>n :NERDTreeToggle<cr>
-" }}}
-" Tagbar {{{
-nnoremap <leader>t :TagbarToggle<cr>
-let g:tagbar_autofocus=1
-let g:tagbar_expand=1
-let g:tagbar_foldlevel=2
-let g:tagbar_autoshowtag=1
-let g:tagbar_type_go = {
-      \ 'ctagstype' : 'go',
-      \ 'kinds' : [
-      \   'p:package',
-      \   'i:imports:1',
-      \   'c:constants',
-      \   'v:variables',
-      \   't:types',
-      \   'n:interfaces',
-      \   'w:fields',
-      \   'e:embedded',
-      \   'm:methods',
-      \   'r:constructor',
-      \   'f:functions'
-      \ ],
-      \ 'sro' : '.',
-      \ 'kind2scope' : {
-      \   't' : 'ctype',
-      \   'n' : 'ntype'
-      \ },
-      \ 'scope2kind' : {
-      \   'ctype' : 't',
-      \   'ntype' : 'n'
-      \ },
-      \ 'ctagsbin'  : 'gotags',
-      \ 'ctagsargs' : '-sort -silent'
-      \ }
+" CtrlP {{{
+let g:ctrlp_use_caching=1
+let g:ctrlp_clear_cache_on_exit=1
+let g:ctrlp_cache_dir=$HOME.'/.vim/tmp/ctrlp'
+let g:ctrlp_by_filename=1
+let g:ctrlp_regexp=0
+let g:ctrlp_switch_buffer=0
 " }}}
 " JavaScript syntax {{{
 let g:javascript_enable_domhtmlcss=1
 let g:jsx_ext_required=0
-" }}}
-" Terminus {{{
-let g:TerminusCursorShape=0
 " }}}
 " Note {{{
 " Default vim key binding for autocomplete
@@ -373,4 +223,12 @@ autocmd filetype php setlocal expandtab smartindent shiftwidth=4 tabstop=4 softt
 autocmd filetype ruby setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
 autocmd filetype python setlocal expandtab nosmartindent shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=indent
 autocmd filetype javascript setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
+" }}}
+" Ag {{{
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --nocolor
+  let g:ctrlp_user_command='ag %s --ignore-case --smart-case --skip-vcs-ignores --hidden --nocolor --nogroup -g ""'
+  let g:ctrlp_use_caching=0
+  nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+endif
 " }}}
