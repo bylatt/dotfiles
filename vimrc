@@ -3,7 +3,7 @@
 call plug#begin($HOME.'/.vim/bundle')
 Plug 'ervandew/matchem'
 Plug 'ervandew/supertab'
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 Plug 'scrooloose/syntastic'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -71,7 +71,7 @@ set completefunc=syntaxcomplete#Complete
 set completeopt=longest,menuone
 set wildmenu
 set wildmode=list:longest,full
-set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*,.composer/*,.gem/*
+set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*,.composer/*,.gem/*,.git/*
 set statusline=%{getcwd()}/%f\ %{fugitive#head()}\ %m\ %{SyntasticStatuslineFlag()}\ %=\ [%l,%c]\ [%L,%p%%]
 set splitbelow
 set splitright
@@ -111,6 +111,11 @@ nmap <cr> :noh<cr>
 nnoremap ; :
 nnoremap ! :!
 " }}}
+" Supertab {{{
+let g:SuperTabDefaultCompletionType='context'
+let g:SuperTabContextDefaultCompletionType="<c-n>"
+autocmd filetype * if &omnifunc != '' | call SuperTabChain(&omnifunc, "<c-n>") | endif
+" }}}
 " NERDTree {{{
 let g:NERDTreeHijackNetrw=1
 let g:NERDTreeWinPos=1
@@ -135,6 +140,14 @@ let g:syntastic_warning_symbol='∆'
 let g:syntastic_style_warning_symbol='≈'
 let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
 nnoremap <c-c> :SyntasticCheck<cr>
+" }}}
+" CtrlP {{{
+let g:ctrlp_use_caching=1
+let g:ctrlp_clear_cache_on_exit=1
+let g:ctrlp_cache_dir=$HOME.'/.vim/tmp/ctrlp'
+let g:ctrlp_by_filename=1
+let g:ctrlp_regexp=0
+let g:ctrlp_switch_buffer=0
 " }}}
 " Arpeggio {{{
 function! s:javascript()
@@ -189,46 +202,34 @@ autocmd filetype ruby call s:ruby()
 autocmd filetype javascript call s:javascript()
 let g:arpeggio_timeoutlen=50
 " }}}
-" CtrlP {{{
-let g:ctrlp_use_caching=1
-let g:ctrlp_clear_cache_on_exit=1
-let g:ctrlp_cache_dir=$HOME.'/.vim/tmp/ctrlp'
-let g:ctrlp_by_filename=1
-let g:ctrlp_regexp=0
-let g:ctrlp_switch_buffer=0
-" }}}
-" JavaScript syntax {{{
-let g:javascript_enable_domhtmlcss=1
-let g:jsx_ext_required=0
-" }}}
-" Note {{{
-" Default vim key binding for autocomplete
-" <c-x><c-f> for path completion
-" <c-x><c-l> for whole line completion
-" <c-x><c-o> for omnifunc completion
-" <c-x><c-u> for completefunc completion
-" <c-x><c-]> for tag conpletion
-" <c-x><c-k> for dictionary conpletion
-" <c-n> for completion for next match keyword
-" <c-p> for completion for previous match keyword
-" When stage is on option list
-" <c-n> for next option
-" <c-p> for previous option
-" }}}
 " Filetype {{{
 autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-autocmd filetype zsh setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=marker foldlevel=0
-autocmd filetype vim setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=marker foldlevel=0
-autocmd filetype php setlocal expandtab smartindent shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
-autocmd filetype ruby setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
-autocmd filetype python setlocal expandtab nosmartindent shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=indent
-autocmd filetype javascript setlocal expandtab smartindent shiftwidth=2 tabstop=2 softtabstop=2 foldmethod=syntax
+autocmd filetype zsh setlocal foldmethod=marker foldlevel=0
+autocmd filetype vim setlocal foldmethod=marker foldlevel=0
+autocmd filetype php setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
+autocmd filetype ruby setlocal foldmethod=syntax
+autocmd filetype make setlocal noexpandtab shiftwidth=4 tabstop=4 softtabstop=4
+autocmd filetype python setlocal nosmartindent shiftwidth=4 tabstop=4 softtabstop=4
+autocmd filetype javascript setlocal foldmethod=syntax
 " }}}
 " Ag {{{
 if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
   let g:ctrlp_user_command='ag %s --ignore-case --smart-case --skip-vcs-ignores --hidden --nocolor --nogroup -g ""'
   let g:ctrlp_use_caching=0
-  nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 endif
+" }}}
+" Note {{{
+" Default vim key binding for autocomplete
+" <c-x><c-f> for path completion
+" <c-x><c-k> for dictionary conpletion
+" <c-x><c-l> for whole line completion
+" <c-x><c-o> for omnifunc completion
+" <c-x><c-u> for completefunc completion
+" <c-x><c-]> for tag conpletion
+" <c-n> for completion for next match keyword
+" <c-p> for completion for previous match keyword
+" When stage is on option list
+" <c-n> for next option
+" <c-p> for previous option
 " }}}
