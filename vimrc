@@ -1,20 +1,18 @@
-" cloze2u's vim
+" ------------------------
+" Lattapon Yodsuwan's vim
+" ------------------------
 " Plug Settings {{{
 call plug#begin($HOME.'/.vim/bundle')
-Plug 'ervandew/matchem'
 Plug 'ervandew/supertab'
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 Plug 'scrooloose/syntastic'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'kchmck/vim-coffee-script'
-Plug 'pangloss/vim-javascript'
-Plug 'wakatime/vim-wakatime'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
-Plug 'kana/vim-arpeggio'
 Plug 'sickill/vim-pasta'
 Plug 'vim-ruby/vim-ruby'
 Plug 'junegunn/vim-plug'
@@ -33,7 +31,7 @@ set nobomb
 set t_Co=256
 set t_ut=
 set t_vb=
-set background=dark
+set background=light
 set expandtab
 set smarttab
 set shiftwidth=2
@@ -44,13 +42,15 @@ set smartindent
 set autowrite
 set autoread
 set nowrap
+set history=1024
 set backspace=2
 set laststatus=2
 set showtabline=0
 set showcmd
 set number
 set cursorline
-set scrolloff=4
+set cursorcolumn
+set scrolloff=2
 set gdefault
 set incsearch
 set hlsearch
@@ -76,7 +76,7 @@ set statusline=%{getcwd()}/%f\ %{fugitive#head()}\ %m\ %{SyntasticStatuslineFlag
 set splitbelow
 set splitright
 set timeout
-set timeoutlen=300
+set timeoutlen=200
 set ttimeout
 set ttimeoutlen=0
 set nofoldenable
@@ -89,15 +89,17 @@ set clipboard+=unnamed,unnamedplus
 filetype plugin on
 filetype indent on
 syntax on
-colorscheme xoria
+colorscheme grb
 " }}}
 " Improve color scheme {{{
-highlight Normal                   ctermbg=none
-highlight NonText      cterm=none  ctermbg=none
-highlight SpecialKey   cterm=none  ctermbg=none
-highlight CursorLine   cterm=none  ctermbg=none
-highlight CursorLineNr cterm=none  ctermbg=none
-highlight LineNr       cterm=none  ctermbg=none
+highlight Normal                  ctermbg=none
+highlight NonText      cterm=none ctermbg=none
+highlight SpecialKey   cterm=none ctermbg=none
+highlight CursorLine   cterm=none ctermbg=none
+highlight CursorLineNr cterm=none ctermbg=none ctermfg=none
+highlight CursorColumn cterm=none ctermbg=none ctermfg=none
+highlight LineNr       cterm=none ctermbg=none ctermfg=240
+highlight TabLineFill  cterm=none ctermbg=none
 " }}}
 " Keys mapping {{{
 let g:mapleader=' '
@@ -107,14 +109,15 @@ noremap <c-h> <c-w>h
 noremap <c-l> <c-w>l
 vmap <  <gv
 vmap > >gv
-nmap <cr> :noh<cr>
+nmap <cr> :nohlsearch<cr>
 nnoremap ; :
 nnoremap ! :!
+inoremap jk <esc>
+inoremap kj <esc>
+imap <c-l> =>
 " }}}
 " Supertab {{{
-let g:SuperTabDefaultCompletionType='context'
-let g:SuperTabContextDefaultCompletionType="<c-n>"
-autocmd filetype * if &omnifunc != '' | call SuperTabChain(&omnifunc, "<c-n>") | endif
+let g:SuperTabDefaultCompletionType='<c-n>'
 " }}}
 " NERDTree {{{
 let g:NERDTreeHijackNetrw=1
@@ -142,67 +145,15 @@ let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_
 nnoremap <c-c> :SyntasticCheck<cr>
 " }}}
 " CtrlP {{{
-let g:ctrlp_use_caching=1
+let g:ctrlp_use_caching=0
 let g:ctrlp_clear_cache_on_exit=1
 let g:ctrlp_cache_dir=$HOME.'/.vim/tmp/ctrlp'
-let g:ctrlp_by_filename=1
-let g:ctrlp_regexp=0
+let g:ctrlp_by_filename=0
+let g:ctrlp_regexp=1
 let g:ctrlp_switch_buffer=0
 " }}}
-" Arpeggio {{{
-function! s:javascript()
-  Arpeggio inoremap fin function<space>()<space>{<cr>}<esc>k$F(a
-  Arpeggio inoremap foe .forEach(function<space>()<space>{<cr>})<esc>k$F(a
-  Arpeggio inoremap con console.log()<left>
-  Arpeggio inoremap thi this.
-  Arpeggio inoremap ten .then()<left>
-  Arpeggio inoremap req require('')<esc>F'i
-  Arpeggio inoremap vai var<space>
-  Arpeggio inoremap doc document.
-  Arpeggio inoremap win window.
-  Arpeggio inoremap pro .prototype.
-  Arpeggio inoremap ary Array
-  Arpeggio inoremap obj Object
-  Arpeggio inoremap len .length
-  Arpeggio inoremap aug arguments
-  Arpeggio inoremap rea fs.readFile
-  Arpeggio inoremap jsp JSON.parse
-  Arpeggio inoremap jst JSON.stringify
-  Arpeggio inoremap bin .bind
-  Arpeggio inoremap mep module.exports
-  Arpeggio inoremap new new<space>
-  Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>k$<left><left>i
-  Arpeggio inoremap pam .params.
-endfunction
-
-function! s:ruby()
-  Arpeggio inoremap put puts<space>
-  Arpeggio inoremap xv, cases<space>do<cr>end<esc>O
-  Arpeggio inoremap xv. loop<space>do<cr>end<esc>O
-  Arpeggio inoremap req require ''<left>
-  Arpeggio inoremap whi while<cr>end<esc>kA<space>
-  Arpeggio inoremap fin def<cr>end<esc>kA<space>
-  Arpeggio inoremap cla class<cr>end<esc>kA<space>
-  Arpeggio inoremap ges gets
-  Arpeggio inoremap ife if<cr>end<esc>kA<space>
-  Arpeggio inoremap els else
-  Arpeggio inoremap new .new
-endfunction
-
-function! s:common()
-  Arpeggio inoremap tui true
-  Arpeggio inoremap fal false
-  Arpeggio inoremap mat Math
-  Arpeggio inoremap wer return<space>
-  Arpeggio inoremap jk <esc>
-endfunction
-
-autocmd vimenter * call s:common()
-autocmd filetype ruby call s:ruby()
-autocmd filetype javascript call s:javascript()
-let g:arpeggio_timeoutlen=50
-" }}}
 " Filetype {{{
+autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd filetype zsh setlocal foldmethod=marker foldlevel=0
 autocmd filetype vim setlocal foldmethod=marker foldlevel=0
@@ -227,6 +178,8 @@ endif
 " <c-x><c-o> for omnifunc completion
 " <c-x><c-u> for completefunc completion
 " <c-x><c-]> for tag conpletion
+" <c-x><c-n> for keyword in current file
+" <c-x><c-v> for vim command line
 " <c-n> for completion for next match keyword
 " <c-p> for completion for previous match keyword
 " When stage is on option list

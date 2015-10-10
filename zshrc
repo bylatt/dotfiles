@@ -71,8 +71,8 @@ bindkey '^u' history-substring-search-up
 bindkey '^d' history-substring-search-down
 
 HISTFILE=$HOME/.zsh_history
-HISTSIZE=5120
-SAVEHIST=1024
+HISTSIZE=10240
+SAVEHIST=10240
 
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion:*' cache-path ~/.cache/zsh
@@ -86,8 +86,16 @@ zstyle ':vcs_info:*:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*:*' branchformats '%r'
 zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
+set-window-title() {
+  echo -ne "\e]1;clozed2u\a"
+  echo -ne "\e]0;clozed2u\a"
+}
+PR_TITLEBAR=''
+set-window-title
+add-zsh-hook precmd set-window-title
 precmd() {vcs_info}
 
-PROMPT='%F{green}%B%U%n%u%b%f:%1~$vcs_info_msg_0_ $ %{$reset_color%}'
+DISABLE_AUTO_TITLE="true"
+PROMPT='%F{green}%B%U%1d%u%b%f $ %{$reset_color%}'
 RPROMPT=''
 # }}}
