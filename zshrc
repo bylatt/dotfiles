@@ -12,6 +12,7 @@ export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
 if (($+commands[rbenv])); then
+  export RBENV_ROOT="/usr/local/var/rbenv"
   eval "$(rbenv init -)"
 fi
 # }}}
@@ -27,7 +28,7 @@ mcd() { mkdir -p "$1" && cd "$1"; }
 trash() { mv "$@" ~/.Trash; }
 # }}}
 # ZSH specific settings {{{
-autoload -U compinit promptinit colors vcs_info
+autoload -Uz add-zsh-hook compinit promptinit colors vcs_info
 compinit -d $HOME/.zsh_compdump
 promptinit
 colors
@@ -80,22 +81,64 @@ zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
-zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:*:*' get-revision true
 zstyle ':vcs_info:*:*' check-for-changes true
-zstyle ':vcs_info:*:*' stagedstr '%F{yellow}'
-zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
-zstyle ':vcs_info:*:*' branchformats '%r'
-zstyle ':vcs_info:*:*' formats ' %F{green}%c%u(%b)%f'
-set-window-title() {
-  echo -ne "\e]1;clozed2u\a"
+zstyle ':vcs_info:git*+set-message:*' hooks \
+  git-stash \
+  git-square-bracket \
+  git-untracked
+zstyle ':vcs_info:*' formats ":%{$fg_bold[grey]%}%m%u%c[%s:%b]%{$reset_color%}"
+zstyle ':vcs_info:*' actionformats ":%{$fg_bold[grey]%}%m%u%c[%s:%b|%a]%{$reset_color%}"
+
+# Get name of remote that we're tracking
+function +vi-git-remote() {
+  local remote
+  remote=$(git remote 2>/dev/null)
+  if [[ -n ${remote} ]]; then
+    hook_com[branch]="${remote}/${hook_com[branch]}"
+  fi
+}
+
+# Show untracked files indicator
+function +vi-git-untracked {
+  local untracked
+  untracked=$(git ls-files --other --exclude-standard 2>/dev/null)
+  if [[ -n ${untracked} ]]; then
+    hook_com[misc]+="[?]"
+  fi
+}
+
+# Show number of stashed changes.
+function +vi-git-stash() {
+  local -a stashes
+  if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
+    stashes=(${(@f)$(git stash list 2>/dev/null)})
+    # Sometimes refs/stash exists even with 0 stashes
+    # Make sure we have at least 1 stash before adding this info
+    if (( ${#stashes} )); then
+      hook_com[misc]+="[${#stashes}S]"
+    fi
+  fi
+}
+
+# Square bracketing for a few things
+function +vi-git-square-bracket {
+  if [[ -n ${hook_com[unstaged]} ]]; then
+    hook_com[unstaged]="[${hook_com[unstaged]}]"
+  fi
+
+  if [[ -n ${hook_com[staged]} ]]; then
+    hook_com[staged]="[${hook_com[staged]}]"
+  fi
+}
+
+function set-window-title {
   echo -ne "\e]0;clozed2u\a"
 }
-PR_TITLEBAR=''
-set-window-title
-add-zsh-hook precmd set-window-title
-precmd() {vcs_info}
 
-DISABLE_AUTO_TITLE="true"
-PROMPT='%F{green}%B%U%1d%u%b%f $ %{$reset_color%}'
-RPROMPT=''
+add-zsh-hook precmd set-window-title
+add-zsh-hook precmd vcs_info
+
+PROMPT='%F{green}%U%B%1d#!%b%u%f%{$vcs_info_msg_0_%} %{$reset_color%}'
 # }}}
