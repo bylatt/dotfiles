@@ -1,6 +1,6 @@
-" ------------------------
+" -----------------------
 " Lattapon Yodsuwan's vim
-" ------------------------
+" -----------------------
 " Vundle {{{
 set rtp+=$HOME/.vim/bundle/vundle.vim
 call vundle#begin()
@@ -16,7 +16,6 @@ Plugin 'janko-m/vim-test'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-rails'
 call vundle#end()
@@ -45,10 +44,9 @@ set backspace=2
 set laststatus=2
 set showtabline=0
 set showcmd
-set number
+set nonumber
 set cursorline
 set cursorcolumn
-set scrolloff=2
 set gdefault
 set incsearch
 set hlsearch
@@ -69,7 +67,7 @@ set completeopt=longest,menuone
 set wildmenu
 set wildmode=list:longest,full
 set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*,.composer/*,.gem/*,.git/*
-set statusline=%{getcwd()}/%f\ %{fugitive#head()}\ %m\ %{SyntasticStatuslineFlag()}\ %=\ [%l,%c]\ [%L,%p%%]
+set statusline=%f\ %m\ %=\ %{fugitive#head()}\ %{SyntasticStatuslineFlag()}
 set splitbelow
 set splitright
 set ttyfast
@@ -83,13 +81,13 @@ set foldlevel=1
 set concealcursor=i
 set clipboard+=unnamed,unnamedplus
 " }}}
-" Color and Syntax {{{
+" Color {{{
 filetype plugin on
 filetype indent on
 syntax on
 colorscheme latt
 " }}}
-" Keys mapping {{{
+" Mapping {{{
 let g:mapleader="\<space>"
 noremap <c-j> <c-w>j
 noremap <c-k> <c-w>k
@@ -102,6 +100,7 @@ nnoremap ; :
 nnoremap ! :!
 inoremap jk <esc>
 inoremap kj <esc>
+cnoremap w!! %!sudo tee > /dev/null %
 " }}}
 " Syntastic {{{
 let g:syntastic_auto_jump=0

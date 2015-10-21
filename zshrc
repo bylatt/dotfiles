@@ -11,6 +11,7 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
+export HOMEBREW_GITHUB_API_TOKEN='7aab602895c13c105437d9a859f0d00aa907e0c4'
 if (($+commands[rbenv])); then
   export RBENV_ROOT="/usr/local/var/rbenv"
   eval "$(rbenv init -)"
@@ -91,48 +92,6 @@ zstyle ':vcs_info:git*+set-message:*' hooks \
 zstyle ':vcs_info:*' formats ":%{$fg_bold[grey]%}%m%u%c[%s:%b]%{$reset_color%}"
 zstyle ':vcs_info:*' actionformats ":%{$fg_bold[grey]%}%m%u%c[%s:%b|%a]%{$reset_color%}"
 
-# Get name of remote that we're tracking
-function +vi-git-remote() {
-  local remote
-  remote=$(git remote 2>/dev/null)
-  if [[ -n ${remote} ]]; then
-    hook_com[branch]="${remote}/${hook_com[branch]}"
-  fi
-}
-
-# Show untracked files indicator
-function +vi-git-untracked {
-  local untracked
-  untracked=$(git ls-files --other --exclude-standard 2>/dev/null)
-  if [[ -n ${untracked} ]]; then
-    hook_com[misc]+="[?]"
-  fi
-}
-
-# Show number of stashed changes.
-function +vi-git-stash() {
-  local -a stashes
-  if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
-    stashes=(${(@f)$(git stash list 2>/dev/null)})
-    # Sometimes refs/stash exists even with 0 stashes
-    # Make sure we have at least 1 stash before adding this info
-    if (( ${#stashes} )); then
-      hook_com[misc]+="[${#stashes}S]"
-    fi
-  fi
-}
-
-# Square bracketing for a few things
-function +vi-git-square-bracket {
-  if [[ -n ${hook_com[unstaged]} ]]; then
-    hook_com[unstaged]="[${hook_com[unstaged]}]"
-  fi
-
-  if [[ -n ${hook_com[staged]} ]]; then
-    hook_com[staged]="[${hook_com[staged]}]"
-  fi
-}
-
 function set-window-title {
   echo -ne "\e]0;clozed2u\a"
 }
@@ -140,5 +99,5 @@ function set-window-title {
 add-zsh-hook precmd set-window-title
 add-zsh-hook precmd vcs_info
 
-PROMPT='%F{green}%U%B%1d#!%b%u%f%{$vcs_info_msg_0_%} %{$reset_color%}'
+PROMPT='%F{green}%B%U%1d#!%u%b%f %{$reset_color%}'
 # }}}
