@@ -3,7 +3,7 @@
 
 # Source: {{{
 if [ -f '/etc/zprofile' ]; then PATH=''; source '/etc/zprofile'; fi
-if [ -f '~/.zsh_search' ]; then source '~/.zsh_search'; fi
+if [ -f ~/.zsh_search ]; then source ~/.zsh_search; fi
 # }}}
 
 # Export: {{{
