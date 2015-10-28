@@ -2,7 +2,7 @@
 # http://clozed2u.com
 
 # Source: {{{
-if [ -f '/etc/zprofile' ]; then PATH=''; source '/etc/zprofile'; fi
+if [ -f /etc/zprofile ]; then PATH=''; source /etc/zprofile; fi
 if [ -f ~/.zsh_search ]; then source ~/.zsh_search; fi
 # }}}
 
@@ -19,7 +19,7 @@ export HOMEBREW_GITHUB_API_TOKEN='7aab602895c13c105437d9a859f0d00aa907e0c4'
 
 # Rbenv: {{{
 if (($+commands[rbenv])); then
-  export RBENV_ROOT="/usr/local/var/rbenv"
+  export RBENV_ROOT='/usr/local/var/rbenv'
   eval "$(rbenv init -)"
 fi
 # }}}
