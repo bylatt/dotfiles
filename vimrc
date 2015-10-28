@@ -2,26 +2,31 @@
 " http://clozed2u.com
 
 " Initialization: {{{
+
 set nocompatible
 set encoding=utf-8
 set fileencoding=utf-8
 set termencoding=utf-8
 set nobomb
+
 " }}}
 
 " Colors: {{{
+
 set t_Co=256
 syntax enable
 set background=dark
 colorscheme latt
+
 " }}}
 
 " Vundle: {{{
+
 let install_vundle = 0
 
-if !isdirectory($HOME . "/.vim/bundle/vundle.vim")
-  silent !mkdir -p $HOME/.vim/bundle
-  silent !git clone https://github.com/vundlevim/vundle.vim $HOME/.vim/bundle/vundle.vim
+if !isdirectory($HOME.'/.vim/bundle/vundle.vim')
+  silent !mkdir -p ~/.vim/bundle
+  silent !git clone https://github.com/vundlevim/vundle.vim ~/.vim/bundle/vundle.vim
   let install_vundle = 1
 endif
 
@@ -31,10 +36,6 @@ set runtimepath+=~/.vim/bundle/vundle.vim
 call vundle#begin()
 
 Plugin 'vundlevim/vundle.vim'
-
-" sort the bundles by plugin name with
-"   sort i /\/\zs.\+\ze'/ r
-
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'scrooloose/syntastic'
@@ -50,10 +51,13 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-rails'
 
 call vundle#end()
+
 filetype plugin indent on
+
 " }}}
 
 " Settings: {{{
+
 " don't allow files with the same name to overwrite each other
 set noswapfile
 set writebackup
@@ -65,12 +69,12 @@ set tags=./tags;
 
 set backspace=2
 set laststatus=2
-set expandtab
 set tabstop=2
 set softtabstop=2
 set shiftwidth=0
-set autoindent
 set textwidth=0
+set expandtab
+set autoindent
 set smartindent
 set autowrite
 set autoread
@@ -118,11 +122,13 @@ set cursorcolumn
 set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
 set completeopt=longest,menuone
+
 " }}}
 
 " Status Line: {{{
 
 " Status Function: {{{2
+
 function! Status(winnum)
   let active = a:winnum == winnr()
   let bufnum = winbufnr(a:winnum)
@@ -237,9 +243,11 @@ function! Status(winnum)
 
   return stat
 endfunction
+
 " }}}
 
 " Status AutoCMD: {{{
+
 function! s:ToggleStatusProgress()
   if !exists('w:statusline_progress')
     let w:statusline_progress = 0
@@ -278,11 +286,13 @@ augroup status
   autocmd!
   autocmd VimEnter,VimLeave,WinEnter,WinLeave,BufWinEnter,BufWinLeave * :RefreshStatus
 augroup END
+
 " }}}
 
 " }}}
 
 " Tab: {{{
+
 function! InsertTabWrapper()
   let col = col('.') - 1
   if !col || getline('.')[col - 1] !~ '\k'
@@ -293,40 +303,36 @@ function! InsertTabWrapper()
 endfunction
 
 inoremap <expr> <silent> <tab> InsertTabWrapper()
+
 " }}}
 
 " OS Specific: {{{
 
-" Windows: {{{2
-if has('win32')
-  set guifont=Consolas:h10
-  set clipboard=unnamed
-" }}}
+let s:kernel = system('echo -n "$(uname -s)"')
 
-" UNIX: {{{2
-else
-  let s:kernel = system('echo -n "$(uname -s)"')
+" Mac: {{{2
 
-" Mac: {{{3
   if s:kernel == 'Darwin'
     set clipboard=unnamed
+
 " }}}
 
-" Linux: {{{3
+" Linux: {{{2
+
   elseif s:kernel == 'Linux'
     set clipboard=unnamedplus
   endif
-" }}}
 
-endif
 " }}}
 
 " }}}
 
 " Mappings: {{{
+
 let mapleader = "\<space>"
 
 " Modes: {{{2
+
 inoremap jk <esc>
 inoremap kj <esc>
 nnoremap ; :
@@ -335,17 +341,22 @@ nnoremap ! :!
 vmap <  <gv
 vmap > >gv
 nmap <cr> :nohlsearch<cr>
+
 " }}}
 
 " Navigation: {{{2
+
 noremap <c-j> <c-w>j
 noremap <c-k> <c-w>k
 noremap <c-h> <c-w>h
 noremap <c-l> <c-w>l
+
 " }}}
+
 " }}}
 
 " File {{{
+
 augroup filespecific
   autocmd!
   autocmd bufreadpost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
@@ -358,11 +369,13 @@ augroup filespecific
   autocmd filetype python setlocal nosmartindent tabstop=4 softtabstop=4
   autocmd filetype javascript setlocal foldmethod=syntax
 augroup END
+
 " }}}
 
 " Plugin: {{{
 
 " CtrlP: {{{2
+
 let g:ctrlp_by_filename=1
 let g:ctrlp_clear_cache_on_exit=1
 let g:ctrlp_max_files=0
@@ -371,9 +384,11 @@ if executable('ag')
   let g:ctrlp_user_command='ag %s --ignore-case --smart-case --skip-vcs-ignores --hidden --nocolor --nogroup -g ""'
   let g:ctrlp_use_caching=0
 endif
+
 " }}}
 
 " Syntastic: {{{2
+
 let g:syntastic_check_on_wq=0
 let g:syntastic_auto_loc_list=0
 let g:syntastic_aggregate_errors=1
@@ -383,19 +398,23 @@ let g:syntastic_ruby_checkers=['mri', 'rubocop']
 let g:syntastic_php_checkers=['php', 'phpcs']
 let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
 nnoremap <c-c> :SyntasticCheck<cr>
+
 " }}}
 
 " Test: {{{2
+
 nmap <silent> <leader>t :TestNearest<cr>
 nmap <silent> <leader>f :TestFile<cr>
 nmap <silent> <leader>a :TestSuite<cr>
 nmap <silent> <leader>l :TestLast<cr>
 nmap <silent> <leader>g :TestVisit<cr>
+
 " }}}
 
 " }}}
 
 " Note: {{{
+
 " Default vim key binding for autocomplete
 " <c-x><c-f> for path completion
 " <c-x><c-k> for dictionary conpletion
@@ -410,4 +429,5 @@ nmap <silent> <leader>g :TestVisit<cr>
 " When stage is on option list
 " <c-n> for next option
 " <c-p> for previous option
+
 " }}}
