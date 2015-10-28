@@ -26,4 +26,12 @@ for file in $files; do
   fi
 done
 
+echo "\nCreate directories for vim\n"
+mkdir -p .vim/autoloads
+mkdir -p .vim/backups
+mkdir -p .vim/bundle
+mkdir -p .vim/colors
+mkdir -p .vim/tmp
+mkdir -p .vim/undo
+
 echo "\nDone!!\n"
