@@ -412,7 +412,7 @@ noremap <c-l> <c-w>l
 
 " }}}
 
-" File {{{
+" File: {{{
 
 augroup filespecific
   autocmd!
