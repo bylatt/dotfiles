@@ -33,6 +33,7 @@ endif
 filetype off
 
 set runtimepath+=~/.vim/bundle/vundle.vim
+
 call vundle#begin()
 
 Plugin 'vundlevim/vundle.vim'
@@ -74,6 +75,7 @@ set softtabstop=2
 set shiftwidth=0
 set textwidth=0
 set expandtab
+set smarttab
 set autoindent
 set smartindent
 set autowrite
@@ -390,8 +392,6 @@ let mapleader = "\<space>"
 
 " Modes: {{{2
 
-inoremap jk <esc>
-inoremap kj <esc>
 nnoremap ; :
 nnoremap ! :!
 

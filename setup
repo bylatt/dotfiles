@@ -27,7 +27,7 @@ for file in $files; do
 done
 
 echo "\nCreate directories for vim\n"
-mkdir -p .vim/autoloads
+mkdir -p .vim/autoload
 mkdir -p .vim/backups
 mkdir -p .vim/bundle
 mkdir -p .vim/colors

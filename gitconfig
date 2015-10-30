@@ -23,7 +23,7 @@
   aa = add --all
   bl = blame -C
   br = branch
-  cm = commit -qm
+  ci = commit -qm
   co = checkout
   cl = clone
   df = diff --word-diff
@@ -35,3 +35,4 @@
   pu = pull
   rm = rm -rf
   st = status -sb
+  un = 'reset HEAD --'
