@@ -72,8 +72,7 @@ set backspace=2
 set laststatus=2
 set tabstop=2
 set softtabstop=2
-set shiftwidth=0
-set textwidth=0
+set shiftwidth=2
 set expandtab
 set smarttab
 set autoindent
