@@ -16,7 +16,6 @@ export VISUAL=vim
 export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
-export HOMEBREW_GITHUB_API_TOKEN='7aab602895c13c105437d9a859f0d00aa907e0c4'
 
 # }}}
 
