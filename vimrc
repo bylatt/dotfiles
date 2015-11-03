@@ -15,8 +15,6 @@ set nobomb
 
 set t_Co=256
 syntax enable
-set background=dark
-colorscheme latt
 
 " }}}
 
@@ -117,8 +115,8 @@ set nofoldenable
 set foldmethod=indent
 set foldlevel=1
 
-set cursorline
-set cursorcolumn
+set nocursorline
+set nocursorcolumn
 
 set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
@@ -412,7 +410,6 @@ noremap <c-l> <c-w>l
 " }}}
 
 " File: {{{
-
 augroup filespecific
   autocmd!
   autocmd bufreadpost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif

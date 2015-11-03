@@ -3,7 +3,7 @@
 
 # Source: {{{
 
-if [ -f ~/.zsh_search ]; then source ~/.zsh_search; fi
+if [ -f ~/.zshsearch ]; then source ~/.zshsearch; fi
 
 # }}}
 
@@ -125,14 +125,14 @@ function +vi-git-square-bracket {
 add-zsh-hook precmd vcs_info
 
 # Show git info in the right prompt
-RPROMPT='${vcs_info_msg_0_}'
+RPROMPT='%F{white}${vcs_info_msg_0_}%f'
 
 # }}}
 
 # Autocomplete: {{{
 
 autoload -U compinit
-compinit -d ~/.zsh_compdump
+compinit -d ~/.zshcompdump
 
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion:*' cache-path ~/.cache/zsh
@@ -157,7 +157,7 @@ setopt hist_reduce_blanks
 setopt inc_append_history
 setopt share_history
 
-HISTFILE=~/.zsh_history
+HISTFILE=~/.zshhistory
 HISTSIZE=10240
 SAVEHIST=10240
 
@@ -189,6 +189,6 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='%F{green}%B%U%1d#!%u%b%f %{$reset_color%}'
+PROMPT='%F{white}%U%1d#!%u%f %{$reset_color%}'
 
 # }}}
