@@ -125,7 +125,7 @@ function +vi-git-square-bracket {
 add-zsh-hook precmd vcs_info
 
 # Show git info in the right prompt
-RPROMPT='%F{white}${vcs_info_msg_0_}%f'
+RPROMPT='%F{250}${vcs_info_msg_0_}%f'
 
 # }}}
 
@@ -189,6 +189,6 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='%F{white}%U%1d#!%u%f %{$reset_color%}'
+PROMPT='%F{250}%U%B%1d#!%b%u%f%{$reset_color%} '
 
 # }}}
