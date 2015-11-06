@@ -15,6 +15,8 @@ set nobomb
 
 set t_Co=256
 syntax enable
+set background=light
+colorscheme mango
 
 " }}}
 
