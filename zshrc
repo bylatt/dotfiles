@@ -37,6 +37,7 @@ alias vi='vim'
 alias cp='cp -ivR'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'
+alias hist='history -1000 -1'
 
 # }}}
 
@@ -125,7 +126,7 @@ function +vi-git-square-bracket {
 add-zsh-hook precmd vcs_info
 
 # Show git info in the right prompt
-RPROMPT='%F{250}${vcs_info_msg_0_}%f'
+RPROMPT='${vcs_info_msg_0_}'
 
 # }}}
 
@@ -189,6 +190,6 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='%F{250}%U%B%1d#!%b%u%f%{$reset_color%} '
+PROMPT='%F{green}%U%B%1d#!%b%u%f%{$reset_color%} '
 
 # }}}
