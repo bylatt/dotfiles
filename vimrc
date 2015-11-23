@@ -37,17 +37,16 @@ call vundle#begin()
 
 Plugin 'vundlevim/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'ervandew/matchem'
 Plugin 'scrooloose/syntastic'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'sickill/vim-pasta'
-Plugin 'vim-ruby/vim-ruby'
 Plugin 'janko-m/vim-test'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'tpope/vim-rbenv'
 Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-commentary'
 
 call vundle#end()
 
@@ -199,10 +198,10 @@ function! Status(winnum)
   endif
 
   " file name
-  let stat .= Color(active, 'SLArrows', active ? ' »' : ' «')
+  let stat .= Color(active, 'SLArrows', active ? '' : '')
   let stat .= ' %<'
   let stat .= '%f'
-  let stat .= ' ' . Color(active, 'SLArrows', active ? '«' : '»')
+  let stat .= ' ' . Color(active, 'SLArrows', active ? '' : '')
 
   " file modified
   let modified = getbufvar(bufnum, '&modified')
@@ -485,21 +484,3 @@ nmap <silent> <leader>g :TestVisit<cr>
 
 " }}}
 
-" Run a given vim command on the results of fuzzy selecting from a given shell
-" command. See usage below.
-function! SelectaCommand(choice_command, selecta_args, vim_command)
-  try
-    let selection = system(a:choice_command . " | selecta " . a:selecta_args)
-  catch /Vim:Interrupt/
-    " Swallow the ^C so that the redraw below happens; otherwise there will be
-    " leftovers from selecta on the screen
-    redraw!
-    return
-  endtry
-  redraw!
-  exec a:vim_command . " " . selection
-endfunction
-
-" Find all files in all non-dot directories starting in the working directory.
-" Fuzzy select one of those. Open the selected file with :e.
-nnoremap <leader>f :call SelectaCommand("find * -type f", "", ":e")<cr>

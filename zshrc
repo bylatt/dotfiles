@@ -1,7 +1,7 @@
 # github.com/clozed2u :: @clozed2u
 # http://clozed2u.com
 
-# Source: {{{
+# History Search: {{{
 
 if [ -f ~/.zshsearch ]; then source ~/.zshsearch; fi
 
