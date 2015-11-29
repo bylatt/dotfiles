@@ -3,41 +3,53 @@
 
 # History Search: {{{
 
-if [ -f ~/.zshsearch ]; then source ~/.zshsearch; fi
+if [ -f "$HOME/.zshsearch" ]; then source "$HOME/.zshsearch"; fi
 
 # }}}
 
 # Export: {{{
 
-export LANG='en_US.UTF-8'
-export LC_ALL='en_US.UTF-8'
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 export TERM=xterm-256color
-export VISUAL=vim
-export EDITOR=vim
+if which nvim > /dev/null; then
+  export VISUAL=nvim
+  export EDITOR=nvim
+else
+  export VISUAL=vim
+  export EDITOR=vim
+fi
 export CLICOLOR=1
 export KEYTIMEOUT=1
 
 # }}}
 
-# Rbenv: {{{
+# Chruby: {{{
 
-if (($+commands[rbenv])); then
-  export RBENV_ROOT='/usr/local/var/rbenv'
-  eval "$(rbenv init -)"
+if which brew > /dev/null; then
+  if [[ -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]]; then
+    source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
+    source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
+  fi
 fi
 
 # }}}
 
 # Alias: {{{
 
-alias df='df -h'
-alias ll='ls -GFlAhp'
-alias lr='ls -alR'
-alias vi='vim'
-alias cp='cp -ivR'
-alias mv='mv -iv'
-alias mkdir='mkdir -pv'
-alias hist='history -1000 -1'
+alias df="df -h"
+alias ll="ls -GFlAhp"
+alias lr="ls -alR"
+if which nvim > /dev/null; then
+  alias vi="nvim"
+  alias vim="nvim"
+else
+  alias vi="vim"
+fi
+alias cp="cp -ivR"
+alias mv="mv -iv"
+alias mkdir="mkdir -pv"
+alias hist="history -1000 -1"
 
 # }}}
 
@@ -71,62 +83,62 @@ setopt multios
 autoload -U vcs_info
 vcs_info
 
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*:*' get-revision true
-zstyle ':vcs_info:*:*' check-for-changes true
-zstyle ':vcs_info:git*+set-message:*' hooks \
+zstyle ":vcs_info:*" enable git
+zstyle ":vcs_info:*:*" get-revision true
+zstyle ":vcs_info:*:*" check-for-changes true
+zstyle ":vcs_info:git*+set-message:*" hooks \
   git-stash \
   git-square-bracket \
   git-untracked
-zstyle ':vcs_info:*' formats ":%{$fg_bold[grey]%}%m%u%c[%s:%b]%{$reset_color%}"
-zstyle ':vcs_info:*' actionformats ":%{$fg_bold[grey]%}%m%u%c[%s:%b|%a]%{$reset_color%}"
+zstyle ":vcs_info:*" formats ":%{$fg_bold[grey]%}%m%u%c[%s:%b]%{$reset_color%}"
+zstyle ":vcs_info:*" actionformats ":%{$fg_bold[grey]%}%m%u%c[%s:%b|%a]%{$reset_color%}"
 
 # Get name of remote that we're tracking
 function +vi-git-remote() {
-  local remote
-  remote=$(git remote 2>/dev/null)
-  if [[ -n ${remote} ]]; then
-    hook_com[branch]="${remote}/${hook_com[branch]}"
-  fi
+local remote
+remote=$(git remote 2>/dev/null)
+if [[ -n ${remote} ]]; then
+  hook_com[branch]="${remote}/${hook_com[branch]}"
+fi
 }
 
 # Show untracked files indicator
 function +vi-git-untracked {
-  local untracked
-  untracked=$(git ls-files --other --exclude-standard 2>/dev/null)
-  if [[ -n ${untracked} ]]; then
-    hook_com[misc]+="[?]"
-  fi
+local untracked
+untracked=$(git ls-files --other --exclude-standard 2>/dev/null)
+if [[ -n ${untracked} ]]; then
+  hook_com[misc]+="[?]"
+fi
 }
 
 # Show number of stashed changes.
 function +vi-git-stash() {
-  local -a stashes
-  if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
-    stashes=(${(@f)$(git stash list 2>/dev/null)})
-    # Sometimes refs/stash exists even with 0 stashes
-    # Make sure we have at least 1 stash before adding this info
-    if (( ${#stashes} )); then
-      hook_com[misc]+="[${#stashes}S]"
-    fi
+local -a stashes
+if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
+  stashes=(${(@f)$(git stash list 2>/dev/null)})
+  # Sometimes refs/stash exists even with 0 stashes
+  # Make sure we have at least 1 stash before adding this info
+  if (( ${#stashes} )); then
+    hook_com[misc]+="[${#stashes}S]"
   fi
+fi
 }
 
 # Square bracketing for a few things
 function +vi-git-square-bracket {
-  if [[ -n ${hook_com[unstaged]} ]]; then
-    hook_com[unstaged]="[${hook_com[unstaged]}]"
-  fi
+if [[ -n ${hook_com[unstaged]} ]]; then
+  hook_com[unstaged]="[${hook_com[unstaged]}]"
+fi
 
-  if [[ -n ${hook_com[staged]} ]]; then
-    hook_com[staged]="[${hook_com[staged]}]"
-  fi
+if [[ -n ${hook_com[staged]} ]]; then
+  hook_com[staged]="[${hook_com[staged]}]"
+fi
 }
 
 add-zsh-hook precmd vcs_info
 
 # Show git info in the right prompt
-RPROMPT='${vcs_info_msg_0_}'
+RPROMPT="${vcs_info_msg_0_}"
 
 # }}}
 
@@ -135,12 +147,12 @@ RPROMPT='${vcs_info_msg_0_}'
 autoload -U compinit
 compinit -d ~/.zshcompdump
 
-zstyle ':completion::complete:*' use-cache on
-zstyle ':completion:*' cache-path ~/.cache/zsh
-zstyle ':completion:*' completer _expand _complete _ignored _approximate
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-zstyle ':completion:*' menu select
-zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
+zstyle ":completion::complete:*" use-cache on
+zstyle ":completion:*" cache-path ~/.cache/zsh
+zstyle ":completion:*" completer _expand _complete _ignored _approximate
+zstyle ":completion:*" matcher-list "m:{a-zA-Z}={A-Za-z}" "r:|[._-]=* r:|=*" "l:|=* r:|=*"
+zstyle ":completion:*" menu select
+zstyle ":completion:*:cd:*" tag-order local-directories directory-stack path-directories
 
 # }}}
 
@@ -167,17 +179,17 @@ SAVEHIST=10240
 # Mapping: {{{
 
 bindkey -v
-bindkey -M viins 'jk' vi-cmd-mode
-bindkey '^r' history-incremental-search-backward
-bindkey '^u' history-substring-search-up
-bindkey '^d' history-substring-search-down
+bindkey -M viins "jk" vi-cmd-mode
+bindkey "^r" history-incremental-search-backward
+bindkey "^u" history-substring-search-up
+bindkey "^d" history-substring-search-down
 
 # }}}
 
 # Title: {{{
 
 function set-window-title {
-  echo -ne "\e]0;clozed2u\a"
+echo -ne "\e]0;clozed2u\a"
 }
 
 add-zsh-hook precmd set-window-title
@@ -190,6 +202,6 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='%F{green}%U%B%1d#!%b%u%f%{$reset_color%} '
+PROMPT="%F{green}%U%B%1d#!%b%u%f%{$reset_color%} "
 
 # }}}

@@ -37,13 +37,16 @@ call vundle#begin()
 
 Plugin 'vundlevim/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'ervandew/matchem'
 Plugin 'scrooloose/syntastic'
+Plugin 'sickill/vim-pasta'
 Plugin 'janko-m/vim-test'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'tpope/vim-rbenv'
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-eunuch'
+Plugin 'tpope/vim-vinegar'
+Plugin 'tpope/vim-markdown'
+Plugin 'tpope/vim-dispatch'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-commentary'
@@ -123,172 +126,6 @@ set completeopt=longest,menuone
 
 " }}}
 
-" Status Line: {{{
-
-" Status Function: {{{2
-
-function! Status(winnum)
-  let active = a:winnum == winnr()
-  let bufnum = winbufnr(a:winnum)
-
-  let stat = ''
-
-  " this function just outputs the content colored by the
-  " supplied colorgroup number, e.g. num = 2 -> User2
-  " it only colors the input if the window is the currently
-  " focused one
-
-  function! Color(active, group, content)
-    if a:active
-      return '%#' . a:group . '#' . a:content . '%*'
-    else
-      return a:content
-    endif
-  endfunction
-
-  " this handles alternative statuslines
-  let usealt = 0
-
-  let type = getbufvar(bufnum, '&buftype')
-  let name = bufname(bufnum)
-
-  let altstat = ''
-
-  if type ==# 'help'
-    let altstat .= '%#SLHelp# HELP %* ' . fnamemodify(name, ':t:r')
-    let usealt = 1
-  endif
-
-  if usealt
-    return altstat
-  endif
-
-  " column
-  "   this might seem a bit complicated but all it amounts to is
-  "   a calculation to see how much padding should be used for the
-  "   column number, so that it lines up nicely with the line numbers
-
-  "   an expression is needed because expressions are evaluated within
-  "   the context of the window for which the statusline is being prepared
-  "   this is crucial because the line and virtcol functions otherwise
-  "   operate on the currently focused window
-
-  function! Column()
-    let vc = virtcol('.')
-    let ruler_width = max([strlen(line('$')), (&numberwidth - 1)]) + &l:foldcolumn
-    let column_width = strlen(vc)
-    let padding = ruler_width - column_width
-    let column = ''
-
-    if padding <= 0
-      let column .= vc
-    else
-      let column .= repeat(' ', padding + 1) . vc
-    endif
-
-    return column . ' '
-  endfunction
-
-  let stat .= '%#SLColumn#'
-  let stat .= '%{Column()}'
-  let stat .= '%*'
-
-  if getwinvar(a:winnum, 'statusline_progress', 0)
-    let stat .= Color(active, 'SLProgress', ' %p ')
-  endif
-
-  " file name
-  let stat .= Color(active, 'SLArrows', active ? '' : '')
-  let stat .= ' %<'
-  let stat .= '%f'
-  let stat .= ' ' . Color(active, 'SLArrows', active ? '' : '')
-
-  " file modified
-  let modified = getbufvar(bufnum, '&modified')
-  let stat .= Color(active, 'SLLineNr', modified ? ' +' : '')
-
-  " read only
-  let readonly = getbufvar(bufnum, '&readonly')
-  let stat .= Color(active, 'SLLineNR', readonly ? ' ‼' : '')
-
-  " paste
-  if active
-    if getwinvar(a:winnum, '&spell')
-      let stat .= Color(active, 'SLLineNr', ' S')
-    endif
-
-    if getwinvar(a:winnum, '&paste')
-      let stat .= Color(active, 'SLLineNr', ' P')
-    endif
-  endif
-
-  " right side
-  let stat .= '%='
-
-  " git branch
-  if exists('*fugitive#head')
-    let head = fugitive#head()
-
-    if empty(head) && exists('*fugitive#detect') && !exists('b:git_dir')
-      call fugitive#detect(getcwd())
-      let head = fugitive#head()
-    endif
-  endif
-
-  if !empty(head)
-    let stat .= Color(active, 'SLBranch', ' ← ') . head . ' '
-  endif
-
-  return stat
-endfunction
-
-" }}}
-
-" Status AutoCMD: {{{
-
-function! s:ToggleStatusProgress()
-  if !exists('w:statusline_progress')
-    let w:statusline_progress = 0
-  endif
-
-  let w:statusline_progress = !w:statusline_progress
-endfunction
-
-command! ToggleStatusProgress :call s:ToggleStatusProgress()
-
-nnoremap <silent> ,p :ToggleStatusProgress<CR>
-
-function! s:IsDiff()
-  let result = 0
-
-  for nr in range(1, winnr('$'))
-    let result = result || getwinvar(nr, '&diff')
-
-    if result
-      return result
-    endif
-  endfor
-
-  return result
-endfunction
-
-function! s:RefreshStatus()
-  for nr in range(1, winnr('$'))
-    call setwinvar(nr, '&statusline', '%!Status(' . nr . ')')
-  endfor
-endfunction
-
-command! RefreshStatus :call <SID>RefreshStatus()
-
-augroup status
-  autocmd!
-  autocmd VimEnter,VimLeave,WinEnter,WinLeave,BufWinEnter,BufWinLeave * :RefreshStatus
-augroup END
-
-" }}}
-
-" }}}
-
 " Tab: {{{
 
 function! InsertTabWrapper()
@@ -306,58 +143,12 @@ inoremap <expr> <silent> <tab> InsertTabWrapper()
 
 " Explorer: {{{
 
-let g:netrw_liststyle=3
+let g:netrw_liststyle=1
 let g:netrw_banner=0
 let g:netrw_altv=1
 let g:netrw_preview=1
-let g:netrw_browse_split=4
+let g:netrw_browse_split=0
 let g:netrw_list_hide=&wildignore
-
-function! VexToggle(dir)
-  if exists("t:vex_buf_nr")
-    call VexClose()
-  else
-    call VexOpen(a:dir)
-  endif
-endfunction
-
-function! VexOpen(dir)
-  let g:netrw_browse_split=4
-  let vex_width = 25
-
-  execute "Vexplore " . a:dir
-  let t:vex_buf_nr = bufnr("%")
-  wincmd H
-
-  call VexSize(vex_width)
-endfunction
-
-function! VexClose()
-  let cur_win_nr = winnr()
-  let target_nr = ( cur_win_nr == 1 ? winnr("#") : cur_win_nr )
-
-  1wincmd w
-  close
-  unlet t:vex_buf_nr
-
-  execute (target_nr - 1) . "wincmd w"
-  call NormalizeWidths()
-endfunction
-
-function! VexSize(vex_width)
-  execute "vertical resize" . a:vex_width
-  set winfixwidth
-  call NormalizeWidths()
-endfunction
-
-function! NormalizeWidths()
-  let eadir_pref = &eadirection
-  set eadirection=hor
-  set equalalways! equalalways!
-  let &eadirection = eadir_pref
-endfunction
-
-nnoremap <c-n> :call VexToggle("")<cr>
 
 " }}}
 
@@ -409,7 +200,8 @@ noremap <c-l> <c-w>l
 " }}}
 
 " File: {{{
-augroup filespecific
+
+augroup filetypespecific
   autocmd!
   autocmd bufreadpost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
   autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -483,4 +275,3 @@ nmap <silent> <leader>g :TestVisit<cr>
 " <c-p> for previous option
 
 " }}}
-

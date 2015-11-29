@@ -35,4 +35,4 @@
   pu = pull
   rm = rm -rf
   st = status -sb
-  un = 'reset HEAD --'
+  un = reset HEAD --
