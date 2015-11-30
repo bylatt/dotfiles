@@ -38,6 +38,7 @@ call vundle#begin()
 Plugin 'vundlevim/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/syntastic'
+Plugin 'pangloss/vim-javascript'
 Plugin 'sickill/vim-pasta'
 Plugin 'janko-m/vim-test'
 Plugin 'vim-ruby/vim-ruby'
