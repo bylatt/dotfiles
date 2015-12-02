@@ -12,7 +12,7 @@ if [ -f "$HOME/.zshsearch" ]; then source "$HOME/.zshsearch"; fi
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 export TERM=xterm-256color
-if which nvim > /dev/null; then
+if which nvim > /dev/null 2>&1; then
   export VISUAL=nvim
   export EDITOR=nvim
 else
@@ -26,7 +26,7 @@ export KEYTIMEOUT=1
 
 # Chruby: {{{
 
-if which brew > /dev/null; then
+if which brew > /dev/null 2>&1; then
   if [[ -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]]; then
     source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
     source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
@@ -40,7 +40,7 @@ fi
 alias df="df -h"
 alias ll="ls -GFlAhp"
 alias lr="ls -alR"
-if which nvim > /dev/null; then
+if which nvim > /dev/null 2>&1; then
   alias vi="nvim"
   alias vim="nvim"
 else
