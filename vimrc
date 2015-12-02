@@ -15,7 +15,14 @@ set nobomb
 
 set t_Co=256
 syntax enable
-colorscheme ir_black
+colorscheme xoria256
+
+highlight Normal                   ctermbg=none
+highlight NonText      cterm=none  ctermbg=none
+highlight SpecialKey   cterm=none  ctermbg=none
+highlight CursorLine   cterm=none  ctermbg=none
+highlight CursorLineNr cterm=none  ctermbg=none
+highlight LineNr       cterm=none  ctermbg=none
 
 " }}}
 
@@ -47,7 +54,6 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-eunuch'
 Plugin 'tpope/vim-vinegar'
 Plugin 'tpope/vim-markdown'
-Plugin 'tpope/vim-dispatch'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-commentary'
@@ -248,6 +254,7 @@ nnoremap <c-c> :SyntasticCheck<cr>
 
 " Test: {{{2
 
+let test#strategy='basic'
 nmap <silent> <leader>t :TestNearest<cr>
 nmap <silent> <leader>f :TestFile<cr>
 nmap <silent> <leader>a :TestSuite<cr>
