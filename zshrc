@@ -3,7 +3,11 @@
 
 # History Search: {{{
 
-if [ -f "$HOME/.zshsearch" ]; then source "$HOME/.zshsearch"; fi
+if [ -f "$HOME/.zshsearch" ]; then
+  source "$HOME/.zshsearch"
+  bindkey "^u" history-substring-search-up
+  bindkey "^d" history-substring-search-down
+fi
 
 # }}}
 
@@ -12,13 +16,8 @@ if [ -f "$HOME/.zshsearch" ]; then source "$HOME/.zshsearch"; fi
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 export TERM=xterm-256color
-if which nvim > /dev/null 2>&1; then
-  export VISUAL=nvim
-  export EDITOR=nvim
-else
-  export VISUAL=vim
-  export EDITOR=vim
-fi
+export VISUAL=vim
+export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
 
@@ -40,12 +39,7 @@ fi
 alias df="df -h"
 alias ll="ls -GFlAhp"
 alias lr="ls -alR"
-if which nvim > /dev/null 2>&1; then
-  alias vi="nvim"
-  alias vim="nvim"
-else
-  alias vi="vim"
-fi
+alias vi="vim"
 alias cp="cp -ivR"
 alias mv="mv -iv"
 alias mkdir="mkdir -pv"
@@ -181,8 +175,6 @@ SAVEHIST=4096
 bindkey -v
 bindkey -M viins "jk" vi-cmd-mode
 bindkey "^r" history-incremental-search-backward
-bindkey "^u" history-substring-search-up
-bindkey "^d" history-substring-search-down
 
 # }}}
 
