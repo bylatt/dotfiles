@@ -5,8 +5,6 @@
 
 if [ -f "$HOME/.zshsearch" ]; then
   source "$HOME/.zshsearch"
-  bindkey "^u" history-substring-search-up
-  bindkey "^d" history-substring-search-down
 fi
 
 # }}}
@@ -21,6 +19,17 @@ export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
 
+# My bin
+export BINPATH="$HOME/.bin"
+# NODEJS
+export NODEPATH="/usr/local/node"
+# PYTHON
+export PYTHONPATH="/usr/local/python"
+# PHP
+export PHPPATH="/usr/local/php5"
+
+export PATH="$BINPATH:$NODEPATH/bin:$PYTHONPATH/bin:$PHPPATH/bin:$PATH"
+
 # }}}
 
 # Chruby: {{{
@@ -29,6 +38,8 @@ if which brew > /dev/null 2>&1; then
   if [[ -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]]; then
     source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
     source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
+
+    RUBIES=(/usr/local/rubies/*)
   fi
 fi
 
@@ -175,6 +186,8 @@ SAVEHIST=4096
 bindkey -v
 bindkey -M viins "jk" vi-cmd-mode
 bindkey "^r" history-incremental-search-backward
+bindkey "^u" history-substring-search-up
+bindkey "^d" history-substring-search-down
 
 # }}}
 

@@ -17,12 +17,12 @@ set t_Co=256
 syntax enable
 colorscheme xoria256
 
-highlight Normal                   ctermbg=none
-highlight NonText      cterm=none  ctermbg=none
-highlight SpecialKey   cterm=none  ctermbg=none
-highlight CursorLine   cterm=none  ctermbg=none
-highlight CursorLineNr cterm=none  ctermbg=none
-highlight LineNr       cterm=none  ctermbg=none
+highlight Normal                  ctermbg=NONE
+highlight NonText      cterm=NONE ctermbg=NONE
+highlight SpecialKey   cterm=NONE ctermbg=NONE
+highlight CursorLine   cterm=NONE ctermbg=NONE guibg=NONE
+highlight CursorLineNr cterm=BOLD ctermbg=NONE guibg=NONE
+highlight LineNr       cterm=NONE ctermbg=NONE guibg=NONE
 
 " }}}
 
@@ -44,18 +44,17 @@ call vundle#begin()
 
 Plugin 'vundlevim/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'othree/html5.vim'
-Plugin 'othree/yajs.vim'
-Plugin 'othree/javascript-libraries-syntax.vim'
 Plugin 'scrooloose/syntastic'
-Plugin 'gavocanov/vim-js-indent'
+Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'sickill/vim-pasta'
 Plugin 'janko-m/vim-test'
+Plugin 'kana/vim-arpeggio'
+Plugin 'pangloss/vim-javascript'
+Plugin 'rhysd/vim-crystal'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-eunuch'
-Plugin 'tpope/vim-vinegar'
 Plugin 'tpope/vim-markdown'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
@@ -127,7 +126,7 @@ set foldenable
 set foldmethod=indent
 set foldlevel=9999
 
-set nocursorline
+set cursorline
 set nocursorcolumn
 
 set omnifunc=syntaxcomplete#Complete
@@ -361,6 +360,7 @@ nnoremap ! :!
 vmap <  <gv
 vmap > >gv
 nmap <cr> :nohlsearch<cr>
+inoremap <c-u> <c-w>
 
 " }}}
 
@@ -412,10 +412,9 @@ endif
 let g:syntastic_check_on_wq=0
 let g:syntastic_auto_loc_list=0
 let g:syntastic_aggregate_errors=1
-let g:syntastic_python_checkers=['python', 'flake8']
+let g:syntastic_python_checkers=['flake8']
 let g:syntastic_javascript_checkers=['standard']
-let g:syntastic_ruby_checkers=['mri', 'rubocop']
-let g:syntastic_php_checkers=['php', 'phpcs']
+let g:syntastic_ruby_checkers=['rubocop']
 let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
 nnoremap <c-c> :SyntasticCheck<cr>
 
@@ -423,7 +422,8 @@ nnoremap <c-c> :SyntasticCheck<cr>
 
 " Test: {{{2
 
-let test#strategy='basic'
+let g:test#strategy='basic'
+let g:test#preserve_screen=1
 nmap <silent> <leader>t :TestNearest<cr>
 nmap <silent> <leader>f :TestFile<cr>
 nmap <silent> <leader>a :TestSuite<cr>
@@ -435,8 +435,90 @@ nmap <silent> <leader>g :TestVisit<cr>
 " }}}
 
 " Local config: {{{
+
 set exrc
 set secure
+
+" }}}
+
+" Arpeggio: {{{
+function! s:javascript()
+  Arpeggio inoremap fin function<space>
+  Arpeggio inoremap con console.log
+  Arpeggio inoremap thi this
+  Arpeggio inoremap ten .then
+  Arpeggio inoremap req require('')<left><left>
+  Arpeggio inoremap vai var<space>
+  Arpeggio inoremap let let<space>
+  Arpeggio inoremap don document.
+  Arpeggio inoremap win window.
+  Arpeggio inoremap pro .prototype.
+  Arpeggio inoremap ary Array
+  Arpeggio inoremap obj Object
+  Arpeggio inoremap len .length
+  Arpeggio inoremap aug arguments
+  Arpeggio inoremap rea fs.readFile
+  Arpeggio inoremap jsp JSON.parse
+  Arpeggio inoremap jst JSON.stringify
+  Arpeggio inoremap bin .bind
+  Arpeggio inoremap mep module.exports
+  Arpeggio inoremap new new<space>
+  Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>kf(a
+  Arpeggio inoremap ofe .forEach(<space>function<space>()<space>{})<left><left>
+endfunction
+
+function! s:ruby()
+  Arpeggio inoremap put puts<space>
+  Arpeggio inoremap xv, cases do<cr>end<esc>O<tab>
+  Arpeggio inoremap xv. loop do<cr>end<esc>O<tab>
+  Arpeggio inoremap req require ''<left>
+  Arpeggio inoremap whi while<cr>end<esc>kA<space>
+  Arpeggio inoremap fin def<cr>end<esc>kA<space>
+  Arpeggio inoremap cla class<space><cr>end<esc>k$a
+  Arpeggio inoremap ges gets
+  Arpeggio inoremap ife if<cr>end<esc>kA<space>
+  Arpeggio inoremap els else
+  Arpeggio inoremap new .new
+endfunction
+
+function! s:php()
+  Arpeggio inoremap put echo<space>
+  Arpeggio inoremap pub public<space>
+  Arpeggio inoremap pri private<space>
+  Arpeggio inoremap fin function<space>()<cr>{<cr>}<esc>2kf(i
+  Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>kf(a
+  Arpeggio inoremap foe foreach<space>()<space>{<cr>}<esc>kf(a
+  Arpeggio inoremap els else
+  Arpeggio inoremap whi while<space>()<space>{<cr>}<esc>kf(a
+  Arpeggio inoremap don /**<cr>*<cr>*/<esc>ka<space>
+  Arpeggio inoremap cla class<space><cr>{<cr>}<esc>2k$a
+endfunction
+
+function! s:common()
+  Arpeggio inoremap tui true
+  Arpeggio inoremap fal false
+  Arpeggio inoremap mat Math
+  Arpeggio inoremap ren return<space>
+endfunction
+
+autocmd vimenter * call s:common()
+autocmd filetype php call s:php()
+autocmd filetype ruby call s:ruby()
+autocmd filetype javascript call s:javascript()
+let g:arpeggio_timeoutlen=30
+
+" }}}
+
+" Macvim: {{{
+
+if has('gui_running')
+  set guioptions-=m
+  set guioptions-=T
+  set guioptions-=r
+  set guioptions-=L
+  set guifont=Inconsolata\ LGC:h14
+endif
+
 " }}}
 
 " Note: {{{
