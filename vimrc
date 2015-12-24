@@ -28,14 +28,6 @@ highlight LineNr       cterm=NONE ctermbg=NONE guibg=NONE
 
 " Vundle: {{{
 
-let install_vundle = 0
-
-if !isdirectory($HOME.'/.vim/bundle/vundle.vim')
-  silent !mkdir -p ~/.vim/bundle
-  silent !git clone https://github.com/vundlevim/vundle.vim ~/.vim/bundle/vundle.vim
-  let install_vundle = 1
-endif
-
 filetype off
 
 set runtimepath+=~/.vim/bundle/vundle.vim
@@ -68,6 +60,8 @@ filetype plugin indent on
 
 " Settings: {{{
 
+" Specific shell
+set shell=$SHELL
 " don't allow files with the same name to overwrite each other
 set noswapfile
 set writebackup
@@ -381,7 +375,7 @@ augroup filetypespecific
   autocmd!
   autocmd bufreadpost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
   autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-  autocmd filetype zsh setlocal foldmethod=marker foldlevel=0
+  autocmd filetype sh setlocal foldmethod=marker foldlevel=0
   autocmd filetype vim setlocal foldmethod=marker foldlevel=0
   autocmd filetype php setlocal tabstop=4 softtabstop=4 foldmethod=syntax
   autocmd filetype ruby setlocal foldmethod=syntax
@@ -396,9 +390,10 @@ augroup END
 
 " CtrlP: {{{2
 
-let g:ctrlp_by_filename=1
+let g:ctrlp_by_filename=0
 let g:ctrlp_clear_cache_on_exit=1
 let g:ctrlp_max_files=0
+let g:ctrlp_cache_dir='~/.vim/tmp/ctrlp'
 
 if executable('ag')
   let g:ctrlp_user_command='ag %s --ignore-case --smart-case --skip-vcs-ignores --hidden --nocolor --nogroup -g ""'
@@ -412,9 +407,10 @@ endif
 let g:syntastic_check_on_wq=0
 let g:syntastic_auto_loc_list=0
 let g:syntastic_aggregate_errors=1
-let g:syntastic_python_checkers=['flake8']
+let g:syntastic_php_checkers=['php', 'phpcs']
+let g:syntastic_python_checkers=['python', 'flake8']
 let g:syntastic_javascript_checkers=['standard']
-let g:syntastic_ruby_checkers=['rubocop']
+let g:syntastic_ruby_checkers=['mri', 'rubocop']
 let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
 nnoremap <c-c> :SyntasticCheck<cr>
 
@@ -523,7 +519,7 @@ endif
 
 " Note: {{{
 
-" Default vim key binding for autocomplete
+"" Default vim key binding for autocomplete
 " <c-x><c-f> for path completion
 " <c-x><c-k> for dictionary conpletion
 " <c-x><c-l> for whole line completion
@@ -534,7 +530,7 @@ endif
 " <c-x><c-v> for vim command line
 " <c-n> for completion for next match keyword
 " <c-p> for completion for previous match keyword
-" When stage is on option list
+"" When stage is on option list
 " <c-n> for next option
 " <c-p> for previous option
 

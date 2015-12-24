@@ -19,16 +19,14 @@ export EDITOR=vim
 export CLICOLOR=1
 export KEYTIMEOUT=1
 
-# My bin
-export BINPATH="$HOME/.bin"
 # NODEJS
 export NODEPATH="/usr/local/node"
 # PYTHON
-export PYTHONPATH="/usr/local/python"
+export PYPYPATH="/usr/local/pypy"
 # PHP
 export PHPPATH="/usr/local/php5"
 
-export PATH="$BINPATH:$NODEPATH/bin:$PYTHONPATH/bin:$PHPPATH/bin:$PATH"
+export PATH="$NODEPATH/bin:$PYPY/bin:$PHPPATH/bin:$PATH"
 
 # }}}
 
@@ -39,7 +37,7 @@ if which brew > /dev/null 2>&1; then
     source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
     source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
 
-    RUBIES=(/usr/local/rubies/*)
+    # RUBIES=(/usr/local/rubies/*)
   fi
 fi
 
@@ -47,14 +45,14 @@ fi
 
 # Alias: {{{
 
-alias df="df -h"
-alias ll="ls -GFlAhp"
-alias lr="ls -alR"
-alias vi="vim"
-alias cp="cp -ivR"
-alias mv="mv -iv"
-alias mkdir="mkdir -pv"
-alias hist="history -1000 -1"
+alias "df"="df -h"
+alias "ll"="ls -GFlAhp"
+alias "lr"="ls -alR"
+alias "vi"="vim"
+alias "cp"="cp -ivR"
+alias "mv"="mv -iv"
+alias "mkdir"="mkdir -pv"
+alias "hist"="history -1000 -1"
 
 # }}}
 
@@ -88,15 +86,17 @@ setopt multios
 autoload -U vcs_info
 vcs_info
 
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*:*' get-revision true
-zstyle ':vcs_info:*:*' check-for-changes true
-zstyle ':vcs_info:git*+set-message:*' hooks \
-  git-stash \
-  git-square-bracket \
-  git-untracked
-zstyle ':vcs_info:*' formats ":%{$fg_bold[grey]%}%m%u%c[%s:%b]%{$reset_color%}"
-zstyle ':vcs_info:*' actionformats ":%{$fg_bold[grey]%}%m%u%c[%s:%b|%a]%{$reset_color%}"
+zstyle ":vcs_info:*" enable git
+zstyle ":vcs_info:*:*" get-revision true
+zstyle ":vcs_info:*:*" check-for-changes true
+zstyle ":vcs_info:*:*" stagedstr "%F{yellow}"
+zstyle ":vcs_info:*:*" unstagedstr "%F{red}"
+zstyle ":vcs_info:*:*" branchformats "%r"
+zstyle ":vcs_info:*:*" formats "%F{green}%m%c%u(%b)%f "
+zstyle ":vcs_info:git*+set-message:*" hooks \
+  git-remote \
+  git-untracked \
+  git-stash
 
 # Get name of remote that we're tracking
 function +vi-git-remote() {
@@ -112,7 +112,7 @@ function +vi-git-untracked {
   local untracked
   untracked=$(git ls-files --other --exclude-standard 2>/dev/null)
   if [[ -n ${untracked} ]]; then
-    hook_com[misc]+="[?]"
+    hook_com[misc]="%F{red}"
   fi
 }
 
@@ -124,26 +124,12 @@ function +vi-git-stash() {
     # Sometimes refs/stash exists even with 0 stashes
     # Make sure we have at least 1 stash before adding this info
     if (( ${#stashes} )); then
-      hook_com[misc]+="[${#stashes}S]"
+      hook_com[misc]+="${#stashes}S"
     fi
   fi
 }
 
-# Square bracketing for a few things
-function +vi-git-square-bracket {
-  if [[ -n ${hook_com[unstaged]} ]]; then
-    hook_com[unstaged]="[${hook_com[unstaged]}]"
-  fi
-
-  if [[ -n ${hook_com[staged]} ]]; then
-    hook_com[staged]="[${hook_com[staged]}]"
-  fi
-}
-
 add-zsh-hook precmd vcs_info
-
-# Show git info in the right prompt
-RPROMPT='${vcs_info_msg_0_}'
 
 # }}}
 
@@ -194,7 +180,7 @@ bindkey "^d" history-substring-search-down
 # Title: {{{
 
 function set-window-title {
-echo -ne "\e]0;clozed2u\a"
+  echo -ne "\e]0;${USER}\a"
 }
 
 add-zsh-hook precmd set-window-title
@@ -207,6 +193,6 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT="%F{green}%U%B%1d#!%b%u%f%{$reset_color%} "
+PROMPT='${vcs_info_msg_0_}%F{blue}%1~%f%{$reset_color%} '
 
 # }}}
