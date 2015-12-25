@@ -26,7 +26,7 @@ export PYPYPATH="/usr/local/pypy"
 # PHP
 export PHPPATH="/usr/local/php5"
 
-export PATH="$NODEPATH/bin:$PYPY/bin:$PHPPATH/bin:$PATH"
+export PATH="$NODEPATH/bin:$PYPYPATH/bin:$PHPPATH/bin:$PATH"
 
 # }}}
 
@@ -37,7 +37,7 @@ if which brew > /dev/null 2>&1; then
     source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
     source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
 
-    # RUBIES=(/usr/local/rubies/*)
+    RUBIES=(/usr/local/rubies/*)
   fi
 fi
 
