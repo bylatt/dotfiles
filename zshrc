@@ -22,11 +22,11 @@ export KEYTIMEOUT=1
 # NODEJS
 export NODEPATH="/usr/local/node"
 # PYTHON
-export PYPYPATH="/usr/local/pypy"
+export PTYHONPATH="/usr/local/python"
 # PHP
 export PHPPATH="/usr/local/php5"
 
-export PATH="$NODEPATH/bin:$PYPYPATH/bin:$PHPPATH/bin:$PATH"
+export PATH="$NODEPATH/bin:$PTYHONPATH/bin:$PHPPATH/bin:$PATH"
 
 # }}}
 
@@ -93,10 +93,7 @@ zstyle ":vcs_info:*:*" stagedstr "%F{yellow}"
 zstyle ":vcs_info:*:*" unstagedstr "%F{red}"
 zstyle ":vcs_info:*:*" branchformats "%r"
 zstyle ":vcs_info:*:*" formats "%F{green}%m%c%u(%b)%f "
-zstyle ":vcs_info:git*+set-message:*" hooks \
-  git-remote \
-  git-untracked \
-  git-stash
+zstyle ":vcs_info:git*+set-message:*" hooks git-remote git-untracked git-stash
 
 # Get name of remote that we're tracking
 function +vi-git-remote() {
@@ -161,9 +158,11 @@ setopt hist_reduce_blanks
 setopt inc_append_history
 setopt share_history
 
+HISTCONTROL="erasedups:ignorespace"
 HISTFILE=~/.zshhistory
-HISTSIZE=4096
-SAVEHIST=4096
+HISTSIZE=100000
+SAVEHIST=100000
+HISTFILESIZE=2000000
 
 # }}}
 

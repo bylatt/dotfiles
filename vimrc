@@ -42,7 +42,6 @@ Plugin 'sickill/vim-pasta'
 Plugin 'janko-m/vim-test'
 Plugin 'kana/vim-arpeggio'
 Plugin 'pangloss/vim-javascript'
-Plugin 'rhysd/vim-crystal'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-repeat'
@@ -375,7 +374,7 @@ augroup filetypespecific
   autocmd!
   autocmd bufreadpost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
   autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-  autocmd filetype sh setlocal foldmethod=marker foldlevel=0
+  autocmd filetype zsh setlocal foldmethod=marker foldlevel=0
   autocmd filetype vim setlocal foldmethod=marker foldlevel=0
   autocmd filetype php setlocal tabstop=4 softtabstop=4 foldmethod=syntax
   autocmd filetype ruby setlocal foldmethod=syntax
