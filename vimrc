@@ -11,21 +11,6 @@ set nobomb
 
 " }}}
 
-" Colors: {{{
-
-set t_Co=256
-syntax enable
-colorscheme xoria256
-
-highlight Normal                  ctermbg=NONE
-highlight NonText      cterm=NONE ctermbg=NONE
-highlight SpecialKey   cterm=NONE ctermbg=NONE
-highlight CursorLine   cterm=NONE ctermbg=NONE guibg=NONE
-highlight CursorLineNr cterm=BOLD ctermbg=NONE guibg=NONE
-highlight LineNr       cterm=NONE ctermbg=NONE guibg=NONE
-
-" }}}
-
 " Vundle: {{{
 
 filetype off
@@ -36,8 +21,10 @@ call vundle#begin()
 
 Plugin 'vundlevim/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'othree/javascript-libraries-syntax.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'bling/vim-airline'
 Plugin 'sickill/vim-pasta'
 Plugin 'janko-m/vim-test'
 Plugin 'kana/vim-arpeggio'
@@ -45,7 +32,6 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-eunuch'
 Plugin 'tpope/vim-markdown'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
@@ -57,10 +43,29 @@ filetype plugin indent on
 
 " }}}
 
+" Colors: {{{
+
+set background=dark
+set t_Co=256
+syntax enable
+let g:base16colorspace=256
+colorscheme base16-ocean
+
+" Custom colors
+highlight Normal                  ctermbg=NONE
+highlight NonText      cterm=NONE ctermbg=NONE
+highlight SpecialKey   cterm=NONE ctermbg=NONE
+highlight CursorLine   cterm=NONE ctermbg=NONE guibg=NONE
+highlight CursorLineNr cterm=BOLD ctermbg=NONE guibg=NONE
+highlight LineNr       cterm=NONE ctermbg=NONE guibg=NONE
+
+" autocmd InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
+" autocmd InsertLeave * hi StatusLine ctermbg=240 ctermfg=12
+
+" }}}
+
 " Settings: {{{
 
-" Specific shell
-set shell=$SHELL
 " don't allow files with the same name to overwrite each other
 set noswapfile
 set writebackup
@@ -261,7 +266,7 @@ endfunction
 
 command! ToggleStatusProgress :call s:ToggleStatusProgress()
 
-nnoremap <silent> ,p :ToggleStatusProgress<CR>
+nnoremap <silent> ,p :ToggleStatusProgress<cr>
 
 function! s:IsDiff()
   let result = 0
@@ -352,8 +357,12 @@ nnoremap ! :!
 
 vmap <  <gv
 vmap > >gv
-nmap <cr> :nohlsearch<cr>
-inoremap <c-u> <c-w>
+nnoremap <cr> :nohlsearch<cr>
+
+autocmd filetype php nnoremap <c-u> :!php %<cr>
+autocmd filetype ruby nnoremap <c-u> :!ruby %<cr>
+autocmd filetype python nnoremap <c-u> :!python %<cr>
+autocmd filetype javascript nnoremap <c-u> :!node %<cr>
 
 " }}}
 
@@ -392,7 +401,7 @@ augroup END
 let g:ctrlp_by_filename=0
 let g:ctrlp_clear_cache_on_exit=1
 let g:ctrlp_max_files=0
-let g:ctrlp_cache_dir='~/.vim/tmp/ctrlp'
+let g:ctrlp_cache_dir='~/.cache/ctrlp'
 
 if executable('ag')
   let g:ctrlp_user_command='ag %s --ignore-case --smart-case --skip-vcs-ignores --hidden --nocolor --nogroup -g ""'
@@ -424,6 +433,17 @@ nmap <silent> <leader>f :TestFile<cr>
 nmap <silent> <leader>a :TestSuite<cr>
 nmap <silent> <leader>l :TestLast<cr>
 nmap <silent> <leader>g :TestVisit<cr>
+
+" }}}
+
+" Airline: {{{2
+
+let g:airline_powerline_fonts=1
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#left_sep=""
+let g:airline#extensions#tabline#left_alt_sep=""
+let g:airline_left_sep=""
+let g:airline_right_sep=""
 
 " }}}
 
@@ -470,6 +490,7 @@ function! s:ruby()
   Arpeggio inoremap whi while<cr>end<esc>kA<space>
   Arpeggio inoremap fin def<cr>end<esc>kA<space>
   Arpeggio inoremap cla class<space><cr>end<esc>k$a
+  Arpeggio inoremap mod module<space><cr>end<esc>k$a
   Arpeggio inoremap ges gets
   Arpeggio inoremap ife if<cr>end<esc>kA<space>
   Arpeggio inoremap els else
@@ -487,6 +508,7 @@ function! s:php()
   Arpeggio inoremap whi while<space>()<space>{<cr>}<esc>kf(a
   Arpeggio inoremap don /**<cr>*<cr>*/<esc>ka<space>
   Arpeggio inoremap cla class<space><cr>{<cr>}<esc>2k$a
+  Arpeggio inoremap nas namespace<space>
 endfunction
 
 function! s:common()
@@ -494,6 +516,8 @@ function! s:common()
   Arpeggio inoremap fal false
   Arpeggio inoremap mat Math
   Arpeggio inoremap ren return<space>
+  Arpeggio inoremap sd <c-w>
+  Arpeggio inoremap kl <c-w>
 endfunction
 
 autocmd vimenter * call s:common()
@@ -507,11 +531,12 @@ let g:arpeggio_timeoutlen=30
 " Macvim: {{{
 
 if has('gui_running')
+  set macligatures
   set guioptions-=m
   set guioptions-=T
   set guioptions-=r
   set guioptions-=L
-  set guifont=Inconsolata\ LGC:h14
+  set guifont=Inconsolata-g\ for \Powerline:h14
 endif
 
 " }}}

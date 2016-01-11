@@ -9,6 +9,14 @@ fi
 
 # }}}
 
+# Ocean dark colors: {{{
+
+if [ -f "$HOME/Oceandark/ocean.dark.sh" ]; then
+  source "$HOME/Oceandark/ocean.dark.sh"
+fi
+
+# }}}
+
 # Export: {{{
 
 export LANG="en_US.UTF-8"
@@ -22,11 +30,11 @@ export KEYTIMEOUT=1
 # NODEJS
 export NODEPATH="/usr/local/node"
 # PYTHON
-export PTYHONPATH="/usr/local/python"
+export PYTHONPATH="/usr/local/python"
 # PHP
 export PHPPATH="/usr/local/php5"
 
-export PATH="$NODEPATH/bin:$PTYHONPATH/bin:$PHPPATH/bin:$PATH"
+export PATH="$NODEPATH/bin:$PYTHONPATH/bin:$PHPPATH/bin:$PATH"
 
 # }}}
 
