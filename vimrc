@@ -48,8 +48,13 @@ filetype plugin indent on
 set background=dark
 set t_Co=256
 syntax enable
-let g:base16colorspace=256
-colorscheme base16-ocean
+
+try
+  let g:base16colorspace=256
+  colorscheme base16-ocean
+catch /^Vim\%((\a\+)\)\=:E185/
+  colorscheme default
+endtry
 
 " Custom colors
 highlight Normal                  ctermbg=NONE
