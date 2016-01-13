@@ -24,7 +24,6 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'othree/javascript-libraries-syntax.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'bling/vim-airline'
 Plugin 'sickill/vim-pasta'
 Plugin 'janko-m/vim-test'
 Plugin 'kana/vim-arpeggio'
@@ -64,8 +63,8 @@ highlight CursorLine   cterm=NONE ctermbg=NONE guibg=NONE
 highlight CursorLineNr cterm=BOLD ctermbg=NONE guibg=NONE
 highlight LineNr       cterm=NONE ctermbg=NONE guibg=NONE
 
-" autocmd InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
-" autocmd InsertLeave * hi StatusLine ctermbg=240 ctermfg=12
+autocmd InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
+autocmd InsertLeave * hi StatusLine ctermbg=19  ctermfg=20
 
 " }}}
 
@@ -441,17 +440,6 @@ nmap <silent> <leader>g :TestVisit<cr>
 
 " }}}
 
-" Airline: {{{2
-
-let g:airline_powerline_fonts=1
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#left_sep=""
-let g:airline#extensions#tabline#left_alt_sep=""
-let g:airline_left_sep=""
-let g:airline_right_sep=""
-
-" }}}
-
 " }}}
 
 " Local config: {{{
@@ -485,6 +473,9 @@ function! s:javascript()
   Arpeggio inoremap new new<space>
   Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>kf(a
   Arpeggio inoremap ofe .forEach(<space>function<space>()<space>{})<left><left>
+  Arpeggio inoremap cla class<space>{<cr>}<esc>k$Fsa<space>
+  Arpeggio inoremap let let<space>
+  Arpeggio inoremap cot construct<space>()<space>{<cr>}<esc>kf)i
 endfunction
 
 function! s:ruby()

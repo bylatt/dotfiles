@@ -59,6 +59,7 @@ alias "lr"="ls -alR"
 alias "vi"="vim"
 alias "cp"="cp -ivR"
 alias "mv"="mv -iv"
+alias "git"="hub"
 alias "mkdir"="mkdir -pv"
 alias "hist"="history -1000 -1"
 
