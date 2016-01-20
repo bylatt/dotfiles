@@ -47,6 +47,10 @@ if which brew > /dev/null 2>&1; then
 
     RUBIES=(/usr/local/rubies/*)
   fi
+
+  if [[ -f "$(brew --prefix)/etc/profile.d/z.sh" ]]; then
+    source "$(brew --prefix)/etc/profile.d/z.sh"
+  fi
 fi
 
 # }}}

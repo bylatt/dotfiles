@@ -21,8 +21,8 @@ call vundle#begin()
 
 Plugin 'vundlevim/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'othree/javascript-libraries-syntax.vim'
 Plugin 'scrooloose/syntastic'
+Plugin 'raimondi/delimitmate'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'sickill/vim-pasta'
 Plugin 'janko-m/vim-test'
@@ -120,7 +120,7 @@ set listchars=tab:▸\ ,eol:\ ,trail:•,nbsp:.
 set list
 
 set timeout
-set timeoutlen=200
+set timeoutlen=500
 set ttimeout
 set ttimeoutlen=0
 
@@ -134,6 +134,8 @@ set nocursorcolumn
 set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
 set completeopt=longest,menuone
+
+set scrolloff=5
 
 " }}}
 
@@ -389,7 +391,7 @@ augroup filetypespecific
   autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
   autocmd filetype zsh setlocal foldmethod=marker foldlevel=0
   autocmd filetype vim setlocal foldmethod=marker foldlevel=0
-  autocmd filetype php setlocal tabstop=4 softtabstop=4 foldmethod=syntax
+  autocmd filetype php setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
   autocmd filetype ruby setlocal foldmethod=syntax
   autocmd filetype make setlocal noexpandtab tabstop=4 softtabstop=4
   autocmd filetype python setlocal nosmartindent tabstop=4 softtabstop=4
@@ -424,7 +426,7 @@ let g:syntastic_python_checkers=['python', 'flake8']
 let g:syntastic_javascript_checkers=['standard']
 let g:syntastic_ruby_checkers=['mri', 'rubocop']
 let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
-nnoremap <c-c> :SyntasticCheck<cr>
+nnoremap <leader>c :SyntasticCheck<cr>
 
 " }}}
 
@@ -451,8 +453,8 @@ set secure
 
 " Arpeggio: {{{
 function! s:javascript()
-  Arpeggio inoremap fin function<space>
-  Arpeggio inoremap con console.log
+  Arpeggio inoremap fin function<space>()<left>
+  Arpeggio inoremap con console.log()<left>
   Arpeggio inoremap thi this
   Arpeggio inoremap ten .then
   Arpeggio inoremap req require('')<left><left>
@@ -494,7 +496,7 @@ function! s:ruby()
 endfunction
 
 function! s:php()
-  Arpeggio inoremap put echo<space>
+  Arpeggio inoremap put print<space>
   Arpeggio inoremap pub public<space>
   Arpeggio inoremap pri private<space>
   Arpeggio inoremap fin function<space>()<cr>{<cr>}<esc>2kf(i
@@ -505,6 +507,10 @@ function! s:php()
   Arpeggio inoremap don /**<cr>*<cr>*/<esc>ka<space>
   Arpeggio inoremap cla class<space><cr>{<cr>}<esc>2k$a
   Arpeggio inoremap nas namespace<space>
+  Arpeggio inoremap thi $this->
+  Arpeggio inoremap new new<space>
+  Arpeggio inoremap len strlen()<left>
+  Arpeggio inoremap req require_once<space>__DIR__<space>.<space>
 endfunction
 
 function! s:common()
@@ -512,15 +518,15 @@ function! s:common()
   Arpeggio inoremap fal false
   Arpeggio inoremap mat Math
   Arpeggio inoremap ren return<space>
-  Arpeggio inoremap sd <c-w>
-  Arpeggio inoremap kl <c-w>
+  Arpeggio inoremap sdf <c-w>
+  Arpeggio inoremap jkl <c-w>
 endfunction
 
 autocmd vimenter * call s:common()
 autocmd filetype php call s:php()
 autocmd filetype ruby call s:ruby()
 autocmd filetype javascript call s:javascript()
-let g:arpeggio_timeoutlen=30
+let g:arpeggio_timeoutlen=50
 
 " }}}
 
@@ -532,7 +538,7 @@ if has('gui_running')
   set guioptions-=T
   set guioptions-=r
   set guioptions-=L
-  set guifont=Inconsolata-g\ for \Powerline:h14
+  set guifont=Inconsolata-g:h14
 endif
 
 " }}}

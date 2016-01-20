@@ -36,3 +36,9 @@
 Icon?
 ehthumbs.db
 Thumbs.db
+
+# 3rd components
+# --------------
+node_modules
+bower_components
+vendor
