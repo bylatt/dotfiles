@@ -13,6 +13,14 @@ set nobomb
 
 " Vundle: {{{
 
+let vundle_install = 0
+
+if !isdirectory($HOME.'/.vim/bundle/vundle.vim')
+  silent !mkdir -p ~/.vim/bundle
+  silent !git clone https://github.com/vundlevim/vundle.vim ~/.vim/bundle/vundle.vim
+  let vundle_install = 1
+endif
+
 filetype off
 
 set runtimepath+=~/.vim/bundle/vundle.vim
@@ -36,6 +44,12 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-commentary'
 
+if vundle_install == 1
+  echo 'Installinng plugins...'
+  echo ''
+  :PluginInstall
+endif
+
 call vundle#end()
 
 filetype plugin indent on
@@ -51,20 +65,19 @@ syntax enable
 try
   let g:base16colorspace=256
   colorscheme base16-ocean
+
+  highlight Normal                  ctermbg=NONE
+  highlight NonText      cterm=NONE ctermbg=NONE
+  highlight SpecialKey   cterm=NONE ctermbg=NONE
+  highlight CursorLine   cterm=NONE ctermbg=NONE guibg=NONE
+  highlight CursorLineNr cterm=BOLD ctermbg=NONE guibg=NONE
+  highlight LineNr       cterm=NONE ctermbg=NONE guibg=NONE
+
+  autocmd InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
+  autocmd InsertLeave * hi StatusLine ctermbg=19  ctermfg=20
 catch /^Vim\%((\a\+)\)\=:E185/
   colorscheme default
 endtry
-
-" Custom colors
-highlight Normal                  ctermbg=NONE
-highlight NonText      cterm=NONE ctermbg=NONE
-highlight SpecialKey   cterm=NONE ctermbg=NONE
-highlight CursorLine   cterm=NONE ctermbg=NONE guibg=NONE
-highlight CursorLineNr cterm=BOLD ctermbg=NONE guibg=NONE
-highlight LineNr       cterm=NONE ctermbg=NONE guibg=NONE
-
-autocmd InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
-autocmd InsertLeave * hi StatusLine ctermbg=19  ctermfg=20
 
 " }}}
 
@@ -365,11 +378,6 @@ vmap <  <gv
 vmap > >gv
 nnoremap <cr> :nohlsearch<cr>
 
-autocmd filetype php nnoremap <c-u> :!php %<cr>
-autocmd filetype ruby nnoremap <c-u> :!ruby %<cr>
-autocmd filetype python nnoremap <c-u> :!python %<cr>
-autocmd filetype javascript nnoremap <c-u> :!node %<cr>
-
 " }}}
 
 " Navigation: {{{2
@@ -452,10 +460,11 @@ set secure
 " }}}
 
 " Arpeggio: {{{
+
 function! s:javascript()
   Arpeggio inoremap fin function<space>()<left>
   Arpeggio inoremap con console.log()<left>
-  Arpeggio inoremap thi this
+  Arpeggio inoremap thi this.
   Arpeggio inoremap ten .then
   Arpeggio inoremap req require('')<left><left>
   Arpeggio inoremap vai var<space>
@@ -474,7 +483,7 @@ function! s:javascript()
   Arpeggio inoremap mep module.exports
   Arpeggio inoremap new new<space>
   Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>kf(a
-  Arpeggio inoremap ofe .forEach(<space>function<space>()<space>{})<left><left>
+  Arpeggio inoremap ofe .forEach(function<space>()<space>{})<esc>F)i
   Arpeggio inoremap cla class<space>{<cr>}<esc>k$Fsa<space>
   Arpeggio inoremap let let<space>
   Arpeggio inoremap cot construct<space>()<space>{<cr>}<esc>kf)i
