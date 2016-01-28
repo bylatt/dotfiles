@@ -462,7 +462,7 @@ set secure
 " Arpeggio: {{{
 
 function! s:javascript()
-  Arpeggio inoremap fin function<space>()<left>
+  Arpeggio inoremap fin ()<space>=><space>
   Arpeggio inoremap con console.log()<left>
   Arpeggio inoremap thi this.
   Arpeggio inoremap ten .then
@@ -483,7 +483,7 @@ function! s:javascript()
   Arpeggio inoremap mep module.exports
   Arpeggio inoremap new new<space>
   Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>kf(a
-  Arpeggio inoremap ofe .forEach(function<space>()<space>{})<esc>F)i
+  Arpeggio inoremap ofe .forEach(()<space>=><space>{})<esc>F)i
   Arpeggio inoremap cla class<space>{<cr>}<esc>k$Fsa<space>
   Arpeggio inoremap let let<space>
   Arpeggio inoremap cot construct<space>()<space>{<cr>}<esc>kf)i
