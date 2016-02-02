@@ -11,46 +11,43 @@ set nobomb
 
 " }}}
 
-" Vundle: {{{
+" Plugin: {{{
 
-let vundle_install = 0
+let s:plug = 0
 
-if !isdirectory($HOME.'/.vim/bundle/vundle.vim')
-  silent !mkdir -p ~/.vim/bundle
-  silent !git clone https://github.com/vundlevim/vundle.vim ~/.vim/bundle/vundle.vim
-  let vundle_install = 1
+if !filereadable(expand('~/.vim/autoload/plug.vim'))
+  silent !git clone https://github.com/junegunn/vim-plug.git ~/.vim/bundle/vim-plug
+  silent !ln -s ~/.vim/bundle/vim-plug/plug.vim ~/.vim/autoload/plug.vim
+  let s:plug = 1
 endif
 
-filetype off
+call plug#begin('~/.vim/bundle')
 
-set runtimepath+=~/.vim/bundle/vundle.vim
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'scrooloose/syntastic'
+Plug 'ervandew/matchem'
+Plug 'crusoexia/vim-monokai'
+Plug 'junegunn/vim-plug'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'sickill/vim-pasta'
+Plug 'janko-m/vim-test'
+Plug 'kana/vim-arpeggio'
+Plug 'pangloss/vim-javascript'
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
 
-call vundle#begin()
-
-Plugin 'vundlevim/vundle.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'scrooloose/syntastic'
-Plugin 'raimondi/delimitmate'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'sickill/vim-pasta'
-Plugin 'janko-m/vim-test'
-Plugin 'kana/vim-arpeggio'
-Plugin 'pangloss/vim-javascript'
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-markdown'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-commentary'
-
-if vundle_install == 1
+if s:plug == 1
   echo 'Installinng plugins...'
   echo ''
-  :PluginInstall
+  :PlugInstall
 endif
 
-call vundle#end()
+call plug#end()
 
 filetype plugin indent on
 
@@ -63,8 +60,7 @@ set t_Co=256
 syntax enable
 
 try
-  let g:base16colorspace=256
-  colorscheme base16-ocean
+  colorscheme monokai
 
   highlight Normal                  ctermbg=NONE
   highlight NonText      cterm=NONE ctermbg=NONE
@@ -73,8 +69,8 @@ try
   highlight CursorLineNr cterm=BOLD ctermbg=NONE guibg=NONE
   highlight LineNr       cterm=NONE ctermbg=NONE guibg=NONE
 
-  autocmd InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
-  autocmd InsertLeave * hi StatusLine ctermbg=19  ctermfg=20
+  autocmd InsertEnter * hi StatusLine ctermfg=208
+  autocmd InsertLeave * hi StatusLine ctermfg=241
 catch /^Vim\%((\a\+)\)\=:E185/
   colorscheme default
 endtry
@@ -382,10 +378,10 @@ nnoremap <cr> :nohlsearch<cr>
 
 " Navigation: {{{2
 
-noremap <c-j> <c-w>j
-noremap <c-k> <c-w>k
-noremap <c-h> <c-w>h
-noremap <c-l> <c-w>l
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
 
 " }}}
 
@@ -397,9 +393,9 @@ augroup filetypespecific
   autocmd!
   autocmd bufreadpost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
   autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-  autocmd filetype zsh setlocal foldmethod=marker foldlevel=0
   autocmd filetype vim setlocal foldmethod=marker foldlevel=0
   autocmd filetype php setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
+  autocmd filetype bash setlocal foldmethod=marker foldlevel=0
   autocmd filetype ruby setlocal foldmethod=syntax
   autocmd filetype make setlocal noexpandtab tabstop=4 softtabstop=4
   autocmd filetype python setlocal nosmartindent tabstop=4 softtabstop=4
@@ -440,7 +436,12 @@ nnoremap <leader>c :SyntasticCheck<cr>
 
 " Test: {{{2
 
-let g:test#strategy='basic'
+if has('nvim')
+  let g:test#strategy='neovim'
+else
+  let g:test#strategy='basic'
+endif
+
 let g:test#preserve_screen=1
 nmap <silent> <leader>t :TestNearest<cr>
 nmap <silent> <leader>f :TestFile<cr>

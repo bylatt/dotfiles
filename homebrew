@@ -2,7 +2,6 @@ autoconf
 automake
 chruby
 gdbm
-gist
 git
 hub
 libevent
