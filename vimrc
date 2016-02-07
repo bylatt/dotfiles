@@ -13,41 +13,42 @@ set nobomb
 
 " Plugin: {{{
 
-let s:plug = 0
+let s:vundle = 0
 
-if !filereadable(expand('~/.vim/autoload/plug.vim'))
-  silent !git clone https://github.com/junegunn/vim-plug.git ~/.vim/bundle/vim-plug
-  silent !ln -s ~/.vim/bundle/vim-plug/plug.vim ~/.vim/autoload/plug.vim
-  let s:plug = 1
+if !isdirectory($HOME.'/.vim/bundle/vundle.vim')
+  silent !git clone https://github.com/vundlevim/vundle.vim.git ~/.vim/bundle/vundle.vim
+  let s:vundle = 1
 endif
 
-call plug#begin('~/.vim/bundle')
+filetype off
+set runtimepath+=~/.vim/bundle/vundle.vim
 
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'scrooloose/syntastic'
-Plug 'ervandew/matchem'
-Plug 'crusoexia/vim-monokai'
-Plug 'junegunn/vim-plug'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'sickill/vim-pasta'
-Plug 'janko-m/vim-test'
-Plug 'kana/vim-arpeggio'
-Plug 'pangloss/vim-javascript'
-Plug 'vim-ruby/vim-ruby'
-Plug 'tpope/vim-rails'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-markdown'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-commentary'
+call vundle#begin()
 
-if s:plug == 1
+Plugin 'vundlevim/vundle.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'raimondi/delimitmate'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'sickill/vim-pasta'
+Plugin 'janko-m/vim-test'
+Plugin 'pangloss/vim-javascript'
+Plugin 'fatih/vim-go'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-markdown'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-commentary'
+
+if s:vundle == 1
   echo 'Installinng plugins...'
   echo ''
-  :PlugInstall
+  :PluginInstall
 endif
 
-call plug#end()
+call vundle#end()
 
 filetype plugin indent on
 
@@ -55,25 +56,21 @@ filetype plugin indent on
 
 " Colors: {{{
 
-set background=dark
 set t_Co=256
-syntax enable
+syntax on
 
 try
-  colorscheme monokai
-
-  highlight Normal                  ctermbg=NONE
-  highlight NonText      cterm=NONE ctermbg=NONE
-  highlight SpecialKey   cterm=NONE ctermbg=NONE
-  highlight CursorLine   cterm=NONE ctermbg=NONE guibg=NONE
-  highlight CursorLineNr cterm=BOLD ctermbg=NONE guibg=NONE
-  highlight LineNr       cterm=NONE ctermbg=NONE guibg=NONE
-
-  autocmd InsertEnter * hi StatusLine ctermfg=208
-  autocmd InsertLeave * hi StatusLine ctermfg=241
+  colorscheme grb256
 catch /^Vim\%((\a\+)\)\=:E185/
   colorscheme default
 endtry
+
+hi Normal                  ctermbg=NONE
+hi NonText      cterm=NONE ctermbg=NONE
+hi SpecialKey   cterm=NONE ctermbg=NONE
+hi CursorLine   cterm=NONE ctermbg=NONE guibg=NONE
+hi CursorLineNr cterm=BOLD ctermbg=NONE guibg=NONE
+hi LineNr       cterm=NONE ctermbg=NONE guibg=NONE
 
 " }}}
 
@@ -110,7 +107,7 @@ set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cac
 set showmode
 set showcmd
 set hidden
-set number
+set nonumber
 set ttyfast
 
 set ignorecase
@@ -357,7 +354,7 @@ elseif s:kernel == 'Linux'
   set clipboard=unnamedplus
 endif
 
-" }}}
+  " }}}
 
 " }}}
 
@@ -457,86 +454,6 @@ nmap <silent> <leader>g :TestVisit<cr>
 
 set exrc
 set secure
-
-" }}}
-
-" Arpeggio: {{{
-
-function! s:javascript()
-  Arpeggio inoremap fin ()<space>=><space>
-  Arpeggio inoremap con console.log()<left>
-  Arpeggio inoremap thi this.
-  Arpeggio inoremap ten .then
-  Arpeggio inoremap req require('')<left><left>
-  Arpeggio inoremap vai var<space>
-  Arpeggio inoremap let let<space>
-  Arpeggio inoremap don document.
-  Arpeggio inoremap win window.
-  Arpeggio inoremap pro .prototype.
-  Arpeggio inoremap ary Array
-  Arpeggio inoremap obj Object
-  Arpeggio inoremap len .length
-  Arpeggio inoremap aug arguments
-  Arpeggio inoremap rea fs.readFile
-  Arpeggio inoremap jsp JSON.parse
-  Arpeggio inoremap jst JSON.stringify
-  Arpeggio inoremap bin .bind
-  Arpeggio inoremap mep module.exports
-  Arpeggio inoremap new new<space>
-  Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>kf(a
-  Arpeggio inoremap ofe .forEach(()<space>=><space>{})<esc>F)i
-  Arpeggio inoremap cla class<space>{<cr>}<esc>k$Fsa<space>
-  Arpeggio inoremap let let<space>
-  Arpeggio inoremap cot construct<space>()<space>{<cr>}<esc>kf)i
-endfunction
-
-function! s:ruby()
-  Arpeggio inoremap put puts<space>
-  Arpeggio inoremap xv, cases do<cr>end<esc>O<tab>
-  Arpeggio inoremap xv. loop do<cr>end<esc>O<tab>
-  Arpeggio inoremap req require ''<left>
-  Arpeggio inoremap whi while<cr>end<esc>kA<space>
-  Arpeggio inoremap fin def<cr>end<esc>kA<space>
-  Arpeggio inoremap cla class<space><cr>end<esc>k$a
-  Arpeggio inoremap mod module<space><cr>end<esc>k$a
-  Arpeggio inoremap ges gets
-  Arpeggio inoremap ife if<cr>end<esc>kA<space>
-  Arpeggio inoremap els else
-  Arpeggio inoremap new .new
-endfunction
-
-function! s:php()
-  Arpeggio inoremap put print<space>
-  Arpeggio inoremap pub public<space>
-  Arpeggio inoremap pri private<space>
-  Arpeggio inoremap fin function<space>()<cr>{<cr>}<esc>2kf(i
-  Arpeggio inoremap ife if<space>()<space>{<cr>}<esc>kf(a
-  Arpeggio inoremap foe foreach<space>()<space>{<cr>}<esc>kf(a
-  Arpeggio inoremap els else
-  Arpeggio inoremap whi while<space>()<space>{<cr>}<esc>kf(a
-  Arpeggio inoremap don /**<cr>*<cr>*/<esc>ka<space>
-  Arpeggio inoremap cla class<space><cr>{<cr>}<esc>2k$a
-  Arpeggio inoremap nas namespace<space>
-  Arpeggio inoremap thi $this->
-  Arpeggio inoremap new new<space>
-  Arpeggio inoremap len strlen()<left>
-  Arpeggio inoremap req require_once<space>__DIR__<space>.<space>
-endfunction
-
-function! s:common()
-  Arpeggio inoremap tui true
-  Arpeggio inoremap fal false
-  Arpeggio inoremap mat Math
-  Arpeggio inoremap ren return<space>
-  Arpeggio inoremap sdf <c-w>
-  Arpeggio inoremap jkl <c-w>
-endfunction
-
-autocmd vimenter * call s:common()
-autocmd filetype php call s:php()
-autocmd filetype ruby call s:ruby()
-autocmd filetype javascript call s:javascript()
-let g:arpeggio_timeoutlen=50
 
 " }}}
 

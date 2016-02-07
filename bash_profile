@@ -20,8 +20,8 @@ stty -ixon
 export LANG='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
 export TERM='xterm-256color'
-export CLICOLOR='1'
-export KEYTIMEOUT='1'
+export CLICOLOR=1
+export KEYTIMEOUT=1
 
 # Vim: {{{2
 
@@ -31,6 +31,17 @@ if which nvim > /dev/null 2>&1; then
 else
   export VISUAL='vim'
   export EDITOR='vim'
+fi
+
+# }}}
+
+# Golang: {{{2
+
+if which go > /dev/null 2>&1; then
+  export GOPATH="$HOME/Golang"
+  export GOROOT="$(brew --prefix)/opt/go/libexec"
+  export GOBIN="$GOPATH/bin"
+  export PATH="$PATH:$GOBIN"
 fi
 
 # }}}
@@ -66,10 +77,21 @@ alias cp='cp -ivR'
 alias mv='mv -iv'
 alias mkdir='mkdir -pv'
 
+# Vim: {{{2
+
 if which nvim > /dev/null 2>&1; then
   alias vi='nvim'
   alias vim='nvim'
 fi
+
+# }}}
+
+# Git: {{{2
+if which hub > /dev/null 2>&1; then
+  alias git='hub'
+fi
+
+# }}}
 
 # }}}
 
@@ -79,7 +101,7 @@ shopt -s cmdhist
 shopt -s histappend
 shopt -s histverify
 
-export HISTCONTROL="erasedups:ignorespace"
+export HISTCONTROL="erasedups:ignoredups:ignorespace"
 export HISTFILE="$HOME/.bash_history"
 export HISTSIZE=100000
 export SAVEHIST=100000
