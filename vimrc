@@ -107,7 +107,7 @@ set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cac
 set showmode
 set showcmd
 set hidden
-set nonumber
+set number
 set ttyfast
 
 set ignorecase
@@ -467,6 +467,22 @@ if has('gui_running')
   set guioptions-=L
   set guifont=Inconsolata-g:h14
 endif
+
+" }}}
+
+" Rename: {{{
+
+function! RenameFile()
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
+endfunction
+
+map <leader>n :call RenameFile()<cr>
 
 " }}}
 
