@@ -168,6 +168,13 @@ if which brew > /dev/null 2>&1; then
 
   # }}}
 
-fi
+  # BashCompletion: {{{ 2
+
+  if [ -f $(brew --prefix)/etc/bash_completion ]; then
+      source $(brew --prefix)/etc/bash_completion
+    fi
+
+  fi
+  # }}}
 
 # }}}

@@ -115,7 +115,7 @@ set smartcase
 set infercase
 set incsearch
 set hlsearch
-set showmatch
+set noshowmatch
 set matchtime=0
 
 set splitbelow
@@ -422,9 +422,9 @@ endif
 let g:syntastic_check_on_wq=0
 let g:syntastic_auto_loc_list=0
 let g:syntastic_aggregate_errors=1
-let g:syntastic_php_checkers=['php', 'phpcs']
-let g:syntastic_python_checkers=['python', 'flake8']
-let g:syntastic_javascript_checkers=['standard']
+let g:syntastic_php_checkers=['php']
+let g:syntastic_python_checkers=['python']
+let g:syntastic_javascript_checkers=['eslint']
 let g:syntastic_ruby_checkers=['mri', 'rubocop']
 let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
 nnoremap <leader>c :SyntasticCheck<cr>
@@ -476,8 +476,8 @@ function! RenameFile()
   let old_name = expand('%')
   let new_name = input('New file name: ', expand('%'), 'file')
   if new_name != '' && new_name != old_name
-    exec ':saveas ' . new_name
-    exec ':silent !rm ' . old_name
+    execute ':saveas ' . new_name
+    execute ':silent !rm ' . old_name
     redraw!
   endif
 endfunction
