@@ -31,8 +31,6 @@ Plugin 'scrooloose/syntastic'
 Plugin 'raimondi/delimitmate'
 Plugin 'janko-m/vim-test'
 Plugin 'sickill/vim-pasta'
-Plugin 'justinmk/vim-sneak'
-Plugin 'airblade/vim-gitgutter'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'fatih/vim-go'
 Plugin 'vim-ruby/vim-ruby'
@@ -147,9 +145,9 @@ set scrolloff=5
 
 " }}}
 
-" Status Line: {{{
+" StatusLine: {{{
 
-" Status Function: {{{2
+" StatusFunction: {{{2
 
 function! Status(winnum)
   let active = a:winnum == winnr()
@@ -263,12 +261,19 @@ function! Status(winnum)
     let stat .= Color(active, 'SLBranch', ' ← ') . head . ' '
   endif
 
+  " syntax error
+  if exists('*SyntasticStatuslineFlag')
+    let stat .= '%#warningmsg#'
+    let stat .= '%{SyntasticStatuslineFlag()}'
+    let stat .= '%*'
+  endif
+
   return stat
 endfunction
 
 " }}}
 
-" Status AutoCMD: {{{
+" StatusAutocmd: {{{
 
 function! s:ToggleStatusProgress()
   if !exists('w:statusline_progress')
@@ -280,7 +285,7 @@ endfunction
 
 command! ToggleStatusProgress :call s:ToggleStatusProgress()
 
-nnoremap <silent> ,p :ToggleStatusProgress<cr>
+nnoremap <silent> nb :ToggleStatusProgress<cr>
 
 function! s:IsDiff()
   let result = 0
@@ -339,7 +344,7 @@ let g:netrw_list_hide=&wildignore
 
 " }}}
 
-" OS Specific: {{{
+" OSSpecific: {{{
 
 let s:kernel = system('echo -n "$(uname -s)"')
 
@@ -368,10 +373,11 @@ let mapleader = "\<space>"
 
 nnoremap ; :
 nnoremap ! :!
+nnoremap <cr> :nohlsearch<cr>
+nnoremap <leader>; :ToggleStatusProgress<cr>
 
 vmap <  <gv
 vmap > >gv
-nnoremap <cr> :nohlsearch<cr>
 
 " }}}
 
@@ -403,7 +409,7 @@ augroup END
 
 " }}}
 
-" Plugin Settings: {{{
+" PluginSettings: {{{
 
 " CtrlP: {{{2
 
@@ -422,6 +428,7 @@ endif
 " Syntastic: {{{2
 
 let g:syntastic_check_on_wq=0
+let g:syntastic_enable_signs=0
 let g:syntastic_auto_loc_list=0
 let g:syntastic_aggregate_errors=1
 let g:syntastic_php_checkers=['php']
@@ -429,6 +436,7 @@ let g:syntastic_python_checkers=['python']
 let g:syntastic_javascript_checkers=['eslint']
 let g:syntastic_ruby_checkers=['mri', 'rubocop']
 let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
+let g:syntastic_stl_format='%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}'
 nnoremap <leader>c :SyntasticCheck<cr>
 
 " }}}
@@ -452,23 +460,10 @@ nmap <silent> <leader>g :TestVisit<cr>
 
 " }}}
 
-" Local config: {{{
+" LocalConfig: {{{
 
 set exrc
 set secure
-
-" }}}
-
-" Macvim: {{{
-
-if has('gui_running')
-  set macligatures
-  set guioptions-=m
-  set guioptions-=T
-  set guioptions-=r
-  set guioptions-=L
-  set guifont=Inconsolata-g:h14
-endif
 
 " }}}
 
@@ -506,3 +501,4 @@ map <leader>n :call RenameFile()<cr>
 " <c-p> for previous option
 
 " }}}
+

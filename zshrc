@@ -1,6 +1,22 @@
 # github.com/clozed2u :: @clozed2u
 # http://clozed2u.com
 
+# History: {{{
+
+if [[ -f "$HOME/.zsh-history/zsh-history-substring-search.zsh" ]]; then
+  source "$HOME/.zsh-history/zsh-history-substring-search.zsh"
+fi
+
+# }}}
+
+# Completions: {{{
+
+if [[ -d "$HOME/.zsh-completions" ]]; then
+  fpath=("$HOME/.zsh-completions/src" $fpath)
+fi
+
+# }}}
+
 # Export: {{{
 
 export LANG="en_US.UTF-8"
@@ -23,11 +39,13 @@ fi
 
 # Golang: {{{2
 
-if which go > /dev/null 2>&1; then
-  export GOPATH="$HOME/Golang"
-  export GOROOT="$(brew --prefix)/opt/go/libexec"
-  export GOBIN="$GOPATH/bin"
-  export PATH="$PATH:$GOBIN"
+if which brew > /dev/null 2>&1; then
+  if which go > /dev/null 2>&1; then
+    export GOPATH="$HOME/Golang"
+    export GOROOT="$(brew --prefix)/opt/go/libexec"
+    export GOBIN="$GOPATH/bin"
+    export PATH="$PATH:$GOBIN"
+  fi
 fi
 
 # }}}
@@ -85,6 +103,16 @@ setopt extended_glob
 setopt prompt_subst
 setopt long_list_jobs
 setopt multios
+
+# }}}
+
+# Mapping: {{{
+
+bindkey -v
+bindkey -M viins "jk" vi-cmd-mode
+bindkey "^r" history-incremental-search-backward
+bindkey "^u" history-substring-search-up
+bindkey "^d" history-substring-search-down
 
 # }}}
 
@@ -191,38 +219,5 @@ promptinit
 colors
 
 PROMPT='${vcs_info_msg_0_}%F{blue}%1~%f%{$reset_color%} '
-
-# }}}
-
-# Syntax: {{{
-
-if [[ -f "$HOME/.zsh-syntax/zsh-syntax-highlighting.zsh" ]]; then
-  source "$HOME/.zsh-syntax/zsh-syntax-highlighting.zsh"
-fi
-
-# }}}
-
-# History: {{{
-
-if [[ -f "$HOME/.zsh-history/zsh-history-substring-search.zsh" ]]; then
-  source "$HOME/.zsh-history/zsh-history-substring-search.zsh"
-fi
-
-# }}}
-
-# Completions: {{{
-
-if [[ -d "$HOME/.zsh-completions" ]]; then
-  fpath=("$HOME/.zsh-completions/src" $fpath)
-fi
-# }}}
-
-# Mapping: {{{
-
-bindkey -v
-bindkey -M viins "jk" vi-cmd-mode
-bindkey "^r" history-incremental-search-backward
-bindkey "^u" history-substring-search-up
-bindkey "^d" history-substring-search-down
 
 # }}}
