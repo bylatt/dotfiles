@@ -3,7 +3,7 @@
   email = i@clozed2u.com
   username = clozed2u
 [core]
-  autocrlf = input
+  autocrlf = false
   safecrlf = true
   editor = vim
 [apply]

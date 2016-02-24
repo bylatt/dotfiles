@@ -29,14 +29,21 @@ Plugin 'vundlevim/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'raimondi/delimitmate'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'sickill/vim-pasta'
 Plugin 'janko-m/vim-test'
-Plugin 'pangloss/vim-javascript'
+Plugin 'sickill/vim-pasta'
+Plugin 'justinmk/vim-sneak'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'fatih/vim-go'
 Plugin 'vim-ruby/vim-ruby'
+Plugin 'pangloss/vim-javascript'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'tpope/vim-haml'
+Plugin 'tpope/vim-rake'
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-bundler'
+Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-markdown'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-fugitive'
@@ -57,20 +64,14 @@ filetype plugin indent on
 " Colors: {{{
 
 set t_Co=256
+set background=dark
 syntax on
 
 try
-  colorscheme grb256
-catch /^Vim\%((\a\+)\)\=:E185/
+  colorscheme ltp256
+catch /:E185:/
   colorscheme default
 endtry
-
-hi Normal                  ctermbg=NONE
-hi NonText      cterm=NONE ctermbg=NONE
-hi SpecialKey   cterm=NONE ctermbg=NONE
-hi CursorLine   cterm=NONE ctermbg=NONE guibg=NONE
-hi CursorLineNr cterm=BOLD ctermbg=NONE guibg=NONE
-hi LineNr       cterm=NONE ctermbg=NONE guibg=NONE
 
 " }}}
 
@@ -94,8 +95,9 @@ set expandtab
 set smarttab
 set autoindent
 set smartindent
-set autowrite
 set autoread
+set autowrite
+set autowriteall
 
 set shortmess=atToOI
 set viewoptions+=unix,slash
@@ -391,8 +393,8 @@ augroup filetypespecific
   autocmd bufreadpost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
   autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
   autocmd filetype vim setlocal foldmethod=marker foldlevel=0
+  autocmd filetype zsh setlocal foldmethod=marker foldlevel=0
   autocmd filetype php setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
-  autocmd filetype bash setlocal foldmethod=marker foldlevel=0
   autocmd filetype ruby setlocal foldmethod=syntax
   autocmd filetype make setlocal noexpandtab tabstop=4 softtabstop=4
   autocmd filetype python setlocal nosmartindent tabstop=4 softtabstop=4
@@ -401,7 +403,7 @@ augroup END
 
 " }}}
 
-" Plugin: {{{
+" Plugin Settings: {{{
 
 " CtrlP: {{{2
 
