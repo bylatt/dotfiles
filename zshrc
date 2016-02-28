@@ -1,65 +1,85 @@
 # github.com/clozed2u :: @clozed2u
 # http://clozed2u.com
 
-# History: {{{
+# Homebrew: {{{
 
-if [[ -f "$HOME/.zsh-history/zsh-history-substring-search.zsh" ]]; then
-  source "$HOME/.zsh-history/zsh-history-substring-search.zsh"
-fi
+if which brew > /dev/null 2>&1; then
 
-# }}}
+  # History: {{{2
 
-# Completions: {{{
+  if [[ -f "$(brew --prefix)/opt/zsh-history-substring-search/zsh-history-substring-search.zsh" ]]; then
+    source "$(brew --prefix)/opt/zsh-history-substring-search/zsh-history-substring-search.zsh"
+  fi
 
-if [[ -d "$HOME/.zsh-completions" ]]; then
-  fpath=("$HOME/.zsh-completions/src" $fpath)
+  # }}}
+
+  # Completions: {{{2
+
+  if [[ -d "$(brew --prefix)/share/zsh-completions" ]]; then
+    fpath=("$(brew --prefix)/share/zsh-completions" $fpath)
+  fi
+
+  # }}}
+
+  # Chruby: {{{2
+
+  if [[ -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]]; then
+    source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
+    source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
+  fi
+
+  # }}}
+
 fi
 
 # }}}
 
 # Export: {{{
 
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
-export TERM="xterm-256color"
-export CLICOLOR=1
-export KEYTIMEOUT=1
+  # Global: {{{2
 
-# Vim: {{{2
-
-if which nvim > /dev/null 2>&1; then
-  export VISUAL="nvim"
-  export EDITOR="nvim"
-else
+  export LANG="en_US.UTF-8"
+  export LC_ALL="en_US.UTF-8"
+  export TERM="xterm-256color"
+  export CLICOLOR=1
+  export KEYTIMEOUT=1
   export VISUAL="vim"
   export EDITOR="vim"
-fi
 
-# }}}
+  # }}}
 
-# Golang: {{{2
+  # Language: {{{2
 
-if which brew > /dev/null 2>&1; then
-  if which go > /dev/null 2>&1; then
-    export GOPATH="$HOME/Golang"
-    export GOROOT="$(brew --prefix)/opt/go/libexec"
-    export GOBIN="$GOPATH/bin"
-    export PATH="$PATH:$GOBIN"
-  fi
-fi
+    # Rust: {{{3
 
-# }}}
+    export RUSTPATH="/opt/rust"
+    export PATH="$RUSTPATH/bin:$PATH"
+    export DYLD_LIBRARY_PATH="$RUSTPATH/lib/rustlib/x86_64-apple-darwin/lib:$DYLD_LIBRARY_PATH"
 
-# }}}
+    # }}}
 
-# Chruby: {{{
+    # Node: {{{3
 
-if which brew > /dev/null 2>&1; then
-  if [[ -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]]; then
-    source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
-    source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
-  fi
-fi
+    export NODEPATH="/opt/node"
+    export PATH="$NODEPATH/bin:$PATH"
+
+    # }}}
+
+    # PYTHON: {{{3
+
+    export PYTHONPATH="/opt/python"
+    export PATH="$PYTHONPATH/bin:$PATH"
+
+    # }}}
+
+    # PHP: {{{3
+
+    export PHPPATH="/opt/php"
+    export PATH="$PHPPATH/bin:$PATH"
+
+    # }}}
+
+  # }}}
 
 # }}}
 
@@ -70,14 +90,10 @@ alias "ll"="ls -GFlAhp"
 alias "lr"="ls -alR"
 alias "cp"="cp -ivR"
 alias "mv"="mv -iv"
+alias "vi"="vim"
 alias "git"="hub"
 alias "mkdir"="mkdir -pv"
 alias "hist"="history -1000 -1"
-
-if which nvim > /dev/null 2>&1; then
-  alias "vi"="nvim"
-  alias "vim"="nvim"
-fi
 
 # }}}
 

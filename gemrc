@@ -1,7 +1,7 @@
 ---
-gem: --no-ri --no-rdoc
-install: --no-ri --no-rdoc
-update: --no-ri --no-rdoc
+gem: --no-ri --no-rdoc --no-document
+install: --no-ri --no-rdoc --no-document
+update: --no-ri --no-rdoc --no-document
 benchmark: false
 backtrace: false
 verbose: true

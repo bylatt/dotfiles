@@ -27,15 +27,17 @@ call vundle#begin()
 
 Plugin 'vundlevim/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'rust-lang/rust.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'raimondi/delimitmate'
 Plugin 'janko-m/vim-test'
 Plugin 'sickill/vim-pasta'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'fatih/vim-go'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'pangloss/vim-javascript'
-Plugin 'kchmck/vim-coffee-script'
+Plugin 'clozed2u/vim-noctu'
+Plugin 'gavocanov/vim-js-indent'
+Plugin 'jelera/vim-javascript-syntax'
+Plugin 'strogonoff/vim-coffee-script'
+Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'tpope/vim-haml'
 Plugin 'tpope/vim-rake'
 Plugin 'tpope/vim-rails'
@@ -62,11 +64,11 @@ filetype plugin indent on
 " Colors: {{{
 
 set t_Co=256
-set background=dark
+set background=light
 syntax on
 
 try
-  colorscheme ltp256
+  colorscheme noctu
 catch /:E185:/
   colorscheme default
 endtry
@@ -126,7 +128,7 @@ set listchars=tab:▸\ ,eol:\ ,trail:•,nbsp:.
 set list
 
 set timeout
-set timeoutlen=500
+set timeoutlen=200
 set ttimeout
 set ttimeoutlen=0
 
@@ -134,7 +136,7 @@ set foldenable
 set foldmethod=indent
 set foldlevel=9999
 
-set cursorline
+set nocursorline
 set nocursorcolumn
 
 set omnifunc=syntaxcomplete#Complete
@@ -142,6 +144,8 @@ set completefunc=syntaxcomplete#Complete
 set completeopt=longest,menuone
 
 set scrolloff=5
+
+set synmaxcol=0
 
 " }}}
 
@@ -348,18 +352,18 @@ let g:netrw_list_hide=&wildignore
 
 let s:kernel = system('echo -n "$(uname -s)"')
 
-" Mac: {{{2
+  " Mac: {{{2
 
-if s:kernel == 'Darwin'
-  set clipboard=unnamed
+  if s:kernel == 'Darwin'
+    set clipboard=unnamed
 
   " }}}
 
   " Linux: {{{2
 
-elseif s:kernel == 'Linux'
-  set clipboard=unnamedplus
-endif
+  elseif s:kernel == 'Linux'
+    set clipboard=unnamedplus
+  endif
 
   " }}}
 
@@ -369,26 +373,26 @@ endif
 
 let mapleader = "\<space>"
 
-" Modes: {{{2
+  " Modes: {{{2
 
-nnoremap ; :
-nnoremap ! :!
-nnoremap <cr> :nohlsearch<cr>
-nnoremap <leader>; :ToggleStatusProgress<cr>
+  nnoremap ; :
+  nnoremap ! :!
+  nnoremap <cr> :nohlsearch<cr>
+  nnoremap <leader>; :ToggleStatusProgress<cr>
 
-vmap <  <gv
-vmap > >gv
+  vmap <  <gv
+  vmap > >gv
 
-" }}}
+  " }}}
 
-" Navigation: {{{2
+  " Navigation: {{{2
 
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
+  nnoremap <c-j> <c-w>j
+  nnoremap <c-k> <c-w>k
+  nnoremap <c-h> <c-w>h
+  nnoremap <c-l> <c-w>l
 
-" }}}
+  " }}}
 
 " }}}
 
@@ -396,7 +400,7 @@ nnoremap <c-l> <c-w>l
 
 augroup filetypespecific
   autocmd!
-  autocmd bufreadpost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
   autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
   autocmd filetype vim setlocal foldmethod=marker foldlevel=0
   autocmd filetype zsh setlocal foldmethod=marker foldlevel=0
@@ -411,59 +415,49 @@ augroup END
 
 " PluginSettings: {{{
 
-" CtrlP: {{{2
+  " CtrlP: {{{2
 
-let g:ctrlp_by_filename=0
-let g:ctrlp_clear_cache_on_exit=1
-let g:ctrlp_max_files=0
-let g:ctrlp_cache_dir='~/.cache/ctrlp'
+  let g:ctrlp_by_filename=0
+  let g:ctrlp_clear_cache_on_exit=1
+  let g:ctrlp_max_files=0
+  let g:ctrlp_cache_dir='~/.cache/ctrlp'
 
-if executable('ag')
-  let g:ctrlp_user_command='ag %s --ignore-case --smart-case --skip-vcs-ignores --hidden --nocolor --nogroup -g ""'
-  let g:ctrlp_use_caching=0
-endif
+  if executable('ag')
+    let g:ctrlp_user_command='ag %s --ignore-case --smart-case --skip-vcs-ignores --hidden --nocolor --nogroup -g ""'
+    let g:ctrlp_use_caching=0
+  endif
 
-" }}}
+  " }}}
 
-" Syntastic: {{{2
+  " Syntastic: {{{2
 
-let g:syntastic_check_on_wq=0
-let g:syntastic_enable_signs=0
-let g:syntastic_auto_loc_list=0
-let g:syntastic_aggregate_errors=1
-let g:syntastic_php_checkers=['php']
-let g:syntastic_python_checkers=['python']
-let g:syntastic_javascript_checkers=['eslint']
-let g:syntastic_ruby_checkers=['mri', 'rubocop']
-let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
-let g:syntastic_stl_format='%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}'
-nnoremap <leader>c :SyntasticCheck<cr>
+  let g:syntastic_check_on_wq=0
+  let g:syntastic_enable_signs=0
+  let g:syntastic_auto_loc_list=0
+  let g:syntastic_aggregate_errors=1
+  let g:syntastic_php_checkers=['php', 'phpcs']
+  let g:syntastic_python_checkers=['python', 'flake8']
+  let g:syntastic_javascript_checkers=['eslint']
+  let g:syntastic_ruby_checkers=['mri', 'rubocop']
+  let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
+  let g:syntastic_stl_format='%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}'
 
-" }}}
+  nnoremap <leader>c :SyntasticCheck<cr>
 
-" Test: {{{2
+  " }}}
 
-if has('nvim')
-  let g:test#strategy='neovim'
-else
+  " Test: {{{2
+
   let g:test#strategy='basic'
-endif
 
-let g:test#preserve_screen=1
-nmap <silent> <leader>t :TestNearest<cr>
-nmap <silent> <leader>f :TestFile<cr>
-nmap <silent> <leader>a :TestSuite<cr>
-nmap <silent> <leader>l :TestLast<cr>
-nmap <silent> <leader>g :TestVisit<cr>
+  let g:test#preserve_screen=1
+  nmap <silent> <leader>t :TestNearest<cr>
+  nmap <silent> <leader>f :TestFile<cr>
+  nmap <silent> <leader>a :TestSuite<cr>
+  nmap <silent> <leader>l :TestLast<cr>
+  nmap <silent> <leader>g :TestVisit<cr>
 
-" }}}
-
-" }}}
-
-" LocalConfig: {{{
-
-set exrc
-set secure
+  " }}}
 
 " }}}
 
@@ -480,6 +474,14 @@ function! RenameFile()
 endfunction
 
 map <leader>n :call RenameFile()<cr>
+
+" }}}
+
+" TrimTrailingWhitespace: {{{
+
+if !&binary && &filetype != 'diff'
+  autocmd BufWritePre * :%s/\s\+$//e
+endif
 
 " }}}
 
@@ -501,4 +503,3 @@ map <leader>n :call RenameFile()<cr>
 " <c-p> for previous option
 
 " }}}
-
