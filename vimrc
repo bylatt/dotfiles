@@ -27,13 +27,15 @@ call vundle#begin()
 
 Plugin 'vundlevim/vundle.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'rust-lang/rust.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'raimondi/delimitmate'
+Plugin 'mhartington/oceanic-next'
 Plugin 'janko-m/vim-test'
 Plugin 'sickill/vim-pasta'
+Plugin 'vim-airline/vim-airline'
+Plugin 'fatih/vim-go'
+Plugin 'rhysd/vim-crystal'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'clozed2u/vim-noctu'
 Plugin 'gavocanov/vim-js-indent'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'strogonoff/vim-coffee-script'
@@ -64,11 +66,11 @@ filetype plugin indent on
 " Colors: {{{
 
 set t_Co=256
-set background=light
+set background=dark
 syntax on
 
 try
-  colorscheme noctu
+  colorscheme OceanicNext
 catch /:E185:/
   colorscheme default
 endtry
@@ -76,6 +78,8 @@ endtry
 " }}}
 
 " Settings: {{{
+
+set shell=$SHELL
 
 " don't allow files with the same name to overwrite each other
 set noswapfile
@@ -108,6 +112,7 @@ set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cac
 
 set showmode
 set showcmd
+set showtabline=0
 set hidden
 set number
 set ttyfast
@@ -136,7 +141,7 @@ set foldenable
 set foldmethod=indent
 set foldlevel=9999
 
-set nocursorline
+set cursorline
 set nocursorcolumn
 
 set omnifunc=syntaxcomplete#Complete
@@ -379,6 +384,7 @@ let mapleader = "\<space>"
   nnoremap ! :!
   nnoremap <cr> :nohlsearch<cr>
   nnoremap <leader>; :ToggleStatusProgress<cr>
+  inoremap <c-k> <c-w>
 
   vmap <  <gv
   vmap > >gv
@@ -435,8 +441,8 @@ augroup END
   let g:syntastic_enable_signs=0
   let g:syntastic_auto_loc_list=0
   let g:syntastic_aggregate_errors=1
-  let g:syntastic_php_checkers=['php', 'phpcs']
-  let g:syntastic_python_checkers=['python', 'flake8']
+  let g:syntastic_php_checkers=['php']
+  let g:syntastic_python_checkers=['python']
   let g:syntastic_javascript_checkers=['eslint']
   let g:syntastic_ruby_checkers=['mri', 'rubocop']
   let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
@@ -456,6 +462,19 @@ augroup END
   nmap <silent> <leader>a :TestSuite<cr>
   nmap <silent> <leader>l :TestLast<cr>
   nmap <silent> <leader>g :TestVisit<cr>
+
+  " }}}
+
+  " Airline: {{{2
+
+  let g:airline_theme='oceanicnext'
+  let g:airline_left_sep=''
+  let g:airline_left_sep=''
+  let g:airline_right_sep=''
+  let g:airline_right_sep=''
+  let g:airline#extensions#tabline#enabled=1
+  let g:airline#extensions#tabline#left_sep=' '
+  let g:airline#extensions#tabline#left_alt_sep=' '
 
   " }}}
 
@@ -481,6 +500,19 @@ map <leader>n :call RenameFile()<cr>
 
 if !&binary && &filetype != 'diff'
   autocmd BufWritePre * :%s/\s\+$//e
+endif
+
+" }}}
+
+" Macvim: {{{
+
+if has('gui_running')
+  set macligatures
+  set guioptions-=m
+  set guioptions-=T
+  set guioptions-=r
+  set guioptions-=L
+  set guifont=Inconsolata-g:h14
 endif
 
 " }}}

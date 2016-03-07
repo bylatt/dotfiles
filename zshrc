@@ -1,25 +1,17 @@
 # github.com/clozed2u :: @clozed2u
 # http://clozed2u.com
 
+# History: {{{
+
+if [[ -f "$HOME/.zshsearch" ]]; then
+  source "$HOME/.zshsearch"
+fi
+
+# }}}
+
 # Homebrew: {{{
 
 if which brew > /dev/null 2>&1; then
-
-  # History: {{{2
-
-  if [[ -f "$(brew --prefix)/opt/zsh-history-substring-search/zsh-history-substring-search.zsh" ]]; then
-    source "$(brew --prefix)/opt/zsh-history-substring-search/zsh-history-substring-search.zsh"
-  fi
-
-  # }}}
-
-  # Completions: {{{2
-
-  if [[ -d "$(brew --prefix)/share/zsh-completions" ]]; then
-    fpath=("$(brew --prefix)/share/zsh-completions" $fpath)
-  fi
-
-  # }}}
 
   # Chruby: {{{2
 
@@ -50,11 +42,19 @@ fi
 
   # Language: {{{2
 
-    # Rust: {{{3
+    # Crystal: {{{3
 
-    export RUSTPATH="/opt/rust"
-    export PATH="$RUSTPATH/bin:$PATH"
-    export DYLD_LIBRARY_PATH="$RUSTPATH/lib/rustlib/x86_64-apple-darwin/lib:$DYLD_LIBRARY_PATH"
+    export CRYSTALPATH="/opt/crystal"
+    export PATH="$CRYSTALPATH/bin:$PATH"
+
+    # }}}
+
+    # Go: {{{3
+
+    export GOROOT="/opt/go"
+    export GOPATH="$HOME/Golang"
+    export GOBIN="$GOPATH/bin"
+    export PATH="$GOROOT/bin:$GOBIN:$PATH"
 
     # }}}
 
@@ -65,17 +65,17 @@ fi
 
     # }}}
 
-    # PYTHON: {{{3
-
-    export PYTHONPATH="/opt/python"
-    export PATH="$PYTHONPATH/bin:$PATH"
-
-    # }}}
-
     # PHP: {{{3
 
     export PHPPATH="/opt/php"
     export PATH="$PHPPATH/bin:$PATH"
+
+    # }}}
+
+    # PYTHON: {{{3
+
+    export PYTHON="/opt/python"
+    export PATH="$PYTHON/bin:$PATH"
 
     # }}}
 
