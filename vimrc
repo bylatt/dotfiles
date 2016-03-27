@@ -13,51 +13,42 @@ set nobomb
 
 " Plugin: {{{
 
-let s:vundle = 0
+let s:dein = 0
 
-if !isdirectory($HOME.'/.vim/bundle/vundle.vim')
-  silent !git clone https://github.com/vundlevim/vundle.vim.git ~/.vim/bundle/vundle.vim
-  let s:vundle = 1
+if !isdirectory($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim')
+  silent !git clone https://github.com/shougo/dein.vim.git ~/.vim/bundle/repos/github.com/shougo/dein.vim
+  let s:dein = 1
 endif
 
-filetype off
-set runtimepath+=~/.vim/bundle/vundle.vim
+set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
+call dein#begin(expand($HOME.'/.vim/bundle'))
+call dein#add('shougo/dein.vim')
+call dein#add('junegunn/fzf.vim')
+call dein#add('wellle/targets.vim')
+call dein#add('fatih/vim-go')
+call dein#add('janko-m/vim-test')
+call dein#add('sickill/vim-pasta')
+call dein#add('vim-ruby/vim-ruby')
+call dein#add('clozed2u/vim-noctu')
+call dein#add('pangloss/vim-javascript')
+call dein#add('strogonoff/vim-coffee-script')
+call dein#add('christoomey/vim-tmux-navigator')
+call dein#add('tpope/vim-haml')
+call dein#add('tpope/vim-rake')
+call dein#add('tpope/vim-rails')
+call dein#add('tpope/vim-repeat')
+call dein#add('tpope/vim-bundler')
+call dein#add('tpope/vim-markdown')
+call dein#add('tpope/vim-dispatch')
+call dein#add('tpope/vim-surround')
+call dein#add('tpope/vim-fugitive')
+call dein#add('tpope/vim-commentary')
 
-call vundle#begin()
-
-Plugin 'vundlevim/vundle.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'scrooloose/syntastic'
-Plugin 'raimondi/delimitmate'
-Plugin 'mhartington/oceanic-next'
-Plugin 'janko-m/vim-test'
-Plugin 'sickill/vim-pasta'
-Plugin 'vim-airline/vim-airline'
-Plugin 'fatih/vim-go'
-Plugin 'rhysd/vim-crystal'
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'gavocanov/vim-js-indent'
-Plugin 'jelera/vim-javascript-syntax'
-Plugin 'strogonoff/vim-coffee-script'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'tpope/vim-haml'
-Plugin 'tpope/vim-rake'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-bundler'
-Plugin 'tpope/vim-endwise'
-Plugin 'tpope/vim-markdown'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-commentary'
-
-if s:vundle == 1
-  echo 'Installinng plugins...'
-  echo ''
-  :PluginInstall
+if s:dein == 1
+  call dein#update()
 endif
 
-call vundle#end()
+call dein#end()
 
 filetype plugin indent on
 
@@ -70,7 +61,7 @@ set background=dark
 syntax on
 
 try
-  colorscheme OceanicNext
+  colorscheme noctu
 catch /:E185:/
   colorscheme default
 endtry
@@ -84,7 +75,7 @@ set shell=$SHELL
 " don't allow files with the same name to overwrite each other
 set noswapfile
 set writebackup
-set backupdir=~/.vim/backups
+set backupdir=~/.vim/backup
 set undofile
 set undodir=~/.vim/undo
 set directory=~/.vim/tmp
@@ -141,7 +132,7 @@ set foldenable
 set foldmethod=indent
 set foldlevel=9999
 
-set cursorline
+set nocursorline
 set nocursorcolumn
 
 set omnifunc=syntaxcomplete#Complete
@@ -151,179 +142,178 @@ set completeopt=longest,menuone
 set scrolloff=5
 
 set synmaxcol=0
+set fillchars+=vert:\!
 
 " }}}
 
 " StatusLine: {{{
 
-" StatusFunction: {{{2
+  " StatusFunction: {{{2
 
-function! Status(winnum)
-  let active = a:winnum == winnr()
-  let bufnum = winbufnr(a:winnum)
+  function! Status(winnum)
+    let active = a:winnum == winnr()
+    let bufnum = winbufnr(a:winnum)
 
-  let stat = ''
+    let stat = ''
 
-  " this function just outputs the content colored by the
-  " supplied colorgroup number, e.g. num = 2 -> User2
-  " it only colors the input if the window is the currently
-  " focused one
+    " this function just outputs the content colored by the
+    " supplied colorgroup number, e.g. num = 2 -> User2
+    " it only colors the input if the window is the currently
+    " focused one
 
-  function! Color(active, group, content)
-    if a:active
-      return '%#' . a:group . '#' . a:content . '%*'
-    else
-      return a:content
-    endif
-  endfunction
+    function! Color(active, group, content)
+      if a:active
+        return '%#' . a:group . '#' . a:content . '%*'
+      else
+        return a:content
+      endif
+    endfunction
 
-  " this handles alternative statuslines
-  let usealt = 0
+    " this handles alternative statuslines
+    let usealt = 0
 
-  let type = getbufvar(bufnum, '&buftype')
-  let name = bufname(bufnum)
+    let type = getbufvar(bufnum, '&buftype')
+    let name = bufname(bufnum)
 
-  let altstat = ''
+    let altstat = ''
 
-  if type ==# 'help'
-    let altstat .= '%#SLHelp# HELP %* ' . fnamemodify(name, ':t:r')
-    let usealt = 1
-  endif
-
-  if usealt
-    return altstat
-  endif
-
-  " column
-  "   this might seem a bit complicated but all it amounts to is
-  "   a calculation to see how much padding should be used for the
-  "   column number, so that it lines up nicely with the line numbers
-
-  "   an expression is needed because expressions are evaluated within
-  "   the context of the window for which the statusline is being prepared
-  "   this is crucial because the line and virtcol functions otherwise
-  "   operate on the currently focused window
-
-  function! Column()
-    let vc = virtcol('.')
-    let ruler_width = max([strlen(line('$')), (&numberwidth - 1)]) + &l:foldcolumn
-    let column_width = strlen(vc)
-    let padding = ruler_width - column_width
-    let column = ''
-
-    if padding <= 0
-      let column .= vc
-    else
-      let column .= repeat(' ', padding + 1) . vc
+    if type ==# 'help'
+      let altstat .= '%#SLHelp# HELP %* ' . fnamemodify(name, ':t:r')
+      let usealt = 1
     endif
 
-    return column . ' '
-  endfunction
-
-  let stat .= '%#SLColumn#'
-  let stat .= '%{Column()}'
-  let stat .= '%*'
-
-  if getwinvar(a:winnum, 'statusline_progress', 0)
-    let stat .= Color(active, 'SLProgress', ' %p ')
-  endif
-
-  " file name
-  let stat .= Color(active, 'SLArrows', active ? '' : '')
-  let stat .= ' %<'
-  let stat .= '%f'
-  let stat .= ' ' . Color(active, 'SLArrows', active ? '' : '')
-
-  " file modified
-  let modified = getbufvar(bufnum, '&modified')
-  let stat .= Color(active, 'SLLineNr', modified ? ' +' : '')
-
-  " read only
-  let readonly = getbufvar(bufnum, '&readonly')
-  let stat .= Color(active, 'SLLineNR', readonly ? ' ‼' : '')
-
-  " paste
-  if active
-    if getwinvar(a:winnum, '&spell')
-      let stat .= Color(active, 'SLLineNr', ' S')
+    if usealt
+      return altstat
     endif
 
-    if getwinvar(a:winnum, '&paste')
-      let stat .= Color(active, 'SLLineNr', ' P')
-    endif
-  endif
+    " column
+    "   this might seem a bit complicated but all it amounts to is
+    "   a calculation to see how much padding should be used for the
+    "   column number, so that it lines up nicely with the line numbers
 
-  " right side
-  let stat .= '%='
+    "   an expression is needed because expressions are evaluated within
+    "   the context of the window for which the statusline is being prepared
+    "   this is crucial because the line and virtcol functions otherwise
+    "   operate on the currently focused window
 
-  " git branch
-  if exists('*fugitive#head')
-    let head = fugitive#head()
+    function! Column()
+      let vc = virtcol('.')
+      let ruler_width = max([strlen(line('$')), (&numberwidth - 1)]) + &l:foldcolumn
+      let column_width = strlen(vc)
+      let padding = ruler_width - column_width
+      let column = ''
 
-    if empty(head) && exists('*fugitive#detect') && !exists('b:git_dir')
-      call fugitive#detect(getcwd())
-      let head = fugitive#head()
-    endif
-  endif
+      if padding <= 0
+        let column .= vc
+      else
+        let column .= repeat(' ', padding + 1) . vc
+      endif
 
-  if !empty(head)
-    let stat .= Color(active, 'SLBranch', ' ← ') . head . ' '
-  endif
+      return column . ' '
+    endfunction
 
-  " syntax error
-  if exists('*SyntasticStatuslineFlag')
-    let stat .= '%#warningmsg#'
-    let stat .= '%{SyntasticStatuslineFlag()}'
+    let stat .= '%#SLColumn#'
+    let stat .= '%{Column()}'
     let stat .= '%*'
-  endif
 
-  return stat
-endfunction
-
-" }}}
-
-" StatusAutocmd: {{{
-
-function! s:ToggleStatusProgress()
-  if !exists('w:statusline_progress')
-    let w:statusline_progress = 0
-  endif
-
-  let w:statusline_progress = !w:statusline_progress
-endfunction
-
-command! ToggleStatusProgress :call s:ToggleStatusProgress()
-
-nnoremap <silent> nb :ToggleStatusProgress<cr>
-
-function! s:IsDiff()
-  let result = 0
-
-  for nr in range(1, winnr('$'))
-    let result = result || getwinvar(nr, '&diff')
-
-    if result
-      return result
+    if getwinvar(a:winnum, 'statusline_progress', 0)
+      let stat .= Color(active, 'SLProgress', ' %p ')
     endif
-  endfor
 
-  return result
-endfunction
+    " file name
+    let stat .= Color(active, 'SLArrows', active ? '' : '')
+    let stat .= ' %<'
+    let stat .= '%f'
+    let stat .= ' ' . Color(active, 'SLArrows', active ? '' : '')
 
-function! s:RefreshStatus()
-  for nr in range(1, winnr('$'))
-    call setwinvar(nr, '&statusline', '%!Status(' . nr . ')')
-  endfor
-endfunction
+    " file modified
+    let modified = getbufvar(bufnum, '&modified')
+    let stat .= Color(active, 'SLLineNr', modified ? ' +' : '')
 
-command! RefreshStatus :call <SID>RefreshStatus()
+    " read only
+    let readonly = getbufvar(bufnum, '&readonly')
+    let stat .= Color(active, 'SLLineNR', readonly ? ' ‼' : '')
 
-augroup status
-  autocmd!
-  autocmd VimEnter,VimLeave,WinEnter,WinLeave,BufWinEnter,BufWinLeave * :RefreshStatus
-augroup END
+    " paste
+    if active
+      if getwinvar(a:winnum, '&spell')
+        let stat .= Color(active, 'SLLineNr', ' S')
+      endif
 
-" }}}
+      if getwinvar(a:winnum, '&paste')
+        let stat .= Color(active, 'SLLineNr', ' P')
+      endif
+    endif
+
+    " right side
+    let stat .= '%='
+
+    " git branch
+    if exists('*fugitive#head')
+      let head = fugitive#head()
+
+      if empty(head) && exists('*fugitive#detect') && !exists('b:git_dir')
+        call fugitive#detect(getcwd())
+        let head = fugitive#head()
+      endif
+    endif
+
+    if !empty(head)
+      let stat .= Color(active, 'SLBranch', ' ← ') . head . ' '
+    endif
+
+    " syntax error
+    if exists('*SyntasticStatuslineFlag')
+      let stat .= '%#warningmsg#'
+      let stat .= '%{SyntasticStatuslineFlag()}'
+      let stat .= '%*'
+    endif
+
+    return stat
+  endfunction
+
+  " }}}
+
+  " StatusAutocmd: {{{
+
+  function! s:ToggleStatusProgress()
+    if !exists('w:statusline_progress')
+      let w:statusline_progress = 0
+    endif
+
+    let w:statusline_progress = !w:statusline_progress
+  endfunction
+
+  command! ToggleStatusProgress :call s:ToggleStatusProgress()
+
+  function! s:IsDiff()
+    let result = 0
+
+    for nr in range(1, winnr('$'))
+      let result = result || getwinvar(nr, '&diff')
+
+      if result
+        return result
+      endif
+    endfor
+
+    return result
+  endfunction
+
+  function! s:RefreshStatus()
+    for nr in range(1, winnr('$'))
+      call setwinvar(nr, '&statusline', '%!Status(' . nr . ')')
+    endfor
+  endfunction
+
+  command! RefreshStatus :call <SID>RefreshStatus()
+
+  augroup status
+    autocmd!
+    autocmd VimEnter,VimLeave,WinEnter,WinLeave,BufWinEnter,BufWinLeave * :RefreshStatus
+  augroup END
+
+  " }}}
 
 " }}}
 
@@ -421,60 +411,29 @@ augroup END
 
 " PluginSettings: {{{
 
-  " CtrlP: {{{2
+  " FZF: {{{2
 
-  let g:ctrlp_by_filename=0
-  let g:ctrlp_clear_cache_on_exit=1
-  let g:ctrlp_max_files=0
-  let g:ctrlp_cache_dir='~/.cache/ctrlp'
+  if executable('fzf')
 
-  if executable('ag')
-    let g:ctrlp_user_command='ag %s --ignore-case --smart-case --skip-vcs-ignores --hidden --nocolor --nogroup -g ""'
-    let g:ctrlp_use_caching=0
+    set runtimepath+=/usr/local/opt/fzf
+
+    nnoremap <leader>p :Files<cr>
+    nnoremap <leader>b :Buffers<cr>
+
   endif
-
-  " }}}
-
-  " Syntastic: {{{2
-
-  let g:syntastic_check_on_wq=0
-  let g:syntastic_enable_signs=0
-  let g:syntastic_auto_loc_list=0
-  let g:syntastic_aggregate_errors=1
-  let g:syntastic_php_checkers=['php']
-  let g:syntastic_python_checkers=['python']
-  let g:syntastic_javascript_checkers=['eslint']
-  let g:syntastic_ruby_checkers=['mri', 'rubocop']
-  let g:syntastic_mode_map = {'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': []}
-  let g:syntastic_stl_format='%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}'
-
-  nnoremap <leader>c :SyntasticCheck<cr>
 
   " }}}
 
   " Test: {{{2
 
-  let g:test#strategy='basic'
-
+  let g:test#strategy='neovim'
   let g:test#preserve_screen=1
+
   nmap <silent> <leader>t :TestNearest<cr>
   nmap <silent> <leader>f :TestFile<cr>
   nmap <silent> <leader>a :TestSuite<cr>
   nmap <silent> <leader>l :TestLast<cr>
   nmap <silent> <leader>g :TestVisit<cr>
-
-  " }}}
-
-  " Airline: {{{2
-
-  let g:airline_theme='oceanicnext'
-  let g:airline_left_sep=''
-  let g:airline_left_sep=''
-  let g:airline_right_sep=''
-  let g:airline_right_sep=''
-  let g:airline#extensions#tabline#enabled=1
-  let g:airline#extensions#tabline#left_sep=' '
-  let g:airline#extensions#tabline#left_alt_sep=' '
 
   " }}}
 
@@ -507,6 +466,7 @@ endif
 " Macvim: {{{
 
 if has('gui_running')
+  colorscheme xoria256
   set macligatures
   set guioptions-=m
   set guioptions-=T

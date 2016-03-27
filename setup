@@ -26,12 +26,35 @@ for file in $files; do
   fi
 done
 
-echo "\nCreate directories for vim\n"
+echo "\nCreating directories for vim\n"
 mkdir -p $HOME/.vim/autoload
-mkdir -p $HOME/.vim/backups
+mkdir -p $HOME/.vim/backup
 mkdir -p $HOME/.vim/bundle
 mkdir -p $HOME/.vim/colors
 mkdir -p $HOME/.vim/tmp
 mkdir -p $HOME/.vim/undo
+
+echo "\nCreating directories for zsh\n"
+mkdir -p $HOME/.zsh
+
+echo "\nCloning zsh plugin"
+cd $HOME/.zsh && git clone https://github.com/zsh-users/zsh-completions.git
+cd $HOME/.zsh && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+cd $HOME/.zsh && git clone https://github.com/zsh-users/zsh-history-substring-search.git
+
+echo "\nCreating directories for tmux\n"
+mkdir -p $HOME/.tmux
+
+echo "\nCloning zsh plugin"
+cd $HOME/.tmux && git clone https://github.com/tmux-plugins/tmux-open.git
+cd $HOME/.tmux && git clone https://github.com/tmux-plugins/tmux-yank.git
+cd $HOME/.tmux && git clone https://github.com/tmux-plugins/tmux-copycat.git
+cd $HOME/.tmux && git clone https://github.com/tmux-plugins/tmux-sessionist.git
+cd $HOME/.tmux && git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git
+
+echo "\nCreating and link directory for neovim\n"
+mkdir -p $HOME/.config
+ln -s $HOME/.vim $HOME/.config/nvim
+ls -s $HOME/.vim $HOME/.config/nvim/init.vim
 
 echo "\nDone!!\n"

@@ -5,7 +5,6 @@
 [core]
   autocrlf = false
   safecrlf = true
-  editor = vim
 [apply]
   whitespace = nowarn
 [color]

@@ -1,11 +1,25 @@
 # github.com/clozed2u :: @clozed2u
 # http://clozed2u.com
 
+# Tmux: {{{
+
+if [[ -f "/etc/zprofile" ]]; then
+  PATH=''
+  source "/etc/zprofile"
+fi
+
+# }}}
+
 # History: {{{
 
-if [[ -f "$HOME/.zshsearch" ]]; then
-  source "$HOME/.zshsearch"
-fi
+substring_search="$HOME/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh"
+[ -f $substring_search ] && source $substring_search
+
+# }}}
+
+# Completion: {{{
+
+[ -d "$HOME/.zsh/zsh-completions" ] && fpath=("$HOME/.zsh/zsh-completions/src" $fpath)
 
 # }}}
 
@@ -35,19 +49,20 @@ fi
   export TERM="xterm-256color"
   export CLICOLOR=1
   export KEYTIMEOUT=1
-  export VISUAL="vim"
-  export EDITOR="vim"
+
+  if which brew > /dev/null 2>&1; then
+    export VISUAL="nvim"
+    export EDITOR="nvim"
+  else
+    export VISUAL="vim"
+    export EDITOR="vim"
+  fi
+
+  export FZF_DEFAULT_COMMAND='pt -g ""'
 
   # }}}
 
   # Language: {{{2
-
-    # Crystal: {{{3
-
-    export CRYSTALPATH="/opt/crystal"
-    export PATH="$CRYSTALPATH/bin:$PATH"
-
-    # }}}
 
     # Go: {{{3
 
@@ -74,8 +89,8 @@ fi
 
     # PYTHON: {{{3
 
-    export PYTHON="/opt/python"
-    export PATH="$PYTHON/bin:$PATH"
+    export PYTHONPATH="/opt/python"
+    export PATH="$PYTHONPATH/bin:$PATH"
 
     # }}}
 
@@ -90,8 +105,9 @@ alias "ll"="ls -GFlAhp"
 alias "lr"="ls -alR"
 alias "cp"="cp -ivR"
 alias "mv"="mv -iv"
-alias "vi"="vim"
+alias "vi"="nvim"
 alias "git"="hub"
+alias "vim"="nvim"
 alias "mkdir"="mkdir -pv"
 alias "hist"="history -1000 -1"
 
@@ -150,7 +166,8 @@ zstyle ":vcs_info:git*+set-message:*" hooks git-remote git-untracked git-stash
 # Get name of remote that we're tracking
 function +vi-git-remote() {
   local remote
-  remote=$(git remote 2>/dev/null)
+  remote=$(git remote | tr '\n' '/' | sed 's/.$//' 2>/dev/null)
+
   if [[ -n ${remote} ]]; then
     hook_com[branch]="${remote}/${hook_com[branch]}"
   fi
@@ -160,6 +177,7 @@ function +vi-git-remote() {
 function +vi-git-untracked {
   local untracked
   untracked=$(git ls-files --other --exclude-standard 2>/dev/null)
+
   if [[ -n ${untracked} ]]; then
     hook_com[misc]="%F{red}"
   fi
@@ -168,6 +186,7 @@ function +vi-git-untracked {
 # Show number of stashed changes.
 function +vi-git-stash() {
   local -a stashes
+
   if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
     stashes=(${(@f)$(git stash list 2>/dev/null)})
     # Sometimes refs/stash exists even with 0 stashes
@@ -234,6 +253,13 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='${vcs_info_msg_0_}%F{blue}%1~%f%{$reset_color%} '
+PROMPT='${vcs_info_msg_0_}%F{244}%1~%f %{$reset_color%}'
+
+# }}}
+
+# Syntax: {{{
+
+syntax_path="$HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+[ -f $syntax_path ] && source $syntax_path
 
 # }}}
