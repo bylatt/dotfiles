@@ -1,18 +1,18 @@
 autoconf
 automake
 chruby
+ctags
+diff-so-fancy
 fzf
 gdbm
-gettext
 git
 hub
 libevent
 libffi
-libtool
 libyaml
 mongodb
-neovim
 openssl
+pkg-config
 postgresql
 readline
 redis
@@ -21,4 +21,4 @@ sqlite
 ssh-copy-id
 the_platinum_searcher
 tmux
-universal-ctags
+vim

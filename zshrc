@@ -49,16 +49,8 @@ fi
   export TERM="xterm-256color"
   export CLICOLOR=1
   export KEYTIMEOUT=1
-
-  if which brew > /dev/null 2>&1; then
-    export VISUAL="nvim"
-    export EDITOR="nvim"
-  else
-    export VISUAL="vim"
-    export EDITOR="vim"
-  fi
-
-  export FZF_DEFAULT_COMMAND='pt -g ""'
+  export VISUAL="vim"
+  export EDITOR="vim"
 
   # }}}
 
@@ -80,17 +72,31 @@ fi
 
     # }}}
 
+    # Crystal: {{{3
+
+    export CRYSTALPATH="/opt/crystal"
+    export PATH="$CRYSTALPATH/bin:$PATH"
+
+    # }}}
+
+    # Rush: {{{3
+
+    export RUSTPATH="/opt/rust"
+    export PATH="$RUSTPATH/bin:$PATH"
+
+    # }}}
+
+    # Python: {{{3
+
+    export PYTHONPATH="/opt/python"
+    export PATH="$PYTHONPATH/bin:$PATH"
+
+    # }}}
+
     # PHP: {{{3
 
     export PHPPATH="/opt/php"
     export PATH="$PHPPATH/bin:$PATH"
-
-    # }}}
-
-    # PYTHON: {{{3
-
-    export PYTHONPATH="/opt/python"
-    export PATH="$PYTHONPATH/bin:$PATH"
 
     # }}}
 
@@ -100,16 +106,20 @@ fi
 
 # Alias: {{{
 
+alias "vi"="vim"
 alias "df"="df -h"
 alias "ll"="ls -GFlAhp"
 alias "lr"="ls -alR"
 alias "cp"="cp -ivR"
 alias "mv"="mv -iv"
-alias "vi"="nvim"
-alias "git"="hub"
-alias "vim"="nvim"
-alias "mkdir"="mkdir -pv"
-alias "hist"="history -1000 -1"
+alias "mkd"="mkdir -pv"
+alias "his"="history -1000 -1"
+if which pt > /dev/null 2>&1; then
+  alias "pt"="pt --home-ptignore"
+fi
+if which hub > /dev/null 2>&1; then
+  alias "git"="hub"
+fi
 
 # }}}
 
@@ -159,8 +169,8 @@ zstyle ":vcs_info:*:*" check-for-changes true
 zstyle ":vcs_info:*:*" stagedstr "%F{yellow}"
 zstyle ":vcs_info:*:*" unstagedstr "%F{red}"
 zstyle ":vcs_info:*:*" branchformats "%r"
-zstyle ":vcs_info:*:*" formats "%F{green}%m%c%u(%b)%f "
-zstyle ":vcs_info:*:*" actionformats "%F{green}%m%c%u(%b)%f "
+zstyle ":vcs_info:*:*" formats "%F{green}%m%c%u(%b)%f"
+zstyle ":vcs_info:*:*" actionformats "%F{green}%m%c%u(%b)%f"
 zstyle ":vcs_info:git*+set-message:*" hooks git-remote git-untracked git-stash
 
 # Get name of remote that we're tracking
@@ -253,7 +263,8 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='${vcs_info_msg_0_}%F{244}%1~%f %{$reset_color%}'
+PROMPT='%F{240}%~/%f %{$reset_color%}'
+RPROMPT='${vcs_info_msg_0_}'
 
 # }}}
 

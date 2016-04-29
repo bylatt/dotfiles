@@ -43,18 +43,14 @@ cd $HOME/.zsh && git clone https://github.com/zsh-users/zsh-syntax-highlighting.
 cd $HOME/.zsh && git clone https://github.com/zsh-users/zsh-history-substring-search.git
 
 echo "\nCreating directories for tmux\n"
-mkdir -p $HOME/.tmux
+mkdir -p $HOME/.tmux/plugins
 
 echo "\nCloning zsh plugin"
-cd $HOME/.tmux && git clone https://github.com/tmux-plugins/tmux-open.git
-cd $HOME/.tmux && git clone https://github.com/tmux-plugins/tmux-yank.git
-cd $HOME/.tmux && git clone https://github.com/tmux-plugins/tmux-copycat.git
-cd $HOME/.tmux && git clone https://github.com/tmux-plugins/tmux-sessionist.git
-cd $HOME/.tmux && git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git
-
-echo "\nCreating and link directory for neovim\n"
-mkdir -p $HOME/.config
-ln -s $HOME/.vim $HOME/.config/nvim
-ls -s $HOME/.vim $HOME/.config/nvim/init.vim
+cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tpm.git
+cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tmux-open.git
+cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tmux-yank.git
+cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tmux-copycat.git
+cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tmux-sessionist.git
+cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git
 
 echo "\nDone!!\n"
