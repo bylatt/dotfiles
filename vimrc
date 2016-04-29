@@ -67,7 +67,7 @@ set background=dark
 syntax on
 
 try
-  colorscheme Tomorrow-Night
+  colorscheme grb256
 catch /:E185:/
   colorscheme default
   highlight LineNr cterm=bold ctermfg=white
@@ -287,7 +287,7 @@ augroup END
   if isdirectory('/usr/local/opt/fzf')
     set runtimepath+=/usr/local/opt/fzf
 
-    " Just a copy past of Ag function to use with Pt
+    " Just a copy->paste of Ag function to use with Pt
     function! s:pt_to_qf(line)
       let parts = split(a:line, ':')
       return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2], 'text': join(parts[3:], ':')}
