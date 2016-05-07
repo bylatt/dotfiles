@@ -5,6 +5,7 @@ ctags
 diff-so-fancy
 fzf
 gdbm
+gist
 git
 hub
 libevent
@@ -12,6 +13,7 @@ libffi
 libyaml
 mongodb
 openssl
+pcre
 pkg-config
 postgresql
 readline
@@ -22,3 +24,7 @@ ssh-copy-id
 the_platinum_searcher
 tmux
 vim
+zsh
+zsh-completions
+zsh-history-substring-search
+zsh-syntax-highlighting

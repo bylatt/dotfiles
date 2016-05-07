@@ -12,14 +12,14 @@ fi
 
 # History: {{{
 
-substring_search="$HOME/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh"
+substring_search="/usr/local/opt/zsh-history-substring-search/zsh-history-substring-search.zsh"
 [ -f $substring_search ] && source $substring_search
 
 # }}}
 
 # Completion: {{{
 
-[ -d "$HOME/.zsh/zsh-completions" ] && fpath=("$HOME/.zsh/zsh-completions/src" $fpath)
+[ -d "/usr/local/share/zsh-completions" ] && fpath+=("/usr/local/share/zsh-completions" $fpath)
 
 # }}}
 
@@ -76,13 +76,6 @@ fi
 
     export CRYSTALPATH="/opt/crystal"
     export PATH="$CRYSTALPATH/bin:$PATH"
-
-    # }}}
-
-    # Rush: {{{3
-
-    export RUSTPATH="/opt/rust"
-    export PATH="$RUSTPATH/bin:$PATH"
 
     # }}}
 
@@ -270,7 +263,7 @@ RPROMPT='${vcs_info_msg_0_}'
 
 # Syntax: {{{
 
-syntax_path="$HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+syntax_path="/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 [ -f $syntax_path ] && source $syntax_path
 
 # }}}

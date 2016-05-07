@@ -67,7 +67,7 @@ set background=dark
 syntax on
 
 try
-  colorscheme grb256
+  colorscheme noctu
 catch /:E185:/
   colorscheme default
   highlight LineNr cterm=bold ctermfg=white
@@ -386,4 +386,3 @@ endif
 " <c-p> for previous option
 
 " }}}
-
