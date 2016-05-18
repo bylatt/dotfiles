@@ -34,15 +34,4 @@ mkdir -p $HOME/.vim/colors
 mkdir -p $HOME/.vim/tmp
 mkdir -p $HOME/.vim/undo
 
-echo "\nCreating directories for tmux\n"
-mkdir -p $HOME/.tmux/plugins
-
-echo "\nCloning zsh plugin"
-cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tpm.git
-cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tmux-open.git
-cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tmux-yank.git
-cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tmux-copycat.git
-cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tmux-sessionist.git
-cd $HOME/.tmux/plugins && git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git
-
 echo "\nDone!!\n"

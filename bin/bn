@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+
+require 'nokogiri'
+require 'open-uri'
+
+def get_html(url)
+  html_doc = Nokogiri::HTML(open(url))
+end
+
+def get_post(url)
+  html_doc = get_html(url)
+  post = extract_post(html_doc)
+end
+
+def get_page(url)
+  html_doc = get_html(url)
+  posts = html_doc.css('div.node').map do |post|
+    extract_post(post)
+  end
+end
+
+def extract_post(html_doc)
+  item = Struct.new(:id, :title, :content, :date)
+  date = html_doc.at_css('span.submitted').text.strip
+  content = html_doc.at_css('div.node-content').text.strip
+  tmp = html_doc.at_css('div.content-title-box > h2 a')
+  id = tmp.attribute('href').to_s.gsub(/\/node\//, '')
+  title = tmp.text.strip
+
+  item.new(id, title, content, date)
+end
+
+hello = <<END
+8      8
+8      8
+8oPYo. 8 .oPYo. .oPYo. odYo. .oPYo. odYo. .oPYo.
+8    8 8 8    8 8    8 8' `8 8    8 8' `8 8oooo8
+8    8 8 8    8 8    8 8   8 8    8 8   8 8.
+`YooP' 8 `YooP' `YooP8 8   8 `YooP' 8   8 `Yooo'
+:.....:..:.....::....8 ..::..:.....:..::..:.....:
+::::::::::::::::::ooP'.::::::::::::::::::::::::::
+::::::::::::::::::...::::::::::::::::::::::::::::
+=================================================
+END
+
+puts hello
+
+loop do
+  bn_page_url = 'https://www.blognone.com/node?page='
+  bn_post_url = 'https://www.blognone.com/node/'
+
+  print '>> '
+  msg = $stdin.gets.chomp
+  msg = msg.split(' ')
+  break if msg[0] == 'q' || msg[0] == 'exit'
+
+  case msg[0]
+    when 'page'
+      bn_page_url = "#{bn_page_url}#{msg[1].to_i - 1}" unless msg[1].nil?
+      posts = get_page(bn_page_url)
+      posts.each do |post|
+        puts "[#{post['id']}] #{post['title']}"
+        # puts "#{post['date']}"
+      end
+
+    when 'post'
+      if msg[1].nil?
+        puts 'Please input post id'
+      else
+        bn_post_url = "#{bn_post_url}#{msg[1]}"
+        begin
+          post = get_post(bn_post_url)
+          puts post['title']
+          puts '-------------'
+          puts post['content']
+          # puts post['date']
+        rescue
+          puts 'Post not found'
+        end
+      end
+
+    when 'help'
+      help = <<END
+type `page [number]` to list articles
+type `post [number]` to read article
+type `q` to quit
+END
+      puts help
+
+    else
+      puts 'Please input the correct command, type `help` for help'
+  end
+end

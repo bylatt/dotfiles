@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+percent=$(pmset -g batt | egrep "([0-9]+\%).*" -o | cut -f1 -d'%')
+
+args=("$@")
+if [ "${args[0]}" == "debug" ]; then
+  echo "$percent"
+fi
+
+if [ "$percent" -gt "80" ]; then
+  result="★ ★ ★ ★ ★ "
+elif [ "$percent" -gt "60" ]; then
+  result="★ ★ ★ ★ ☆ "
+elif [ "$percent" -gt "40" ]; then
+  result="★ ★ ★ ☆ ☆ "
+elif [ "$percent" -gt "20" ]; then
+  result="★ ★ ☆ ☆ ☆ "
+elif [ "$percent" -gt "0" ]; then
+  result="★ ☆ ☆ ☆ ☆ "
+fi
+
+echo "$result"

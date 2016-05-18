@@ -23,22 +23,23 @@ endif
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 call dein#begin(expand($HOME.'/.vim/bundle'))
 call dein#add('shougo/dein.vim')
-call dein#add('junegunn/fzf.vim')
+call dein#add('shougo/unite.vim')
+call dein#add('shougo/neomru.vim')
+call dein#add('shougo/vimproc.vim', {'build' : 'make'})
 call dein#add('wellle/targets.vim')
 call dein#add('k-takata/matchit.vim')
 call dein#add('jiangmiao/auto-pairs')
 call dein#add('janko-m/vim-test')
 call dein#add('sickill/vim-pasta')
 call dein#add('alvan/vim-closetag')
-call dein#add('itchyny/vim-parenmatch')
 call dein#add('terryma/vim-multiple-cursors')
 call dein#add('christoomey/vim-tmux-navigator')
 call dein#add('fatih/vim-go')
-call dein#add('vim-ruby/vim-ruby')
 call dein#add('pangloss/vim-javascript')
 call dein#add('mxw/vim-jsx')
-call dein#add('ecomba/vim-ruby-refactoring')
 call dein#add('strogonoff/vim-coffee-script')
+call dein#add('vim-ruby/vim-ruby')
+call dein#add('ecomba/vim-ruby-refactoring')
 call dein#add('tpope/vim-rsi')
 call dein#add('tpope/vim-haml')
 call dein#add('tpope/vim-rails')
@@ -63,7 +64,10 @@ filetype plugin indent on
 " Colors: {{{
 
 set t_Co=256
-set background=dark
+" set termguicolors
+if &term =~ '256color'
+  set t_ut=
+endif
 syntax on
 
 try
@@ -93,10 +97,12 @@ set laststatus=2
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
+" set shiftround
 set expandtab
 set smarttab
 set autoindent
 set smartindent
+set cinoptions=>4,l1,p0,)50,*50,t0
 set autoread
 set autowrite
 set autowriteall
@@ -111,7 +117,7 @@ set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cac
 
 set showmode
 set showcmd
-set showtabline=0
+set showtabline=2
 set hidden
 set number
 set ttyfast
@@ -141,7 +147,7 @@ set foldenable
 set foldmethod=manual
 set foldlevel=9999
 
-set cursorline
+set nocursorline
 set nocursorcolumn
 
 set omnifunc=syntaxcomplete#Complete
@@ -150,12 +156,12 @@ set completeopt=longest,menuone
 " defualt complete=.,w,b,u,t,i
 set complete-=i
 
-set scrolloff=5
+set scrolloff=0
 set synmaxcol=0
 set fillchars+=vert:\!
 
 " disable matchparen
-let g:loaded_matchparen=1
+" let g:loaded_matchparen=1
 
 " }}}
 
@@ -211,6 +217,9 @@ let s:kernel = system('echo -n "$(uname -s)"')
 let mapleader = "\<space>"
 
   " Modes: {{{2
+
+  nnoremap j gj
+  nnoremap k gk
 
   nnoremap ; :
   nnoremap ! :!
@@ -271,62 +280,58 @@ augroup END
 
   " }}}
 
-  " ParenMatch: {{{2
-
-  " Override the highlight function of the plugin
-  function! parenmatch#highlight() abort
-    if !get(g:, 'parenmatch_highlight', 1) | return | endif
-    highlight ParenMatch ctermfg=16 ctermbg=10 cterm=bold,underline
-  endfunction
-
-  " }}}
-
-
-  " FZF: {{{2
-
-  if isdirectory('/usr/local/opt/fzf')
-    set runtimepath+=/usr/local/opt/fzf
-
-    " Just a copy->paste of Ag function to use with Pt
-    function! s:pt_to_qf(line)
-      let parts = split(a:line, ':')
-      return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2], 'text': join(parts[3:], ':')}
-    endfunction
-
-    function! s:pt_handler(lines)
-      if len(a:lines) < 2 | return | endif
-
-      let cmd = get({'ctrl-x': 'split', 'ctrl-v': 'vertical split', 'ctrl-t': 'tabe'}, a:lines[0], 'e')
-      let list = map(a:lines[1:], 's:pt_to_qf(v:val)')
-      let first = list[0]
-      execute cmd escape(first.filename, ' %#\')
-      execute first.lnum
-      execute 'normal!' first.col.'|zz'
-
-      if len(list) > 1
-        call setqflist(list)
-        copen
-        wincmd p
-      endif
-    endfunction
-
-    command! -nargs=* Pt call fzf#run({
-    \ 'source': printf('pt --home-ptignore --nogroup --column --color "%s"', escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
-    \ 'sink*': function('<sid>pt_handler'),
-    \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. --multi --bind ctrl-a:select-all,ctrl-d:deselect-all --color hl:68,hl+:110',
-    \ 'down': '50%'
-    \ })
-
-    " Override vim default autocomplete with fzf helper
-    imap <c-x><c-k> <plug>(fzf-complete-word)
-    imap <c-x><c-f> <plug>(fzf-complete-path)
-    imap <c-x><c-j> <plug>(fzf-complete-file)
-    imap <c-x><c-l> <plug>(fzf-complete-line)
-
-    nnoremap <leader>p :Files<cr>
-    nnoremap <leader>/ :Pt<space>
+  " Unite: {{{2
+  nnoremap <leader>p :Unite -no-split -start-insert file_rec/async:!<cr>
+  nnoremap <leader>y :Unite history/yank<cr>
+  nnoremap <leader>s :Unite -quick-match buffer<cr>
+  nnoremap <leader>/ :Unite grep:.<cr>
+  let g:unite_source_history_yank_enable=1
+  let g:unite_prompt='→ '
+  let g:unite_split_rule='topleft'
+  let g:unite_data_directory=$HOME.'/.cache/unite'
+  call unite#filters#matcher_default#use(['matcher_fuzzy'])
+  call unite#filters#sorter_default#use(['sorter_rank'])
+  call unite#custom_source('file_rec/async,file_rec,file_mru,file,buffer,grep',
+        \ 'ignore_pattern', join([
+        \ '\.git/',
+        \ '\.svn/',
+        \ '\.hg/',
+        \ '\.cache/',
+        \ 'tmp/',
+        \ 'node_modules/',
+        \ 'vendor/',
+        \ 'bower_components/',
+        \ '.sass-cache',
+        \ ], '\|'))
+  let s:ag_opts = '-SU --hidden --nocolor --nogroup '.
+        \ '--ignore ".git" '.
+        \ '--ignore ".svn" '.
+        \ '--ignore ".hg" '.
+        \ '--ignore ".DS_Store" '.
+        \ '--ignore ".cache" '.
+        \ '--ignore "bower_components" '.
+        \ '--ignore "node_modules" '.
+        \ '--ignore "vendor" '.
+        \ '--ignore "*.ttf" '.
+        \ '--ignore "*.png" '.
+        \ '--ignore "*.jpg" '.
+        \ '--ignore "*.gif" '.
+        \ '--ignore "**/*.pyc"'
+  if executable('ag')
+    let g:unite_source_rec_async_command='ag --follow '.s:ag_opts.' -g ""'
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts = '-i --line-numbers '.s:ag_opts
+    let g:unite_source_grep_recursive_opt = ''
   endif
 
+  function! s:unite_settings()
+    imap <buffer> <esc> <plug>(unite_exit)
+    imap <buffer> <c-j> <plug>(unite_select_next_line)
+    imap <buffer> <c-k> <plug>(unite_select_previous_line)
+    imap <buffer> <c-c> <plug>(unite_redraw)
+  endfunction
+
+  autocmd filetype unite call s:unite_settings()
   " }}}
 
 " }}}
@@ -350,7 +355,7 @@ map <leader>n :call RenameFile()<cr>
 " TrimTrailingWhitespace: {{{
 
 if !&binary && &filetype != 'diff'
-  autocmd BufWritePre * :%s/\s\+$//e
+  autocmd bufwritepre * :%s/\s\+$//e
 endif
 
 " }}}

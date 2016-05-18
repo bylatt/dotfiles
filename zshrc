@@ -19,7 +19,7 @@ substring_search="/usr/local/opt/zsh-history-substring-search/zsh-history-substr
 
 # Completion: {{{
 
-[ -d "/usr/local/share/zsh-completions" ] && fpath+=("/usr/local/share/zsh-completions" $fpath)
+[ -d "/usr/local/opt/zsh-completions/share/zsh-completions" ] && fpath+=("/usr/local/opt/zsh-completions/share/zsh-completions" $fpath)
 
 # }}}
 
@@ -29,9 +29,9 @@ if which brew > /dev/null 2>&1; then
 
   # Chruby: {{{2
 
-  if [[ -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]]; then
-    source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
-    source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
+  if [[ -f "/usr/local/opt/chruby/share/chruby/chruby.sh" ]]; then
+    source "/usr/local/opt/chruby/share/chruby/chruby.sh"
+    source "/usr/local/opt/chruby/share/chruby/auto.sh"
   fi
 
   # }}}
@@ -51,6 +51,14 @@ fi
   export KEYTIMEOUT=1
   export VISUAL="vim"
   export EDITOR="vim"
+
+  # }}}
+
+  # Bin: {{{2
+
+  if [ -d "$HOME/.bin" ]; then
+    export PATH="$HOME/.bin:$PATH"
+  fi
 
   # }}}
 
@@ -79,10 +87,10 @@ fi
 
     # }}}
 
-    # Python: {{{3
+    # PYPY: {{{3
 
-    export PYTHONPATH="/opt/python"
-    export PATH="$PYTHONPATH/bin:$PATH"
+    export PYPYPATH="/opt/pypy"
+    export PATH="$PYPYPATH/bin:$PATH"
 
     # }}}
 
@@ -105,11 +113,11 @@ alias "ll"="ls -GFlAhp"
 alias "lr"="ls -alR"
 alias "cp"="cp -ivR"
 alias "mv"="mv -iv"
+alias "rb"="ruby"
+alias "ra"="rails"
+alias "py"="pypy"
 alias "mkd"="mkdir -pv"
 alias "his"="history -1000 -1"
-if which pt > /dev/null 2>&1; then
-  alias "pt"="pt --home-ptignore"
-fi
 if which hub > /dev/null 2>&1; then
   alias "git"="hub"
 fi
@@ -144,7 +152,6 @@ setopt multios
 # Mapping: {{{
 
 bindkey -v
-bindkey -M viins "jk" vi-cmd-mode
 bindkey "^r" history-incremental-search-backward
 bindkey "^u" history-substring-search-up
 bindkey "^d" history-substring-search-down
@@ -162,8 +169,8 @@ zstyle ":vcs_info:*:*" check-for-changes true
 zstyle ":vcs_info:*:*" stagedstr "%F{yellow}"
 zstyle ":vcs_info:*:*" unstagedstr "%F{red}"
 zstyle ":vcs_info:*:*" branchformats "%r"
-zstyle ":vcs_info:*:*" formats "%F{green}%m%c%u(%b)%f"
-zstyle ":vcs_info:*:*" actionformats "%F{green}%m%c%u(%b)%f"
+zstyle ":vcs_info:*:*" formats "%F{green}%m%c%u%b%f"
+zstyle ":vcs_info:*:*" actionformats "%F{green}%m%c%u%b%f"
 zstyle ":vcs_info:git*+set-message:*" hooks git-remote git-untracked git-stash
 
 # Get name of remote that we're tracking
@@ -172,7 +179,8 @@ function +vi-git-remote() {
   remote=$(git remote | tr '\n' '/' | sed 's/.$//' 2>/dev/null)
 
   if [[ -n ${remote} ]]; then
-    hook_com[branch]="${remote}/${hook_com[branch]}"
+    # hook_com[branch]="${remote}/${hook_com[branch]}"
+    hook_com[branch]="${hook_com[branch]}"
   fi
 }
 
@@ -256,14 +264,14 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='%F{240}%~/%f %{$reset_color%}'
-RPROMPT='${vcs_info_msg_0_}'
+PROMPT='%F{248}%1d%f%F{242}:%f${vcs_info_msg_0_}%F{242}:%f%F{214}ɔ%f %{$reset_color%}'
+RPROMPT=''
 
 # }}}
 
 # Syntax: {{{
 
-syntax_path="/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+syntax_path="/usr/local/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 [ -f $syntax_path ] && source $syntax_path
 
 # }}}

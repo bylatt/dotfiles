@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require "json"
+
+input = $stdin.gets.chomp
+
+begin
+  json = JSON.pretty_generate(JSON.parse(input))
+rescue
+  $stdout.write "JSON string is not valid"
+end
+
+$stdout.write json
