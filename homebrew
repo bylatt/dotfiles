@@ -1,9 +1,9 @@
+asciinema
 autoconf
 automake
 chruby
 ctags
 diff-so-fancy
-fzf
 gdbm
 gist
 git
@@ -11,6 +11,7 @@ hub
 libevent
 libffi
 libyaml
+luajit
 mongodb
 openssl
 pcre
@@ -21,9 +22,10 @@ redis
 ruby-install
 sqlite
 ssh-copy-id
-the_platinum_searcher
+the_silver_searcher
 tmux
 vim
+xz
 zsh
 zsh-completions
 zsh-history-substring-search
