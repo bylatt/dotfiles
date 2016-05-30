@@ -1,7 +1,7 @@
 " github.com/clozed2u :: @clozed2u
 " http://clozed2u.com
 
-" Initialization: {{{
+" Initializations: {{{
 
 set nocompatible
 set encoding=utf-8
@@ -23,9 +23,7 @@ endif
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 call dein#begin(expand($HOME.'/.vim/bundle'))
 call dein#add('shougo/dein.vim')
-call dein#add('shougo/unite.vim')
-call dein#add('shougo/neomru.vim')
-call dein#add('shougo/vimproc.vim', {'build' : 'make'})
+call dein#add('junegunn/fzf.vim')
 call dein#add('wellle/targets.vim')
 call dein#add('k-takata/matchit.vim')
 call dein#add('jiangmiao/auto-pairs')
@@ -220,6 +218,7 @@ let mapleader = "\<space>"
 
   nnoremap j gj
   nnoremap k gk
+  nnoremap qq :q!<cr>
 
   nnoremap ; :
   nnoremap ! :!
@@ -280,58 +279,27 @@ augroup END
 
   " }}}
 
-  " Unite: {{{2
-  nnoremap <leader>p :Unite -no-split -start-insert file_rec/async:!<cr>
-  nnoremap <leader>y :Unite history/yank<cr>
-  nnoremap <leader>s :Unite -quick-match buffer<cr>
-  nnoremap <leader>/ :Unite grep:.<cr>
-  let g:unite_source_history_yank_enable=1
-  let g:unite_prompt='→ '
-  let g:unite_split_rule='topleft'
-  let g:unite_data_directory=$HOME.'/.cache/unite'
-  call unite#filters#matcher_default#use(['matcher_fuzzy'])
-  call unite#filters#sorter_default#use(['sorter_rank'])
-  call unite#custom_source('file_rec/async,file_rec,file_mru,file,buffer,grep',
-        \ 'ignore_pattern', join([
-        \ '\.git/',
-        \ '\.svn/',
-        \ '\.hg/',
-        \ '\.cache/',
-        \ 'tmp/',
-        \ 'node_modules/',
-        \ 'vendor/',
-        \ 'bower_components/',
-        \ '.sass-cache',
-        \ ], '\|'))
-  let s:ag_opts = '-SU --hidden --nocolor --nogroup '.
-        \ '--ignore ".git" '.
-        \ '--ignore ".svn" '.
-        \ '--ignore ".hg" '.
-        \ '--ignore ".DS_Store" '.
-        \ '--ignore ".cache" '.
-        \ '--ignore "bower_components" '.
-        \ '--ignore "node_modules" '.
-        \ '--ignore "vendor" '.
-        \ '--ignore "*.ttf" '.
-        \ '--ignore "*.png" '.
-        \ '--ignore "*.jpg" '.
-        \ '--ignore "*.gif" '.
-        \ '--ignore "**/*.pyc"'
-  if executable('ag')
-    let g:unite_source_rec_async_command='ag --follow '.s:ag_opts.' -g ""'
-    let g:unite_source_grep_command = 'ag'
-    let g:unite_source_grep_default_opts = '-i --line-numbers '.s:ag_opts
-    let g:unite_source_grep_recursive_opt = ''
+  " FZF: {{{
+  if isdirectory('/usr/local/opt/fzf')
+    set runtimepath+=/usr/local/opt/fzf
+
+    let g:fzf_action={'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit'}
+
+    let g:fzf_colors={
+      \ 'fg':      ['fg', 'Normal'],
+      \ 'bg':      ['bg', 'Normal'],
+      \ 'hl':      ['fg', 'Comment'],
+      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+      \ 'hl+':     ['fg', 'Statement'],
+      \ 'info':    ['fg', 'PreProc'],
+      \ 'prompt':  ['fg', 'Conditional'],
+      \ 'pointer': ['fg', 'Exception'],
+      \ 'marker':  ['fg', 'Keyword'],
+      \ 'spinner': ['fg', 'Label'],
+      \ 'header':  ['fg', 'Comment']}
+    nnoremap <leader>p :Files<cr>
   endif
-
-  function! s:unite_settings()
-    imap <buffer> <esc> <plug>(unite_exit)
-    imap <buffer> <c-j> <plug>(unite_select_next_line)
-    imap <buffer> <c-k> <plug>(unite_select_previous_line)
-    imap <buffer> <c-c> <plug>(unite_redraw)
-  endfunction
-
-  autocmd filetype unite call s:unite_settings()
   " }}}
 
 " }}}

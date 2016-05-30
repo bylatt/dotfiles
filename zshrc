@@ -36,6 +36,16 @@ if which brew > /dev/null 2>&1; then
 
   # }}}
 
+
+  # FZF: {{{2
+
+  if [[ -d "/usr/local/opt/fzf" ]]; then
+    source "/usr/local/opt/fzf/shell/completion.zsh"
+    source "/usr/local/opt/fzf/shell/key-bindings.zsh"
+  fi
+
+  # }}}
+
 fi
 
 # }}}
@@ -87,6 +97,11 @@ fi
 
     # }}}
 
+    # Haskell: {{{3
+    export HASKELLPATH="/opt/haskell"
+    export PATH="$HASKELLPATH/bin:$PATH"
+    # }}}
+
     # PYPY: {{{3
 
     export PYPYPATH="/opt/pypy"
@@ -120,6 +135,9 @@ alias "mkd"="mkdir -pv"
 alias "his"="history -1000 -1"
 if which hub > /dev/null 2>&1; then
   alias "git"="hub"
+fi
+if which pt > /dev/null 2>&1; then
+  alias "pt"="pt --follow --ignore-case --smart-case --home-ptignore --global-gitignore"
 fi
 
 # }}}
@@ -264,7 +282,7 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='%F{248}%1d%f%F{242}:%f${vcs_info_msg_0_}%F{242}:%f%F{214}ɔ%f %{$reset_color%}'
+PROMPT='%F{248}%1d%f%F{242}:%f${vcs_info_msg_0_}%F{242}:%f%F{4}◑%f %{$reset_color%}'
 RPROMPT=''
 
 # }}}
