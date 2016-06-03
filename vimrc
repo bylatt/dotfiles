@@ -13,11 +13,8 @@ set nobomb
 
 " Plugin: {{{
 
-let s:dein = 0
-
 if !isdirectory($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim')
-  silent !git clone https://github.com/shougo/dein.vim.git ~/.vim/bundle/repos/github.com/shougo/dein.vim
-  let s:dein = 1
+  silent !git clone https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 endif
 
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
@@ -26,10 +23,9 @@ call dein#add('shougo/dein.vim')
 call dein#add('junegunn/fzf.vim')
 call dein#add('wellle/targets.vim')
 call dein#add('k-takata/matchit.vim')
-call dein#add('jiangmiao/auto-pairs')
+call dein#add('justinmk/vim-dirvish')
 call dein#add('janko-m/vim-test')
 call dein#add('sickill/vim-pasta')
-call dein#add('alvan/vim-closetag')
 call dein#add('terryma/vim-multiple-cursors')
 call dein#add('christoomey/vim-tmux-navigator')
 call dein#add('fatih/vim-go')
@@ -41,16 +37,18 @@ call dein#add('ecomba/vim-ruby-refactoring')
 call dein#add('tpope/vim-rsi')
 call dein#add('tpope/vim-haml')
 call dein#add('tpope/vim-rails')
+call dein#add('tpope/vim-eunuch')
 call dein#add('tpope/vim-repeat')
 call dein#add('tpope/vim-endwise')
 call dein#add('tpope/vim-markdown')
 call dein#add('tpope/vim-dispatch')
 call dein#add('tpope/vim-surround')
 call dein#add('tpope/vim-fugitive')
+call dein#add('tpope/vim-unimpaired')
 call dein#add('tpope/vim-commentary')
 
-if s:dein == 1
-  call dein#update()
+if dein#check_install()
+  call dein#install()
 endif
 
 call dein#end()
@@ -63,7 +61,7 @@ filetype plugin indent on
 
 set t_Co=256
 " set termguicolors
-if &term =~ '256color'
+if &term=~'256color'
   set t_ut=
 endif
 syntax on
