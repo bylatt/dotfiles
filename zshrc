@@ -130,6 +130,7 @@ alias "cp"="cp -ivR"
 alias "mv"="mv -iv"
 alias "rb"="ruby"
 alias "ra"="rails"
+alias "cr"="crystal"
 alias "py"="pypy"
 alias "mkd"="mkdir -pv"
 alias "his"="history -1000 -1"
@@ -282,7 +283,7 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='%F{248}%1d%f%F{242}:%f${vcs_info_msg_0_}%F{242}:%f%F{4}◑%f %{$reset_color%}'
+PROMPT='%F{248}%1d%f%F{242}(%f${vcs_info_msg_0_}%F{242})%f %F{4}%%%f %{$reset_color%}'
 RPROMPT=''
 
 # }}}
