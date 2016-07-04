@@ -23,6 +23,8 @@ call dein#add('shougo/dein.vim')
 call dein#add('junegunn/fzf.vim')
 call dein#add('wellle/targets.vim')
 call dein#add('k-takata/matchit.vim')
+call dein#add('jiangmiao/auto-pairs')
+" call dein#add('scrooloose/syntastic')
 call dein#add('justinmk/vim-dirvish')
 call dein#add('janko-m/vim-test')
 call dein#add('sickill/vim-pasta')
@@ -60,17 +62,27 @@ filetype plugin indent on
 " Colors: {{{
 
 set t_Co=256
-" set termguicolors
 if &term=~'256color'
   set t_ut=
 endif
 syntax on
 
 try
-  colorscheme noctu
+  colorscheme somemissingcolorscheme
 catch /:E185:/
   colorscheme default
-  highlight LineNr cterm=bold ctermfg=white
+  highlight DiffAdd    ctermfg=0 ctermbg=2
+  highlight DiffChange ctermfg=0 ctermbg=3
+  highlight DiffDelete ctermfg=0 ctermbg=1
+  highlight DiffText   ctermfg=0 ctermbg=11 cterm=bold
+
+  if &background == "light"
+    highlight LineNr   ctermfg=7
+    highlight Comment  ctermfg=7
+  else
+    highlight LineNr   ctermfg=8
+    highlight Comment  ctermfg=8
+  endif
 endtry
 
 " }}}
@@ -191,20 +203,20 @@ let g:netrw_list_hide=&wildignore
 
 let s:kernel = system('echo -n "$(uname -s)"')
 
-  " Mac: {{{2
+" Mac: {{{2
 
-  if s:kernel == 'Darwin'
-    set clipboard=unnamed
+if s:kernel == 'Darwin'
+  set clipboard=unnamed
 
-  " }}}
+" }}}
 
-  " Linux: {{{2
+" Linux: {{{2
 
-  elseif s:kernel == 'Linux'
-    set clipboard=unnamedplus
-  endif
+elseif s:kernel == 'Linux'
+  set clipboard=unnamedplus
+endif
 
-  " }}}
+" }}}
 
 " }}}
 
@@ -212,29 +224,35 @@ let s:kernel = system('echo -n "$(uname -s)"')
 
 let mapleader = "\<space>"
 
-  " Modes: {{{2
+" Modes: {{{2
 
-  nnoremap j gj
-  nnoremap k gk
-  nnoremap qq :q!<cr>
+nnoremap j gj
+nnoremap k gk
+nnoremap qq :q!<cr>
 
-  nnoremap ; :
-  nnoremap ! :!
-  nnoremap <cr> :nohlsearch<cr>
+nnoremap ; :
+nnoremap ! :!
+nnoremap <cr> :nohlsearch<cr>
 
-  vmap <  <gv
-  vmap > >gv
+vmap <  <gv
+vmap > >gv
 
-  " }}}
+" }}}
 
-  " Navigation: {{{2
+" Navigation: {{{2
 
-  nnoremap <c-j> <c-w>j
-  nnoremap <c-k> <c-w>k
-  nnoremap <c-h> <c-w>h
-  nnoremap <c-l> <c-w>l
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
 
-  " }}}
+" }}}
+
+" Utils: {{{2
+
+nnoremap <leader>d <esc>:bd<cr>
+
+" }}}
 
 " }}}
 
@@ -257,48 +275,48 @@ augroup END
 
 " PluginSettings: {{{
 
-  " JSX: {{{2
+" JSX: {{{2
 
-  let g:jsx_ext_required=0
+let g:jsx_ext_required=0
 
-  " }}}
+" }}}
 
-  " Test: {{{2
+" Test: {{{2
 
-  let g:test#strategy='basic'
-  let g:test#preserve_screen=0
-  let test#ruby#rspec#options='--color'
+let g:test#strategy='basic'
+let g:test#preserve_screen=0
+let test#ruby#rspec#options='--color'
 
-  nmap <silent> <leader>t :TestNearest<cr>
-  nmap <silent> <leader>f :TestFile<cr>
-  nmap <silent> <leader>a :TestSuite<cr>
-  nmap <silent> <leader>l :TestLast<cr>
-  nmap <silent> <leader>g :TestVisit<cr>
+nmap <silent> <leader>t :TestNearest<cr>
+nmap <silent> <leader>f :TestFile<cr>
+nmap <silent> <leader>a :TestSuite<cr>
+nmap <silent> <leader>l :TestLast<cr>
+nmap <silent> <leader>g :TestVisit<cr>
 
-  " }}}
+" }}}
 
-  " FZF: {{{
-  if isdirectory('/usr/local/opt/fzf')
-    set runtimepath+=/usr/local/opt/fzf
+" FZF: {{{
+if isdirectory('/usr/local/opt/fzf')
+  set runtimepath+=/usr/local/opt/fzf
 
-    let g:fzf_action={'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit'}
+  let g:fzf_action={'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit'}
 
-    let g:fzf_colors={
-      \ 'fg':      ['fg', 'Normal'],
-      \ 'bg':      ['bg', 'Normal'],
-      \ 'hl':      ['fg', 'Comment'],
-      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-      \ 'hl+':     ['fg', 'Statement'],
-      \ 'info':    ['fg', 'PreProc'],
-      \ 'prompt':  ['fg', 'Conditional'],
-      \ 'pointer': ['fg', 'Exception'],
-      \ 'marker':  ['fg', 'Keyword'],
-      \ 'spinner': ['fg', 'Label'],
-      \ 'header':  ['fg', 'Comment']}
-    nnoremap <leader>p :Files<cr>
-  endif
-  " }}}
+  " let g:fzf_colors={
+  "       \ 'fg':      ['fg', 'Normal'],
+  "       \ 'bg':      ['bg', 'Normal'],
+  "       \ 'hl':      ['fg', 'Comment'],
+  "       \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  "       \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  "       \ 'hl+':     ['fg', 'Statement'],
+  "       \ 'info':    ['fg', 'PreProc'],
+  "       \ 'prompt':  ['fg', 'Conditional'],
+  "       \ 'pointer': ['fg', 'Exception'],
+  "       \ 'marker':  ['fg', 'Keyword'],
+  "       \ 'spinner': ['fg', 'Label'],
+  "       \ 'header':  ['fg', 'Comment']}
+  nnoremap <leader>p :Files<cr>
+endif
+" }}}
 
 " }}}
 
@@ -314,7 +332,7 @@ function! RenameFile()
   endif
 endfunction
 
-map <leader>n :call RenameFile()<cr>
+nnoremap <leader>n :call RenameFile()<cr>
 
 " }}}
 

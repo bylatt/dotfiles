@@ -188,8 +188,8 @@ zstyle ":vcs_info:*:*" check-for-changes true
 zstyle ":vcs_info:*:*" stagedstr "%F{yellow}"
 zstyle ":vcs_info:*:*" unstagedstr "%F{red}"
 zstyle ":vcs_info:*:*" branchformats "%r"
-zstyle ":vcs_info:*:*" formats "%F{green}%m%c%u%b%f"
-zstyle ":vcs_info:*:*" actionformats "%F{green}%m%c%u%b%f"
+zstyle ":vcs_info:*:*" formats "%F{green}%m%c%u(%b) %f"
+zstyle ":vcs_info:*:*" actionformats "%F{green}%m%c%u(%b) %f"
 zstyle ":vcs_info:git*+set-message:*" hooks git-remote git-untracked git-stash
 
 # Get name of remote that we're tracking
@@ -283,7 +283,7 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='%F{248}%1d%f%F{242}(%f${vcs_info_msg_0_}%F{242})%f %F{4}%%%f %{$reset_color%}'
+PROMPT='${vcs_info_msg_0_}%F{242}%~%f %{$reset_color%}'
 RPROMPT=''
 
 # }}}
