@@ -24,7 +24,8 @@ call dein#add('junegunn/fzf.vim')
 call dein#add('wellle/targets.vim')
 call dein#add('k-takata/matchit.vim')
 call dein#add('jiangmiao/auto-pairs')
-" call dein#add('scrooloose/syntastic')
+call dein#add('scrooloose/syntastic')
+call dein#add('editorconfig/editorconfig-vim')
 call dein#add('justinmk/vim-dirvish')
 call dein#add('janko-m/vim-test')
 call dein#add('sickill/vim-pasta')
@@ -68,7 +69,8 @@ endif
 syntax on
 
 try
-  colorscheme somemissingcolorscheme
+  set background=dark
+  colorscheme noctu
 catch /:E185:/
   colorscheme default
   highlight DiffAdd    ctermfg=0 ctermbg=2
@@ -110,7 +112,7 @@ set expandtab
 set smarttab
 set autoindent
 set smartindent
-set cinoptions=>4,l1,p0,)50,*50,t0
+" set cinoptions=>4,l1,p0,)50,*50,t0
 set autoread
 set autowrite
 set autowriteall
@@ -296,27 +298,27 @@ nmap <silent> <leader>g :TestVisit<cr>
 " }}}
 
 " FZF: {{{
+
 if isdirectory('/usr/local/opt/fzf')
   set runtimepath+=/usr/local/opt/fzf
 
   let g:fzf_action={'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit'}
 
-  " let g:fzf_colors={
-  "       \ 'fg':      ['fg', 'Normal'],
-  "       \ 'bg':      ['bg', 'Normal'],
-  "       \ 'hl':      ['fg', 'Comment'],
-  "       \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  "       \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  "       \ 'hl+':     ['fg', 'Statement'],
-  "       \ 'info':    ['fg', 'PreProc'],
-  "       \ 'prompt':  ['fg', 'Conditional'],
-  "       \ 'pointer': ['fg', 'Exception'],
-  "       \ 'marker':  ['fg', 'Keyword'],
-  "       \ 'spinner': ['fg', 'Label'],
-  "       \ 'header':  ['fg', 'Comment']}
+  let g:fzf_colors={
+        \ 'fg':      ['fg', 'Normal'],
+        \ 'bg':      ['bg', 'Normal'],
+        \ 'hl':      ['fg', 'Comment'],
+        \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+        \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+        \ 'hl+':     ['fg', 'Statement'],
+        \ 'info':    ['fg', 'PreProc'],
+        \ 'prompt':  ['fg', 'Conditional'],
+        \ 'pointer': ['fg', 'Exception'],
+        \ 'marker':  ['fg', 'Keyword'],
+        \ 'spinner': ['fg', 'Label'],
+        \ 'header':  ['fg', 'Comment']}
   nnoremap <leader>p :Files<cr>
 endif
-" }}}
 
 " }}}
 

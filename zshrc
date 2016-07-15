@@ -10,28 +10,28 @@ fi
 
 # }}}
 
-# History: {{{
-
-substring_search="/usr/local/opt/zsh-history-substring-search/zsh-history-substring-search.zsh"
-[ -f $substring_search ] && source $substring_search
-
-# }}}
-
-# Completion: {{{
-
-[ -d "/usr/local/opt/zsh-completions/share/zsh-completions" ] && fpath+=("/usr/local/opt/zsh-completions/share/zsh-completions" $fpath)
-
-# }}}
-
 # Homebrew: {{{
 
 if which brew > /dev/null 2>&1; then
 
+  # History: {{{2
+
+  substring_search="$(brew --prefix)/opt/zsh-history-substring-search/zsh-history-substring-search.zsh"
+  [ -f $substring_search ] && source $substring_search
+
+  # }}}
+
+  # Completion: {{{2
+
+  [ -d "$(brew --prefix)/opt/zsh-completions/share/zsh-completions" ] && fpath+=("$(brew --prefix)/opt/zsh-completions/share/zsh-completions" $fpath)
+
+  # }}}
+
   # Chruby: {{{2
 
-  if [[ -f "/usr/local/opt/chruby/share/chruby/chruby.sh" ]]; then
-    source "/usr/local/opt/chruby/share/chruby/chruby.sh"
-    source "/usr/local/opt/chruby/share/chruby/auto.sh"
+  if [[ -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]]; then
+    source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
+    source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
   fi
 
   # }}}
@@ -39,9 +39,9 @@ if which brew > /dev/null 2>&1; then
 
   # FZF: {{{2
 
-  if [[ -d "/usr/local/opt/fzf" ]]; then
-    source "/usr/local/opt/fzf/shell/completion.zsh"
-    source "/usr/local/opt/fzf/shell/key-bindings.zsh"
+  if [[ -d "$(brew --prefix)/opt/fzf" ]]; then
+    source "$(brew --prefix)/opt/fzf/shell/completion.zsh"
+    source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
   fi
 
   # }}}
@@ -73,11 +73,12 @@ fi
   # }}}
 
   # Language: {{{2
+    export PROGLANG="/opt"
 
     # Go: {{{3
 
-    export GOROOT="/opt/go"
-    export GOPATH="$HOME/Golang"
+    export GOROOT="$PROGLANG/go"
+    export GOPATH="$HOME/Go"
     export GOBIN="$GOPATH/bin"
     export PATH="$GOROOT/bin:$GOBIN:$PATH"
 
@@ -85,33 +86,21 @@ fi
 
     # Node: {{{3
 
-    export NODEPATH="/opt/node"
+    export NODEPATH="$PROGLANG/node"
     export PATH="$NODEPATH/bin:$PATH"
 
     # }}}
 
-    # Crystal: {{{3
+    # Python: {{{3
 
-    export CRYSTALPATH="/opt/crystal"
-    export PATH="$CRYSTALPATH/bin:$PATH"
-
-    # }}}
-
-    # Haskell: {{{3
-    export HASKELLPATH="/opt/haskell"
-    export PATH="$HASKELLPATH/bin:$PATH"
-    # }}}
-
-    # PYPY: {{{3
-
-    export PYPYPATH="/opt/pypy"
-    export PATH="$PYPYPATH/bin:$PATH"
+    export PYTHONPATH="$PROGLANG/python"
+    export PATH="$PYTHONPATH/bin:$PATH"
 
     # }}}
 
     # PHP: {{{3
 
-    export PHPPATH="/opt/php"
+    export PHPPATH="$PROGLANG/php"
     export PATH="$PHPPATH/bin:$PATH"
 
     # }}}
@@ -128,10 +117,6 @@ alias "ll"="ls -GFlAhp"
 alias "lr"="ls -alR"
 alias "cp"="cp -ivR"
 alias "mv"="mv -iv"
-alias "rb"="ruby"
-alias "ra"="rails"
-alias "cr"="crystal"
-alias "py"="pypy"
 alias "mkd"="mkdir -pv"
 alias "his"="history -1000 -1"
 if which hub > /dev/null 2>&1; then
@@ -140,6 +125,14 @@ fi
 if which pt > /dev/null 2>&1; then
   alias "pt"="pt --follow --ignore-case --smart-case --home-ptignore --global-gitignore"
 fi
+if which nvim > /dev/null 2>&1; then
+  alias "vi"="nvim"
+  alias "vim"="nvim"
+fi
+
+function field {
+  awk "{print \$$1}"
+}
 
 # }}}
 
@@ -290,7 +283,9 @@ RPROMPT=''
 
 # Syntax: {{{
 
-syntax_path="/usr/local/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-[ -f $syntax_path ] && source $syntax_path
+if which brew > /dev/null 2>&1; then
+  syntax_path="$(brew --prefix)/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  [ -f $syntax_path ] && source $syntax_path
+fi
 
 # }}}

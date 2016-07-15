@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-
-awk "{print \$$1}"
