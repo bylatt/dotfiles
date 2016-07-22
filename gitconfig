@@ -18,6 +18,8 @@
   helper = osxkeychain
 [push]
   default = current
+[pull]
+  default = current
 [alias]
   aa = add --all
   bl = blame -C

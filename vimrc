@@ -14,7 +14,7 @@ set nobomb
 " Plugin: {{{
 
 if !isdirectory($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim')
-  silent !git clone https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
+  silent !git clone -q https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 endif
 
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
@@ -26,6 +26,7 @@ call dein#add('k-takata/matchit.vim')
 call dein#add('jiangmiao/auto-pairs')
 call dein#add('scrooloose/syntastic')
 call dein#add('editorconfig/editorconfig-vim')
+call dein#add('itchyny/vim-parenmatch')
 call dein#add('justinmk/vim-dirvish')
 call dein#add('janko-m/vim-test')
 call dein#add('sickill/vim-pasta')
@@ -96,10 +97,10 @@ set shell=$SHELL
 " don't allow files with the same name to overwrite each other
 set noswapfile
 set writebackup
-set backupdir=~/.vim/backup
+set backupdir=$HOME/.vim/backup
 set undofile
-set undodir=~/.vim/undo
-set directory=~/.vim/tmp
+set undodir=$HOME/.vim/undo
+set directory=$HOME/.vim/tmp
 set tags=./tags;
 
 set backspace=2
@@ -127,7 +128,7 @@ set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cac
 
 set showmode
 set showcmd
-set showtabline=2
+set showtabline=0
 set hidden
 set number
 set ttyfast
@@ -171,7 +172,7 @@ set synmaxcol=0
 set fillchars+=vert:\!
 
 " disable matchparen
-" let g:loaded_matchparen=1
+let g:loaded_matchparen=1
 
 " }}}
 
@@ -203,22 +204,22 @@ let g:netrw_list_hide=&wildignore
 
 " OSSpecific: {{{
 
-let s:kernel = system('echo -n "$(uname -s)"')
+  let s:kernel = system('echo -n "$(uname -s)"')
 
-" Mac: {{{2
+  " Mac: {{{2
 
-if s:kernel == 'Darwin'
-  set clipboard=unnamed
+  if s:kernel == 'Darwin'
+    set clipboard=unnamed
 
-" }}}
+  " }}}
 
-" Linux: {{{2
+  " Linux: {{{2
 
-elseif s:kernel == 'Linux'
-  set clipboard=unnamedplus
-endif
+  elseif s:kernel == 'Linux'
+    set clipboard=unnamedplus
+  endif
 
-" }}}
+  " }}}
 
 " }}}
 
@@ -226,35 +227,35 @@ endif
 
 let mapleader = "\<space>"
 
-" Modes: {{{2
+  " Modes: {{{2
 
-nnoremap j gj
-nnoremap k gk
-nnoremap qq :q!<cr>
+  nnoremap j gj
+  nnoremap k gk
+  nnoremap qq :q!<cr>
 
-nnoremap ; :
-nnoremap ! :!
-nnoremap <cr> :nohlsearch<cr>
+  nnoremap ; :
+  nnoremap ! :!
+  nnoremap <cr> :nohlsearch<cr>
 
-vmap <  <gv
-vmap > >gv
+  vmap <  <gv
+  vmap > >gv
 
-" }}}
+  " }}}
 
-" Navigation: {{{2
+  " Navigation: {{{2
 
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
+  nnoremap <c-j> <c-w>j
+  nnoremap <c-k> <c-w>k
+  nnoremap <c-h> <c-w>h
+  nnoremap <c-l> <c-w>l
 
-" }}}
+  " }}}
 
-" Utils: {{{2
+  " Utils: {{{2
 
-nnoremap <leader>d <esc>:bd<cr>
+  nnoremap <leader>d <esc>:bd<cr>
 
-" }}}
+  " }}}
 
 " }}}
 
@@ -277,48 +278,61 @@ augroup END
 
 " PluginSettings: {{{
 
-" JSX: {{{2
+  " JSX: {{{2
 
-let g:jsx_ext_required=0
+  let g:jsx_ext_required=0
 
-" }}}
+  " }}}
 
-" Test: {{{2
+  " Test: {{{2
 
-let g:test#strategy='basic'
-let g:test#preserve_screen=0
-let test#ruby#rspec#options='--color'
+  let g:test#strategy='basic'
+  let g:test#preserve_screen=0
+  let test#ruby#rspec#options='--color'
 
-nmap <silent> <leader>t :TestNearest<cr>
-nmap <silent> <leader>f :TestFile<cr>
-nmap <silent> <leader>a :TestSuite<cr>
-nmap <silent> <leader>l :TestLast<cr>
-nmap <silent> <leader>g :TestVisit<cr>
+  nmap <silent> <leader>t :TestNearest<cr>
+  nmap <silent> <leader>f :TestFile<cr>
+  nmap <silent> <leader>a :TestSuite<cr>
+  nmap <silent> <leader>l :TestLast<cr>
+  nmap <silent> <leader>g :TestVisit<cr>
 
-" }}}
+  " }}}
 
-" FZF: {{{
+  " Parenmatch: {{{2
 
-if isdirectory('/usr/local/opt/fzf')
-  set runtimepath+=/usr/local/opt/fzf
+  " override parenmatch color
+  function! parenmatch#highlight() abort
+    if !get(g:, 'parenmatch_highlight', 1) | return | endif
+    highlight ParenMatch ctermfg=16 ctermbg=10 cterm=underline term=underline gui=underline
+  endfunction
 
-  let g:fzf_action={'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit'}
+  " }}}
 
-  let g:fzf_colors={
-        \ 'fg':      ['fg', 'Normal'],
-        \ 'bg':      ['bg', 'Normal'],
-        \ 'hl':      ['fg', 'Comment'],
-        \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-        \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-        \ 'hl+':     ['fg', 'Statement'],
-        \ 'info':    ['fg', 'PreProc'],
-        \ 'prompt':  ['fg', 'Conditional'],
-        \ 'pointer': ['fg', 'Exception'],
-        \ 'marker':  ['fg', 'Keyword'],
-        \ 'spinner': ['fg', 'Label'],
-        \ 'header':  ['fg', 'Comment']}
-  nnoremap <leader>p :Files<cr>
-endif
+  " FZF: {{{
+
+  if isdirectory('/usr/local/opt/fzf')
+    set runtimepath+=/usr/local/opt/fzf
+
+    let g:fzf_action={'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit'}
+
+    let g:fzf_colors={
+          \ 'fg':      ['fg', 'Normal'],
+          \ 'bg':      ['bg', 'Normal'],
+          \ 'hl':      ['fg', 'Comment'],
+          \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+          \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+          \ 'hl+':     ['fg', 'Statement'],
+          \ 'info':    ['fg', 'PreProc'],
+          \ 'prompt':  ['fg', 'Conditional'],
+          \ 'pointer': ['fg', 'Exception'],
+          \ 'marker':  ['fg', 'Keyword'],
+          \ 'spinner': ['fg', 'Label'],
+          \ 'header':  ['fg', 'Comment']}
+
+    nnoremap <leader>p :Files<cr>
+  endif
+
+  " }}}
 
 " }}}
 
