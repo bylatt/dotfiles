@@ -44,6 +44,10 @@ if type brew > /dev/null; then
 
   # }}}
 
+else
+
+  echo "Please install homebrew and packages list on $HOME/.homebrew\n"
+
 fi
 
 # }}}
@@ -145,6 +149,10 @@ function field {
 
 function = {
   echo "$@" | bc -l
+}
+
+function e {
+  /Applications/Emacs.app/Contents/MacOS/Emacs "$@"
 }
 
 # }}}

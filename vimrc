@@ -27,28 +27,19 @@ call dein#add('jiangmiao/auto-pairs')
 call dein#add('scrooloose/syntastic')
 call dein#add('editorconfig/editorconfig-vim')
 call dein#add('itchyny/vim-parenmatch')
-call dein#add('justinmk/vim-dirvish')
 call dein#add('janko-m/vim-test')
 call dein#add('sickill/vim-pasta')
-call dein#add('terryma/vim-multiple-cursors')
 call dein#add('christoomey/vim-tmux-navigator')
 call dein#add('fatih/vim-go')
 call dein#add('pangloss/vim-javascript')
 call dein#add('mxw/vim-jsx')
-call dein#add('strogonoff/vim-coffee-script')
 call dein#add('vim-ruby/vim-ruby')
 call dein#add('ecomba/vim-ruby-refactoring')
-call dein#add('tpope/vim-rsi')
-call dein#add('tpope/vim-haml')
-call dein#add('tpope/vim-rails')
 call dein#add('tpope/vim-eunuch')
 call dein#add('tpope/vim-repeat')
 call dein#add('tpope/vim-endwise')
 call dein#add('tpope/vim-markdown')
-call dein#add('tpope/vim-dispatch')
 call dein#add('tpope/vim-surround')
-call dein#add('tpope/vim-fugitive')
-call dein#add('tpope/vim-unimpaired')
 call dein#add('tpope/vim-commentary')
 
 if dein#check_install()
@@ -71,7 +62,9 @@ syntax on
 
 try
   set background=dark
-  colorscheme noctu
+  " set termguicolors
+  colorscheme xoria
+  highlight Normal ctermbg=none cterm=none
 catch /:E185:/
   colorscheme default
   highlight DiffAdd    ctermfg=0 ctermbg=2
@@ -131,6 +124,7 @@ set showcmd
 set showtabline=0
 set hidden
 set number
+set norelativenumber
 set ttyfast
 
 set ignorecase
@@ -233,8 +227,6 @@ let mapleader = "\<space>"
   nnoremap k gk
   nnoremap qq :q!<cr>
 
-  nnoremap ; :
-  nnoremap ! :!
   nnoremap <cr> :nohlsearch<cr>
 
   vmap <  <gv
@@ -248,12 +240,6 @@ let mapleader = "\<space>"
   nnoremap <c-k> <c-w>k
   nnoremap <c-h> <c-w>h
   nnoremap <c-l> <c-w>l
-
-  " }}}
-
-  " Utils: {{{2
-
-  nnoremap <leader>d <esc>:bd<cr>
 
   " }}}
 
@@ -368,7 +354,7 @@ if has('gui_running')
   set guioptions-=T
   set guioptions-=r
   set guioptions-=L
-  set guifont=Inconsolata\ LGC:h14
+  set guifont=Inconsolata\ LGC:h13
 endif
 
 " }}}

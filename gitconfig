@@ -5,6 +5,7 @@
 [core]
   autocrlf = false
   safecrlf = true
+  excludesfile = ~/.gitignore
 [apply]
   whitespace = nowarn
 [color]
