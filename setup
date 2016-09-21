@@ -27,12 +27,7 @@ for file in $files; do
 done
 
 echo "\nCreating directories for vim\n"
-mkdir -p $HOME/.vim/autoload
-mkdir -p $HOME/.vim/backup
-mkdir -p $HOME/.vim/bundle
-mkdir -p $HOME/.vim/colors
-mkdir -p $HOME/.vim/tmp
-mkdir -p $HOME/.vim/undo
+mkdir -p $HOME/.vim/{autoload,backup,bundle,colors,tmp,undo}
 
 echo "\nCreate symbolic link for ptignore\n"
 ln -s $newdir/gitignore $HOME/.ptignore

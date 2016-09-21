@@ -88,37 +88,12 @@ fi
 
   # Language: {{{2
 
-  export PROGLANG=/opt
-
-    # Go: {{{3
-
-    export GOROOT=$PROGLANG/go
+  if type brew > /dev/null; then
+    export GOROOT=$(brew --prefix)/opt/go/libexec/
     export GOPATH=$HOME/Go
     export GOBIN=$GOPATH/bin
-    export PATH=$GOROOT/bin:$GOBIN:$PATH
-
-    # }}}
-
-    # Node: {{{3
-
-    export NODEPATH=$PROGLANG/node
-    export PATH=$NODEPATH/bin:$PATH
-
-    # }}}
-
-    # Python: {{{3
-
-    export PYTHONPATH=$PROGLANG/python
-    export PATH=$PYTHONPATH/bin:$PATH
-
-    # }}}
-
-    # PHP: {{{3
-
-    export PHPPATH=$PROGLANG/php
-    export PATH=$PHPPATH/bin:$PATH
-
-    # }}}
+    export PATH=$GOBIN:$PATH
+  fi
 
   # }}}
 

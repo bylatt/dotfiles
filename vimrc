@@ -21,11 +21,16 @@ set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 call dein#begin(expand($HOME.'/.vim/bundle'))
 call dein#add('shougo/dein.vim')
 call dein#add('junegunn/fzf.vim')
+call dein#add('rhysd/clever-f.vim')
 call dein#add('wellle/targets.vim')
 call dein#add('k-takata/matchit.vim')
+call dein#add('tweekmonster/braceless.vim')
 call dein#add('jiangmiao/auto-pairs')
 call dein#add('scrooloose/syntastic')
+call dein#add('webdevel/tabulous')
 call dein#add('editorconfig/editorconfig-vim')
+call dein#add('timakro/vim-searchant')
+call dein#add('chemzqm/vim-run')
 call dein#add('itchyny/vim-parenmatch')
 call dein#add('janko-m/vim-test')
 call dein#add('sickill/vim-pasta')
@@ -38,6 +43,7 @@ call dein#add('ecomba/vim-ruby-refactoring')
 call dein#add('tpope/vim-eunuch')
 call dein#add('tpope/vim-repeat')
 call dein#add('tpope/vim-endwise')
+call dein#add('tpope/vim-fugitive')
 call dein#add('tpope/vim-markdown')
 call dein#add('tpope/vim-surround')
 call dein#add('tpope/vim-commentary')
@@ -63,21 +69,32 @@ syntax on
 try
   set background=dark
   " set termguicolors
-  colorscheme xoria
-  highlight Normal ctermbg=none cterm=none
-catch /:E185:/
+  colorscheme noctu
+
+  " highlight the status bar when in insert mode
+  " autocmd InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
+  " autocmd InsertLeave * hi StatusLine ctermbg=240 ctermfg=12
+
+  " highlight trailing spaces in annoying red
+  highlight ExtraWhitespace ctermbg=1 guibg=red
+  match ExtraWhitespace /\s\+$/
+  autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+  autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+  autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+  autocmd BufWinLeave * call clearmatches()
+catch /:e185:/
   colorscheme default
-  highlight DiffAdd    ctermfg=0 ctermbg=2
-  highlight DiffChange ctermfg=0 ctermbg=3
-  highlight DiffDelete ctermfg=0 ctermbg=1
-  highlight DiffText   ctermfg=0 ctermbg=11 cterm=bold
+  highlight DiffAdd      ctermfg=0 ctermbg=2
+  highlight DiffChange   ctermfg=0 ctermbg=3
+  highlight DiffDelete   ctermfg=0 ctermbg=1
+  highlight DiffText     ctermfg=0 ctermbg=11 cterm=BOLD
 
   if &background == "light"
-    highlight LineNr   ctermfg=7
-    highlight Comment  ctermfg=7
+    highlight LineNr     ctermfg=7
+    highlight Comment    ctermfg=7
   else
-    highlight LineNr   ctermfg=8
-    highlight Comment  ctermfg=8
+    highlight LineNr     ctermfg=8
+    highlight Comment    ctermfg=8
   endif
 endtry
 
@@ -164,6 +181,7 @@ set complete-=i
 set scrolloff=0
 set synmaxcol=0
 set fillchars+=vert:\!
+set statusline=%F%m%r%h%w\ %{fugitive#statusline()}\ [%l,%c]\ [%L,%p%%]
 
 " disable matchparen
 let g:loaded_matchparen=1
@@ -226,8 +244,7 @@ let mapleader = "\<space>"
   nnoremap j gj
   nnoremap k gk
   nnoremap qq :q!<cr>
-
-  nnoremap <cr> :nohlsearch<cr>
+  nnoremap ; :
 
   vmap <  <gv
   vmap > >gv
@@ -294,7 +311,7 @@ augroup END
 
   " }}}
 
-  " FZF: {{{
+  " FZF: {{{2
 
   if isdirectory('/usr/local/opt/fzf')
     set runtimepath+=/usr/local/opt/fzf
@@ -317,6 +334,40 @@ augroup END
 
     nnoremap <leader>p :Files<cr>
   endif
+
+  " }}}
+
+  " Braceless: {{{2
+
+  autocmd FileType haml,yaml,coffee,python BracelessEnable +indent +fold +highlight
+
+  " }}}
+
+  " Run: {{{2
+
+  let g:vim_run_command_map = {
+        \'javascript': 'node',
+        \'javascript.jsx': 'node',
+        \'php': 'php',
+        \'python': 'python',
+        \'ruby': 'ruby'}
+
+  nnoremap <leader>r :Run<cr>
+
+  " }}}
+
+  " Searchant: {{{2
+
+  let g:searchant_map_stop=0
+  nmap <cr> <plug>SearchantStop
+
+  " }}}
+
+  " Clever-f: {{{2
+
+  let g:clever_f_across_no_line=0
+  let g:clever_f_ignore_case=1
+  let g:clever_f_smart_case=1
 
   " }}}
 
@@ -354,7 +405,7 @@ if has('gui_running')
   set guioptions-=T
   set guioptions-=r
   set guioptions-=L
-  set guifont=Inconsolata\ LGC:h13
+  set guifont=Inconsolata\ LGC:h14
 endif
 
 " }}}
