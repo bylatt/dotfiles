@@ -28,6 +28,7 @@ call dein#add('tweekmonster/braceless.vim')
 call dein#add('jiangmiao/auto-pairs')
 call dein#add('scrooloose/syntastic')
 call dein#add('webdevel/tabulous')
+call dein#add('morhetz/gruvbox')
 call dein#add('editorconfig/editorconfig-vim')
 call dein#add('timakro/vim-searchant')
 call dein#add('chemzqm/vim-run')
@@ -39,6 +40,7 @@ call dein#add('fatih/vim-go')
 call dein#add('pangloss/vim-javascript')
 call dein#add('mxw/vim-jsx')
 call dein#add('vim-ruby/vim-ruby')
+call dein#add('vim-airline/vim-airline')
 call dein#add('ecomba/vim-ruby-refactoring')
 call dein#add('tpope/vim-eunuch')
 call dein#add('tpope/vim-repeat')
@@ -68,8 +70,10 @@ syntax on
 
 try
   set background=dark
-  " set termguicolors
-  colorscheme noctu
+  if $TERM_PROGRAM =~ "iTerm"
+    set termguicolors
+  endif
+  colorscheme gruvbox
 
   " highlight the status bar when in insert mode
   " autocmd InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
@@ -82,7 +86,7 @@ try
   autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
   autocmd InsertLeave * match ExtraWhitespace /\s\+$/
   autocmd BufWinLeave * call clearmatches()
-catch /:e185:/
+catch /^Vim\%((\a\+)\)\=:E185/
   colorscheme default
   highlight DiffAdd      ctermfg=0 ctermbg=2
   highlight DiffChange   ctermfg=0 ctermbg=3
@@ -111,7 +115,7 @@ set backupdir=$HOME/.vim/backup
 set undofile
 set undodir=$HOME/.vim/undo
 set directory=$HOME/.vim/tmp
-set tags=./tags;
+set tags=./tags
 
 set backspace=2
 set laststatus=2
@@ -368,6 +372,13 @@ augroup END
   let g:clever_f_across_no_line=0
   let g:clever_f_ignore_case=1
   let g:clever_f_smart_case=1
+
+  " }}}
+
+  " Airline: {{{2
+
+  let g:airline_left_sep=''
+  let g:airline_right_sep=''
 
   " }}}
 
