@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # This script will creates symlinks from any desired dotfiles in ~/.dotfiles to home directory
 
