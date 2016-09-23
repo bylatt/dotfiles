@@ -95,6 +95,14 @@ fi
     export PATH=$GOBIN:$PATH
   fi
 
+  if [ -d '/usr/local/node' ]; then
+    export PATH="/usr/local/node/bin:$PATH"
+  fi
+
+  if [ -d '/usr/local/php5' ]; then
+    export PATH="/usr/local/php5/bin:$PATH"
+  fi
+
   # }}}
 
 # }}}
@@ -109,6 +117,17 @@ alias cp='cp -ivR'
 alias mv='mv -iv'
 alias mkd='mkdir -pv'
 alias his='history -1000 -1'
+alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print  }'"
+alias flush='dscacheutil -flushcache && killall -HUP mDNSResponder'
+alias lscleanup='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder'
+alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
+alias show='defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder'
+alias hide='defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder'
+alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
+
+for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
+  alias "$method"="lwp-request -m '$method'"
+done
 
 if type hub > /dev/null; then
   alias git='hub'
@@ -126,8 +145,21 @@ function = {
   echo "$@" | bc -l
 }
 
-function e {
-  /Applications/Emacs.app/Contents/MacOS/Emacs "$@"
+function up {
+  if [[ "$#" -ne 1 ]]; then
+    cd ..
+  elif ! [[ $1 =~ '^[0-9]+$' ]]; then
+    echo "Error: up should be called with the number of directories to go up. The default is 1."
+  else
+    local d=""
+    limit=$1
+    for ((i=1 ; i <= limit ; i++))
+    do
+      d=$d/..
+    done
+    d=$(echo $d | sed 's/^\///')
+    cd $d
+  fi
 }
 
 # }}}
@@ -166,6 +198,10 @@ bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 bindkey -M viins '^a' beginning-of-line
 bindkey -M viins '^e' end-of-line
+bindkey -M viins '^o' vi-backward-kill-word
+bindkey -M vicmd 'yy' vi-yank-whole-line
+bindkey -M vicmd 'u' undo
+bindkey -M vicmd '^r' redo
 
 # }}}
 
@@ -324,6 +360,13 @@ if type git > /dev/null; then
     git clone -q https://github.com/mafredri/zsh-async.git $ZSH_PLUGIN_PATH/zsh-async
   fi
   source $ZSH_ASYNC/async.zsh
+
+  ZSH_FUNCTIONAL=$ZSH_PLUGIN_PATH/zsh-functional
+  if [[ ! -d $ZSH_FUNCTIONAL ]]; then
+    echo "Installing ZSH_FUNCTIONAL"
+    git clone -q https://github.com/tarrasch/zsh-functional.git $ZSH_PLUGIN_PATH/zsh-functional
+  fi
+  source $ZSH_FUNCTIONAL/functional.plugin.zsh
 
   function update_zsh_plugin {
     local current_path
