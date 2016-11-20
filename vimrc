@@ -11,7 +11,7 @@ set nobomb
 
 " }}}
 
-" Plugin: {{{
+" Plugins: {{{
 
 if !isdirectory($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim')
   silent !git clone -q https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
@@ -19,36 +19,27 @@ endif
 
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 call dein#begin(expand($HOME.'/.vim/bundle'))
+call dein#add('fatih/vim-go')
 call dein#add('shougo/dein.vim')
 call dein#add('junegunn/fzf.vim')
+" call dein#add('ctrlpvim/ctrlp.vim')
 call dein#add('rhysd/clever-f.vim')
 call dein#add('wellle/targets.vim')
-call dein#add('k-takata/matchit.vim')
-call dein#add('tweekmonster/braceless.vim')
-call dein#add('jiangmiao/auto-pairs')
-call dein#add('scrooloose/syntastic')
-call dein#add('webdevel/tabulous')
-call dein#add('morhetz/gruvbox')
 call dein#add('editorconfig/editorconfig-vim')
-call dein#add('timakro/vim-searchant')
-call dein#add('chemzqm/vim-run')
-call dein#add('itchyny/vim-parenmatch')
-call dein#add('janko-m/vim-test')
-call dein#add('sickill/vim-pasta')
+call dein#add('jiangmiao/auto-pairs')
+call dein#add('tomtom/tcomment_vim')
+call dein#add('w0rp/ale')
 call dein#add('christoomey/vim-tmux-navigator')
-call dein#add('fatih/vim-go')
+call dein#add('gabrielelana/vim-markdown')
+call dein#add('terryma/vim-expand-region')
 call dein#add('pangloss/vim-javascript')
-call dein#add('mxw/vim-jsx')
+call dein#add('sickill/vim-pasta')
 call dein#add('vim-ruby/vim-ruby')
-call dein#add('vim-airline/vim-airline')
-call dein#add('ecomba/vim-ruby-refactoring')
-call dein#add('tpope/vim-eunuch')
+call dein#add('janko-m/vim-test')
 call dein#add('tpope/vim-repeat')
-call dein#add('tpope/vim-endwise')
 call dein#add('tpope/vim-fugitive')
-call dein#add('tpope/vim-markdown')
 call dein#add('tpope/vim-surround')
-call dein#add('tpope/vim-commentary')
+call dein#add('posva/vim-vue')
 
 if dein#check_install()
   call dein#install()
@@ -68,39 +59,41 @@ if &term=~'256color'
 endif
 syntax on
 
-try
-  set background=dark
-  if $TERM_PROGRAM =~ "iTerm"
-    set termguicolors
-  endif
-  colorscheme gruvbox
+set background=light
+highlight SpecialKey guibg=NONE ctermbg=NONE
+colorscheme default
 
-  " highlight the status bar when in insert mode
-  " autocmd InsertEnter * hi StatusLine ctermfg=235 ctermbg=2
-  " autocmd InsertLeave * hi StatusLine ctermbg=240 ctermfg=12
+" better defualt
+highlight DiffAdd    ctermfg=0 ctermbg=2
+highlight DiffChange ctermfg=0 ctermbg=3
+highlight DiffDelete ctermfg=0 ctermbg=1
+highlight DiffText   ctermfg=0 ctermbg=11 cterm=bold
+highlight Visual     ctermfg=NONE ctermbg=NONE cterm=inverse
+if &background == "light"
+  highlight LineNr      ctermfg=7
+  highlight Comment     ctermfg=7
+  highlight ColorColumn ctermfg=8 ctermbg=7
+  highlight Folded      ctermfg=8 ctermbg=7
+  highlight FoldColumn  ctermfg=8 ctermbg=7
+  highlight Pmenu       ctermfg=0 ctermbg=7
+  highlight PmenuSel    ctermfg=7 ctermbg=0
+else
+  highlight LineNr      ctermfg=8
+  highlight Comment     ctermfg=8
+  highlight ColorColumn ctermfg=7 ctermbg=8
+  highlight Folded      ctermfg=7 ctermbg=8
+  highlight FoldColumn  ctermfg=7 ctermbg=8
+  highlight Pmenu       ctermfg=15 ctermbg=8
+  highlight PmenuSel    ctermfg=8 ctermbg=15
+endif
 
-  " highlight trailing spaces in annoying red
-  highlight ExtraWhitespace ctermbg=1 guibg=red
-  match ExtraWhitespace /\s\+$/
-  autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-  autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-  autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-  autocmd BufWinLeave * call clearmatches()
-catch /^Vim\%((\a\+)\)\=:E185/
-  colorscheme default
-  highlight DiffAdd      ctermfg=0 ctermbg=2
-  highlight DiffChange   ctermfg=0 ctermbg=3
-  highlight DiffDelete   ctermfg=0 ctermbg=1
-  highlight DiffText     ctermfg=0 ctermbg=11 cterm=BOLD
-
-  if &background == "light"
-    highlight LineNr     ctermfg=7
-    highlight Comment    ctermfg=7
-  else
-    highlight LineNr     ctermfg=8
-    highlight Comment    ctermfg=8
-  endif
-endtry
+" highlight trailing spaces in annoying red
+highlight ExtraWhitespace ctermbg=1 guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
 
 " }}}
 
@@ -138,7 +131,7 @@ set viewoptions+=unix,slash
 
 set wildmenu
 set wildmode=list:longest
-set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*DS_Store*,*sass-cache*,*/tmp/*,*node_modules*,*bower_components*,*vendor*,.composer/*,.gem/*,.git/*
+set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*/.DS_Store/*,*/sass-cache/*,*/tmp/*,*/node_modules/*,*/bower_components/*,*/vendor/*,*/.gem/*,*/.git/*,*/.hg/*,*/.svn/*
 
 set showmode
 set showcmd
@@ -185,10 +178,7 @@ set complete-=i
 set scrolloff=0
 set synmaxcol=0
 set fillchars+=vert:\!
-set statusline=%F%m%r%h%w\ %{fugitive#statusline()}\ [%l,%c]\ [%L,%p%%]
-
-" disable matchparen
-let g:loaded_matchparen=1
+set statusline=%F%m%r%h%w\ [%l,%c]\ [%L,%p%%]%=%{ALEGetStatusLine()}
 
 " }}}
 
@@ -220,22 +210,22 @@ let g:netrw_list_hide=&wildignore
 
 " OSSpecific: {{{
 
-  let s:kernel = system('echo -n "$(uname -s)"')
+let s:kernel = system('echo -n "$(uname -s)"')
 
-  " Mac: {{{2
+" Mac: {{{2
 
-  if s:kernel == 'Darwin'
-    set clipboard=unnamed
+if s:kernel == 'Darwin'
+  set clipboard=unnamed
 
-  " }}}
+" }}}
 
-  " Linux: {{{2
+" Linux: {{{2
 
-  elseif s:kernel == 'Linux'
-    set clipboard=unnamedplus
-  endif
+elseif s:kernel == 'Linux'
+  set clipboard=unnamedplus
+endif
 
-  " }}}
+" }}}
 
 " }}}
 
@@ -249,6 +239,7 @@ let mapleader = "\<space>"
   nnoremap k gk
   nnoremap qq :q!<cr>
   nnoremap ; :
+  nnoremap <cr> :nohlsearch<cr>
 
   vmap <  <gv
   vmap > >gv
@@ -285,12 +276,6 @@ augroup END
 
 " PluginSettings: {{{
 
-  " JSX: {{{2
-
-  let g:jsx_ext_required=0
-
-  " }}}
-
   " Test: {{{2
 
   let g:test#strategy='basic'
@@ -305,13 +290,43 @@ augroup END
 
   " }}}
 
-  " Parenmatch: {{{2
+  " Clever-f: {{{2
 
-  " override parenmatch color
-  function! parenmatch#highlight() abort
-    if !get(g:, 'parenmatch_highlight', 1) | return | endif
-    highlight ParenMatch ctermfg=16 ctermbg=10 cterm=underline term=underline gui=underline
-  endfunction
+  let g:clever_f_across_no_line=0
+  let g:clever_f_ignore_case=1
+  let g:clever_f_smart_case=1
+
+  " }}}
+
+  " Editorconfig: {{{2
+
+  if executable('brew')
+    if executable('editorconfig')
+      let g:EditorConfig_exclude_patterns=['fugitive://.*', 'scp://.*']
+      let g:EditorConfig_exec_path='/usr/local/bin/editorconfig'
+    endif
+  endif
+
+  " }}}
+
+  " ALE: {{{2
+
+  let g:ale_sign_column_always=1
+  let g:ale_sign_error='>'
+  let g:ale_sign_warning='-'
+  let g:ale_echo_msg_error_str='E'
+  let g:ale_echo_msg_warning_str='W'
+  let g:ale_echo_msg_format='[%linter%] %s [%severity%]'
+  let g:ale_linters = {
+        \'html': []}
+
+  " }}}
+
+  " CtrlP: {{{2
+
+  " let g:ctrlp_cache_dir=$HOME.'/.cache/ctrlp'
+  " let g:ctrlp_clear_cache_on_exit=1
+  " let g:ctrlp_max_files=0
 
   " }}}
 
@@ -319,9 +334,8 @@ augroup END
 
   if isdirectory('/usr/local/opt/fzf')
     set runtimepath+=/usr/local/opt/fzf
-
+    let g:fzf_history_dir = $HOME.'/.cache/fzf'
     let g:fzf_action={'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit'}
-
     let g:fzf_colors={
           \ 'fg':      ['fg', 'Normal'],
           \ 'bg':      ['bg', 'Normal'],
@@ -336,49 +350,10 @@ augroup END
           \ 'spinner': ['fg', 'Label'],
           \ 'header':  ['fg', 'Comment']}
 
+    command! -bang -nargs=* Find call fzf#vim#grep('git grep --line-number '.shellescape(<q-args>), 0, <bang>0)
     nnoremap <leader>p :Files<cr>
+    nnoremap <leader>/ :Find
   endif
-
-  " }}}
-
-  " Braceless: {{{2
-
-  autocmd FileType haml,yaml,coffee,python BracelessEnable +indent +fold +highlight
-
-  " }}}
-
-  " Run: {{{2
-
-  let g:vim_run_command_map = {
-        \'javascript': 'node',
-        \'javascript.jsx': 'node',
-        \'php': 'php',
-        \'python': 'python',
-        \'ruby': 'ruby'}
-
-  nnoremap <leader>r :Run<cr>
-
-  " }}}
-
-  " Searchant: {{{2
-
-  let g:searchant_map_stop=0
-  nmap <cr> <plug>SearchantStop
-
-  " }}}
-
-  " Clever-f: {{{2
-
-  let g:clever_f_across_no_line=0
-  let g:clever_f_ignore_case=1
-  let g:clever_f_smart_case=1
-
-  " }}}
-
-  " Airline: {{{2
-
-  let g:airline_left_sep=''
-  let g:airline_right_sep=''
 
   " }}}
 
@@ -423,7 +398,7 @@ endif
 
 " Note: {{{
 
-" " Default vim key binding for autocomplete
+" "" Default vim key binding for autocomplete
 " <c-x><c-f> for path completion
 " <c-x><c-k> for dictionary conpletion
 " <c-x><c-l> for whole line completion
@@ -434,7 +409,7 @@ endif
 " <c-x><c-v> for vim command line
 " <c-n> for completion for next match keyword
 " <c-p> for completion for previous match keyword
-" " When stage is on option list
+" "" When stage is on option list
 " <c-n> for next option
 " <c-p> for previous option
 

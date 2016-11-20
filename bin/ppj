@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+raw_input = STDIN.read
+hash_input = JSON.parse(raw_input)
+STDOUT.write(JSON.pretty_generate(hash_input) + "\n")

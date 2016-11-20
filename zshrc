@@ -31,6 +31,12 @@ if type brew > /dev/null; then
   if [[ -f $(brew --prefix)/opt/chruby/share/chruby/chruby.sh ]]; then
     source $(brew --prefix)/opt/chruby/share/chruby/chruby.sh
     source $(brew --prefix)/opt/chruby/share/chruby/auto.sh
+
+    if [[ ! -d $(brew --prefix)/rubies ]]; then
+      mkdir $(brew --prefix)/rubies
+    fi
+
+    RUBIES=($(brew --prefix)/rubies/*)
   fi
 
   # }}}
@@ -61,20 +67,14 @@ fi
   export TERM=xterm-256color
   export CLICOLOR=1
   export KEYTIMEOUT=1
-  export VISUAL=vim
-  export EDITOR=vim
-
-  # }}}
-
-  # FZF: {{{2
-
-  has_fzf=$(type fzf)
-  has_pt=$(type pt)
-
-  if [[ has_fzf && has_pt ]]; then
-    export FZF_DEFAULT_COMMAND='pt --follow --ignore-case --smart-case --home-ptignore --global-gitignore -g ""'
-    export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
+  if type nvim > /dev/null; then
+    export VISUAL=nvim
+    export EDITOR=nvim
+  else
+    export VISUAL=vim
+    export EDITOR=vim
   fi
+  export LSCOLORS=ExFxCxDxBxegedabagacad
 
   # }}}
 
@@ -88,19 +88,31 @@ fi
 
   # Language: {{{2
 
-  if type brew > /dev/null; then
-    export GOROOT=$(brew --prefix)/opt/go/libexec/
-    export GOPATH=$HOME/Go
-    export GOBIN=$GOPATH/bin
-    export PATH=$GOBIN:$PATH
+  if [[ -d $(brew --prefix)/node ]]; then
+    export PATH="$(brew --prefix)/node/bin:$PATH"
   fi
 
-  if [ -d '/usr/local/node' ]; then
-    export PATH="/usr/local/node/bin:$PATH"
+  if [[ -d $(brew --prefix)/php5 ]]; then
+    export PATH="$(brew --prefix)/php5/bin:$PATH"
   fi
 
-  if [ -d '/usr/local/php5' ]; then
-    export PATH="/usr/local/php5/bin:$PATH"
+  if [[ -d $(brew --prefix)/go  ]]; then
+    export GOROOT="$(brew --prefix)/go"
+    export GOPATH="$HOME/GoWorkspace"
+    export GOBIN="$GOPATH/bin"
+    export PATH="$GOROOT/bin:$GOPATH/bin:$PATH"
+  fi
+
+  # }}}
+
+  # FZF: {{{2
+
+  has_fzf=$(type fzf)
+  has_pt=$(type pt)
+
+  if [[ has_fzf && has_pt ]]; then
+    export FZF_DEFAULT_COMMAND='pt --follow --hidden --ignore-case --smart-case --home-ptignore --global-gitignore -g ""'
+    export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
   fi
 
   # }}}
@@ -109,7 +121,12 @@ fi
 
 # Alias: {{{
 
-alias vi='vim'
+if type nvim > /dev/null; then
+  alias vi='nvim'
+  alias vim='nvim'
+else
+  alias vi='vim'
+fi
 alias df='df -h'
 alias ll='ls -GFlAhp'
 alias lr='ls -alR'
@@ -117,35 +134,21 @@ alias cp='cp -ivR'
 alias mv='mv -iv'
 alias mkd='mkdir -pv'
 alias his='history -1000 -1'
-alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print  }'"
 alias flush='dscacheutil -flushcache && killall -HUP mDNSResponder'
-alias lscleanup='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder'
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias show='defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder'
 alias hide='defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder'
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
-for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-  alias "$method"="lwp-request -m '$method'"
+for method in GET POST PUT DELETE; do
+  alias "$method"="curl -s -X$method"
 done
 
-if type hub > /dev/null; then
-  alias git='hub'
-fi
-
-if type pt > /dev/null; then
-  alias pt='pt --follow --ignore-case --smart-case --home-ptignore --global-gitignore'
-fi
-
-function field {
+colnum() {
   awk "{print \$$1}"
 }
 
-function = {
-  echo "$@" | bc -l
-}
-
-function up {
+up() {
   if [[ "$#" -ne 1 ]]; then
     cd ..
   elif ! [[ $1 =~ '^[0-9]+$' ]]; then
@@ -161,6 +164,12 @@ function up {
     cd $d
   fi
 }
+
+if type fzf > /dev/null; then
+  pro() {
+    cd `find $HOME/Projects -mindepth 1 -maxdepth 1 -type d | fzf`
+  }
+fi
 
 # }}}
 
@@ -216,8 +225,8 @@ zstyle ':vcs_info:*:*' check-for-changes true
 zstyle ':vcs_info:*:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*:*' branchformats '%r'
-zstyle ':vcs_info:*:*' formats '%F{green}%m%c%u(%b) %f'
-zstyle ':vcs_info:*:*' actionformats '%F{green}%m%c%u(%b) %f'
+zstyle ':vcs_info:*:*' formats '%F{green}%m%c%u[%b] %f'
+zstyle ':vcs_info:*:*' actionformats '%F{green}%m%c%u[%b] %f'
 zstyle ':vcs_info:git*+set-message:*' hooks git-remote git-untracked git-stash
 
 # Get name of remote that we're tracking
@@ -232,7 +241,7 @@ function +vi-git-remote() {
 }
 
 # Show untracked files indicator
-function +vi-git-untracked {
+function +vi-git-untracked() {
   local untracked
   untracked=$(git ls-files --other --exclude-standard 2>/dev/null)
 
@@ -311,7 +320,7 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='${vcs_info_msg_0_}%F{242}%~%f %{$reset_color%}'
+PROMPT='${vcs_info_msg_0_}%1d:: %{$reset_color%}'
 RPROMPT=''
 
 # }}}
@@ -333,40 +342,12 @@ if type git > /dev/null; then
   fi
   fpath+=($ZSH_COMPLETIONS $fpath)
 
-  ZSH_SYNTAX_HIGHLIGHTING=$ZSH_PLUGIN_PATH/zsh-syntax-highlighting
-  if [[ ! -d $ZSH_SYNTAX_HIGHLIGHTING ]]; then
-    echo "Installing ZSH_SYNTAX_HIGHLIGHTING"
-    git clone -q https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_PLUGIN_PATH/zsh-syntax-highlighting
-  fi
-  source $ZSH_SYNTAX_HIGHLIGHTING/zsh-syntax-highlighting.zsh
-
   ZSH_AUTOPAIR=$ZSH_PLUGIN_PATH/zsh-autopair
   if [[ ! -d $ZSH_AUTOPAIR ]]; then
     echo "Installing ZSH_AUTOPAIR"
     git clone -q https://github.com/hlissner/zsh-autopair.git $ZSH_PLUGIN_PATH/zsh-autopair
   fi
   source $ZSH_AUTOPAIR/autopair.zsh
-
-  ZSH_PG=$ZSH_PLUGIN_PATH/zsh-pg
-  if [[ ! -d $ZSH_PG ]]; then
-    echo "Installing ZSH_PG"
-    git clone -q https://github.com/caarlos0/zsh-pg.git $ZSH_PLUGIN_PATH/zsh-pg
-  fi
-  source $ZSH_PG/pg.plugin.zsh
-
-  ZSH_ASYNC=$ZSH_PLUGIN_PATH/zsh-async
-  if [[ ! -d $ZSH_ASYNC ]]; then
-    echo "Installing ZSH_ASYNC"
-    git clone -q https://github.com/mafredri/zsh-async.git $ZSH_PLUGIN_PATH/zsh-async
-  fi
-  source $ZSH_ASYNC/async.zsh
-
-  ZSH_FUNCTIONAL=$ZSH_PLUGIN_PATH/zsh-functional
-  if [[ ! -d $ZSH_FUNCTIONAL ]]; then
-    echo "Installing ZSH_FUNCTIONAL"
-    git clone -q https://github.com/tarrasch/zsh-functional.git $ZSH_PLUGIN_PATH/zsh-functional
-  fi
-  source $ZSH_FUNCTIONAL/functional.plugin.zsh
 
   function update_zsh_plugin {
     local current_path

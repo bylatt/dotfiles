@@ -41,3 +41,4 @@
   lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
   la = "!git config -l | grep alias | cut -c 7-"
   lll = log --color --graph --pretty=format:'%C(red)%h%C(reset) - %C(yellow)%d%C(reset) %s %C(green)%cr%C(reset) %C(bold blue)<%an - %ae>%C(reset)'
+  search = log --no-merges -i -E --pretty='%h (%ad) - [%an] %s %d' --date=format:'%b %d %Y' —grep
