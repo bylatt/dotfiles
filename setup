@@ -1,23 +1,16 @@
 #!/bin/sh
 
-# This script will creates symlinks from any desired dotfiles in ~/.dotfiles to home directory
-
-files=$( sh <<EOF
-ls -1
-EOF
-)
-
 newdir=$HOME/.dotfiles
 olddir=$HOME/.dotfiles_old
 
-echo "\nCreating $olddir for backup of any existing dotfiles in home directory\n"
+echo "Creating $olddir for backup of any existing dotfiles in home directory"
 mkdir -p $olddir
-echo "...done\n"
+echo "...done"
 
 echo "Changing to the $newdir directory\n"
 cd $newdir
 
-for file in $files; do
+for file in `ls`; do
   if [[ "$file" != "README.md" && "$file" != "setup" ]]; then
     echo "Moving .$file dotfiles from home directory to $olddir if existing";
     mv $HOME/.$file $olddir;
@@ -26,10 +19,15 @@ for file in $files; do
   fi
 done
 
-echo "\nCreating directories for vim\n"
+echo ""
+echo "Creating directories for gitignore"
+mkdir -p $HOME/.config/git
+ln -s $newdir/gitignore $HOME/.config/git/ignore
+ln -s $newdir/gitconfig $HOME/.config/git/config
+
+echo ""
+echo "Creating directories for vim"
 mkdir -p $HOME/.vim/{autoload,backup,bundle,colors,tmp,undo}
 
-echo "\nCreate symbolic link for ptignore\n"
-ln -s $newdir/gitignore $HOME/.ptignore
-
-echo "\nDone!!\n"
+echo ""
+echo "Done!!"

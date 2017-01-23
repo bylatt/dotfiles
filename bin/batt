@@ -1,6 +1,6 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
-percent=$(pmset -g batt | egrep "([0-9]+\%).*" -o | cut -f1 -d'%')
+percent=`pmset -g batt | egrep "([0-9]+\%).*" -o | cut -f1 -d'%'`
 
 args=("$@")
 if [ "${args[0]}" == "debug" ]; then

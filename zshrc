@@ -24,37 +24,19 @@ fi
 
 # Homebrew: {{{
 
-if type brew > /dev/null; then
-
-  # Chruby: {{{2
-
-  if [[ -f $(brew --prefix)/opt/chruby/share/chruby/chruby.sh ]]; then
-    source $(brew --prefix)/opt/chruby/share/chruby/chruby.sh
-    source $(brew --prefix)/opt/chruby/share/chruby/auto.sh
-
-    if [[ ! -d $(brew --prefix)/rubies ]]; then
-      mkdir $(brew --prefix)/rubies
-    fi
-
-    RUBIES=($(brew --prefix)/rubies/*)
-  fi
-
-  # }}}
-
-  # FZF: {{{2
-
-  if [[ -d $(brew --prefix)/opt/fzf ]]; then
-    source $(brew --prefix)/opt/fzf/shell/completion.zsh
-    source $(brew --prefix)/opt/fzf/shell/key-bindings.zsh
-  fi
-
-  # }}}
-
-else
-
-  echo "Please install homebrew and packages list on $HOME/.homebrew\n"
-
+export HOMEBREW=`brew --prefix`
+if [[ -d $HOMEBREW/sbin ]]; then
+  export PATH=$HOMEBREW/sbin:$PATH
 fi
+
+install_ruby() {
+  mkdir -p $HOMEBREW/rubies
+  printf "What ruby version you want to install: "
+  read version
+  git clone -q https://github.com/rbenv/ruby-build.git $HOME/ruby-build
+  $HOME/ruby-build/bin/ruby-build $version $HOMEBREW/rubies/ruby-$version
+  rm -rf $HOME/ruby-build
+}
 
 # }}}
 
@@ -67,13 +49,8 @@ fi
   export TERM=xterm-256color
   export CLICOLOR=1
   export KEYTIMEOUT=1
-  if type nvim > /dev/null; then
-    export VISUAL=nvim
-    export EDITOR=nvim
-  else
-    export VISUAL=vim
-    export EDITOR=vim
-  fi
+  export VISUAL=vim
+  export EDITOR=vim
   export LSCOLORS=ExFxCxDxBxegedabagacad
 
   # }}}
@@ -88,32 +65,38 @@ fi
 
   # Language: {{{2
 
-  if [[ -d $(brew --prefix)/node ]]; then
-    export PATH="$(brew --prefix)/node/bin:$PATH"
-  fi
+    # Ruby: {{{3
 
-  if [[ -d $(brew --prefix)/php5 ]]; then
-    export PATH="$(brew --prefix)/php5/bin:$PATH"
-  fi
+    if [[ -f $HOMEBREW/opt/chruby/share/chruby/chruby.sh ]]; then
+      if [[ ! -d $HOMEBREW/rubies ]]; then
+        install_ruby
+      fi
 
-  if [[ -d $(brew --prefix)/go  ]]; then
-    export GOROOT="$(brew --prefix)/go"
-    export GOPATH="$HOME/GoWorkspace"
-    export GOBIN="$GOPATH/bin"
-    export PATH="$GOROOT/bin:$GOPATH/bin:$PATH"
-  fi
+      source $HOMEBREW/opt/chruby/share/chruby/chruby.sh
+      source $HOMEBREW/opt/chruby/share/chruby/auto.sh
 
-  # }}}
+      RUBIES=($HOMEBREW/rubies/*)
+    fi
 
-  # FZF: {{{2
+    # }}}
 
-  has_fzf=$(type fzf)
-  has_pt=$(type pt)
+    # Go: {{{3
 
-  if [[ has_fzf && has_pt ]]; then
-    export FZF_DEFAULT_COMMAND='pt --follow --hidden --ignore-case --smart-case --home-ptignore --global-gitignore -g ""'
-    export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
-  fi
+    if [[ -d $HOMEBREW/opt/go/libexec ]]; then
+      export GOROOT=$HOMEBREW/opt/go/libexec
+      export GOPATH=$HOME/go
+      export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
+    fi
+
+    # }}}
+
+    # PHP: {{{3
+
+    if [[ -d $HOMEBREW/php5 ]]; then
+      export PATH=$HOMEBREW/php5/bin:$PATH
+    fi
+
+    # }}}
 
   # }}}
 
@@ -121,12 +104,7 @@ fi
 
 # Alias: {{{
 
-if type nvim > /dev/null; then
-  alias vi='nvim'
-  alias vim='nvim'
-else
-  alias vi='vim'
-fi
+alias vi='vim'
 alias df='df -h'
 alias ll='ls -GFlAhp'
 alias lr='ls -alR'
@@ -134,42 +112,12 @@ alias cp='cp -ivR'
 alias mv='mv -iv'
 alias mkd='mkdir -pv'
 alias his='history -1000 -1'
-alias flush='dscacheutil -flushcache && killall -HUP mDNSResponder'
+alias flushdns='dscacheutil -flushcache && killall -HUP mDNSResponder'
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
-alias show='defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder'
-alias hide='defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder'
-alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
 for method in GET POST PUT DELETE; do
-  alias "$method"="curl -s -X$method"
+  alias "$method"="curl -s -X $method"
 done
-
-colnum() {
-  awk "{print \$$1}"
-}
-
-up() {
-  if [[ "$#" -ne 1 ]]; then
-    cd ..
-  elif ! [[ $1 =~ '^[0-9]+$' ]]; then
-    echo "Error: up should be called with the number of directories to go up. The default is 1."
-  else
-    local d=""
-    limit=$1
-    for ((i=1 ; i <= limit ; i++))
-    do
-      d=$d/..
-    done
-    d=$(echo $d | sed 's/^\///')
-    cd $d
-  fi
-}
-
-if type fzf > /dev/null; then
-  pro() {
-    cd `find $HOME/Projects -mindepth 1 -maxdepth 1 -type d | fzf`
-  }
-fi
 
 # }}}
 
@@ -225,8 +173,8 @@ zstyle ':vcs_info:*:*' check-for-changes true
 zstyle ':vcs_info:*:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*:*' branchformats '%r'
-zstyle ':vcs_info:*:*' formats '%F{green}%m%c%u[%b] %f'
-zstyle ':vcs_info:*:*' actionformats '%F{green}%m%c%u[%b] %f'
+zstyle ':vcs_info:*:*' formats '%F{green}%m%c%u(%b) %f'
+zstyle ':vcs_info:*:*' actionformats '%F{green}%m%c%u(%b) %f'
 zstyle ':vcs_info:git*+set-message:*' hooks git-remote git-untracked git-stash
 
 # Get name of remote that we're tracking
@@ -320,42 +268,24 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='${vcs_info_msg_0_}%1d:: %{$reset_color%}'
-RPROMPT=''
+PROMPT='(%F{blue}%1d%f)%F{250};;%f %{$reset_color%}'
+RPROMPT='${vcs_info_msg_0_}'
 
 # }}}
 
 # Plugins: {{{
 
-if type git > /dev/null; then
-  ZSH_HISTORY_SUBSTRING_SEARCH=$ZSH_PLUGIN_PATH/zsh-history-substring-search
-  if [[ ! -d $ZSH_HISTORY_SUBSTRING_SEARCH ]]; then
-    echo "Installing ZSH_HISTORY_SUBSTRING_SEARCH"
-    git clone -q https://github.com/zsh-users/zsh-history-substring-search.git $ZSH_PLUGIN_PATH/zsh-history-substring-search
-  fi
-  source $ZSH_HISTORY_SUBSTRING_SEARCH/zsh-history-substring-search.zsh
-
-  ZSH_COMPLETIONS=$ZSH_PLUGIN_PATH/zsh-completions
-  if [[ ! -d $ZSH_COMPLETIONS ]]; then
-    echo "Installing ZSH_COMPLETIONS"
-    git clone -q https://github.com/zsh-users/zsh-completions.git $ZSH_PLUGIN_PATH/zsh-completions
-  fi
-  fpath+=($ZSH_COMPLETIONS $fpath)
-
-  ZSH_AUTOPAIR=$ZSH_PLUGIN_PATH/zsh-autopair
-  if [[ ! -d $ZSH_AUTOPAIR ]]; then
-    echo "Installing ZSH_AUTOPAIR"
-    git clone -q https://github.com/hlissner/zsh-autopair.git $ZSH_PLUGIN_PATH/zsh-autopair
-  fi
-  source $ZSH_AUTOPAIR/autopair.zsh
-
-  function update_zsh_plugin {
-    local current_path
-    current_path=$PWD
-    cd $ZSH_PLUGIN_PATH; for plugin in `ls`; do cd $plugin; git pull origin master; cd ..; done; cd $current_path; echo "\nUpdate zsh plugins completed\n";
-  }
-else
-  echo "Please install git to install zsh dependency\n"
+ZSH_HISTORY_SUBSTRING_SEARCH=$ZSH_PLUGIN_PATH/zsh-history-substring-search
+if [[ ! -d $ZSH_HISTORY_SUBSTRING_SEARCH ]]; then
+  echo "Installing ZSH_HISTORY_SUBSTRING_SEARCH"
+  git clone -q https://github.com/zsh-users/zsh-history-substring-search.git $ZSH_PLUGIN_PATH/zsh-history-substring-search
 fi
+source $ZSH_HISTORY_SUBSTRING_SEARCH/zsh-history-substring-search.zsh
+
+update_zsh_plugin() {
+  local current_path
+  current_path=$PWD
+  cd $ZSH_PLUGIN_PATH; for plugin in `ls`; do cd $plugin; git pull origin master; cd ..; done; cd $current_path; echo "\nUpdate zsh plugins completed\n";
+}
 
 # }}}

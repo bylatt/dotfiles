@@ -45,6 +45,8 @@ END
 
 puts hello
 
+$ids = []
+
 loop do
   bn_page_url = 'https://www.blognone.com/node?page='
   bn_post_url = 'https://www.blognone.com/node/'
@@ -58,24 +60,33 @@ loop do
     when 'page'
       bn_page_url = "#{bn_page_url}#{msg[1].to_i - 1}" unless msg[1].nil?
       posts = get_page(bn_page_url)
+      $ids = []
       posts.each do |post|
+        $ids << post['id']
         puts "[#{post['id']}] #{post['title']}"
         # puts "#{post['date']}"
       end
 
     when 'post'
       if msg[1].nil?
-        puts 'Please input post id'
+        puts 'Please input last 3 digits of post id'
+      elsif $ids.empty?
+        puts 'Please run `page $number` before selecting post'
       else
-        bn_post_url = "#{bn_post_url}#{msg[1]}"
-        begin
-          post = get_post(bn_post_url)
-          puts post['title']
-          puts '-------------'
-          puts post['content']
-          # puts post['date']
-        rescue
-          puts 'Post not found'
+        id = $ids.select { |id| id.end_with? msg[1] }
+        if id.empty?
+          puts 'ID not found in current page'
+        else
+          bn_post_url = "#{bn_post_url}#{id[0]}"
+          begin
+            post = get_post(bn_post_url)
+            puts post['title']
+            puts '-------------'
+            puts post['content']
+            # puts post['date']
+          rescue
+            puts 'Post not found'
+          end
         end
       end
 

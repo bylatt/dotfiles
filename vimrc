@@ -1,7 +1,7 @@
 " github.com/clozed2u :: @clozed2u
 " http://clozed2u.com
 
-" Initializations: {{{
+" Initial: {{{
 
 set nocompatible
 set encoding=utf-8
@@ -19,27 +19,20 @@ endif
 
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 call dein#begin(expand($HOME.'/.vim/bundle'))
-call dein#add('fatih/vim-go')
+call dein#add('tyru/caw.vim')
 call dein#add('shougo/dein.vim')
-call dein#add('junegunn/fzf.vim')
-" call dein#add('ctrlpvim/ctrlp.vim')
-call dein#add('rhysd/clever-f.vim')
 call dein#add('wellle/targets.vim')
-call dein#add('editorconfig/editorconfig-vim')
-call dein#add('jiangmiao/auto-pairs')
-call dein#add('tomtom/tcomment_vim')
-call dein#add('w0rp/ale')
 call dein#add('christoomey/vim-tmux-navigator')
 call dein#add('gabrielelana/vim-markdown')
 call dein#add('terryma/vim-expand-region')
 call dein#add('pangloss/vim-javascript')
+call dein#add('machakann/vim-sandwich')
+call dein#add('tpope/vim-fugitive')
 call dein#add('sickill/vim-pasta')
 call dein#add('vim-ruby/vim-ruby')
 call dein#add('janko-m/vim-test')
-call dein#add('tpope/vim-repeat')
-call dein#add('tpope/vim-fugitive')
-call dein#add('tpope/vim-surround')
-call dein#add('posva/vim-vue')
+call dein#add('kana/vim-repeat')
+call dein#add('fatih/vim-go')
 
 if dein#check_install()
   call dein#install()
@@ -59,33 +52,12 @@ if &term=~'256color'
 endif
 syntax on
 
-set background=light
+set background=dark
 highlight SpecialKey guibg=NONE ctermbg=NONE
-colorscheme default
-
-" better defualt
-highlight DiffAdd    ctermfg=0 ctermbg=2
-highlight DiffChange ctermfg=0 ctermbg=3
-highlight DiffDelete ctermfg=0 ctermbg=1
-highlight DiffText   ctermfg=0 ctermbg=11 cterm=bold
-highlight Visual     ctermfg=NONE ctermbg=NONE cterm=inverse
-if &background == "light"
-  highlight LineNr      ctermfg=7
-  highlight Comment     ctermfg=7
-  highlight ColorColumn ctermfg=8 ctermbg=7
-  highlight Folded      ctermfg=8 ctermbg=7
-  highlight FoldColumn  ctermfg=8 ctermbg=7
-  highlight Pmenu       ctermfg=0 ctermbg=7
-  highlight PmenuSel    ctermfg=7 ctermbg=0
-else
-  highlight LineNr      ctermfg=8
-  highlight Comment     ctermfg=8
-  highlight ColorColumn ctermfg=7 ctermbg=8
-  highlight Folded      ctermfg=7 ctermbg=8
-  highlight FoldColumn  ctermfg=7 ctermbg=8
-  highlight Pmenu       ctermfg=15 ctermbg=8
-  highlight PmenuSel    ctermfg=8 ctermbg=15
-endif
+" if $TERM_PROGRAM =~ "iTerm"
+"   set termguicolors
+" endif
+colorscheme noctu
 
 " highlight trailing spaces in annoying red
 highlight ExtraWhitespace ctermbg=1 guibg=red
@@ -131,11 +103,29 @@ set viewoptions+=unix,slash
 
 set wildmenu
 set wildmode=list:longest
-set wildignore=*.png,*.jpg,*gif,*.gem,*.so,*.swp,*.zip,*.gz,*/.DS_Store/*,*/sass-cache/*,*/tmp/*,*/node_modules/*,*/bower_components/*,*/vendor/*,*/.gem/*,*/.git/*,*/.hg/*,*/.svn/*
+set wildignore=
+  \*.png,
+  \*.jpg,
+  \*.gif,
+  \*.gem,
+  \*.so,
+  \*.swp,
+  \*.zip,
+  \*.gz,
+  \*/.DS_Store/*,
+  \*/sass-cache/*,
+  \*/tmp/*,
+  \*/node_modules/*,
+  \*/bower_components/*,
+  \*/vendor/*,
+  \*/.gem/*,
+  \*/.git/*,
+  \*/.hg/*,
+  \*/.svn/*
 
 set showmode
 set showcmd
-set showtabline=0
+set showtabline=2
 set hidden
 set number
 set norelativenumber
@@ -178,22 +168,7 @@ set complete-=i
 set scrolloff=0
 set synmaxcol=0
 set fillchars+=vert:\!
-set statusline=%F%m%r%h%w\ [%l,%c]\ [%L,%p%%]%=%{ALEGetStatusLine()}
-
-" }}}
-
-" Tab: {{{
-
-function! InsertTabWrapper()
-  let col = col('.') - 1
-  if !col || getline('.')[col - 1] !~ '\k'
-    return "\<tab>"
-  else
-    return "\<c-p>"
-  endif
-endfunction
-
-inoremap <expr> <silent> <tab> InsertTabWrapper()
+set statusline=%F%m%r%h%w\ [%l,%c]\ [%L,%p%%]
 
 " }}}
 
@@ -290,72 +265,26 @@ augroup END
 
   " }}}
 
-  " Clever-f: {{{2
+  " Go: {{{2
 
-  let g:clever_f_across_no_line=0
-  let g:clever_f_ignore_case=1
-  let g:clever_f_smart_case=1
+  let g:go_fmt_command = "goimports"
 
   " }}}
 
-  " Editorconfig: {{{2
+" }}}
 
-  if executable('brew')
-    if executable('editorconfig')
-      let g:EditorConfig_exclude_patterns=['fugitive://.*', 'scp://.*']
-      let g:EditorConfig_exec_path='/usr/local/bin/editorconfig'
-    endif
+" Tab: {{{
+
+function! InsertTabWrapper()
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+    return "\<c-p>"
   endif
+endfunction
 
-  " }}}
-
-  " ALE: {{{2
-
-  let g:ale_sign_column_always=1
-  let g:ale_sign_error='>'
-  let g:ale_sign_warning='-'
-  let g:ale_echo_msg_error_str='E'
-  let g:ale_echo_msg_warning_str='W'
-  let g:ale_echo_msg_format='[%linter%] %s [%severity%]'
-  let g:ale_linters = {
-        \'html': []}
-
-  " }}}
-
-  " CtrlP: {{{2
-
-  " let g:ctrlp_cache_dir=$HOME.'/.cache/ctrlp'
-  " let g:ctrlp_clear_cache_on_exit=1
-  " let g:ctrlp_max_files=0
-
-  " }}}
-
-  " FZF: {{{2
-
-  if isdirectory('/usr/local/opt/fzf')
-    set runtimepath+=/usr/local/opt/fzf
-    let g:fzf_history_dir = $HOME.'/.cache/fzf'
-    let g:fzf_action={'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit'}
-    let g:fzf_colors={
-          \ 'fg':      ['fg', 'Normal'],
-          \ 'bg':      ['bg', 'Normal'],
-          \ 'hl':      ['fg', 'Comment'],
-          \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-          \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-          \ 'hl+':     ['fg', 'Statement'],
-          \ 'info':    ['fg', 'PreProc'],
-          \ 'prompt':  ['fg', 'Conditional'],
-          \ 'pointer': ['fg', 'Exception'],
-          \ 'marker':  ['fg', 'Keyword'],
-          \ 'spinner': ['fg', 'Label'],
-          \ 'header':  ['fg', 'Comment']}
-
-    command! -bang -nargs=* Find call fzf#vim#grep('git grep --line-number '.shellescape(<q-args>), 0, <bang>0)
-    nnoremap <leader>p :Files<cr>
-    nnoremap <leader>/ :Find
-  endif
-
-  " }}}
+inoremap <expr> <silent> <tab> InsertTabWrapper()
 
 " }}}
 
@@ -379,6 +308,41 @@ nnoremap <leader>n :call RenameFile()<cr>
 
 if !&binary && &filetype != 'diff'
   autocmd bufwritepre * :%s/\s\+$//e
+endif
+
+" }}}
+
+" FuzzySearch: {{{
+
+if executable('fzy')
+
+  function! FzyCommand(choice_command, vim_command)
+    try
+      let output = system(a:choice_command . " | fzy ")
+    catch /Vim:Interrupt/
+      " Swallow errors from ^C, allow redraw! below
+    endtry
+    redraw!
+    if v:shell_error == 0 && !empty(output)
+      exec a:vim_command . ' ' . output
+    endif
+  endfunction
+
+  if executable('ag')
+    nnoremap <c-p> :call FzyCommand("ag . -l -g ''", ":e")<cr>
+  else
+    nnoremap <c-p> :call FzyCommand("find -type f", ":e")<cr>
+  endif
+
+  function! FzyBuffer()
+    let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
+    let buffers = map(bufnrs, 'bufname(v:val)')
+    let named_buffers = filter(buffers, '!empty(v:val)')
+    call FzyCommand('echo "' . join(named_buffers, "\n") . '"', ":b")
+  endfunction
+
+  nnoremap <c-b> :call FzyBuffer()<cr>
+
 endif
 
 " }}}
