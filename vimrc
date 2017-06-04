@@ -21,17 +21,15 @@ set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 call dein#begin(expand($HOME.'/.vim/bundle'))
 call dein#add('tyru/caw.vim')
 call dein#add('shougo/dein.vim')
-call dein#add('wellle/targets.vim')
 call dein#add('christoomey/vim-tmux-navigator')
-call dein#add('gabrielelana/vim-markdown')
-call dein#add('terryma/vim-expand-region')
 call dein#add('pangloss/vim-javascript')
-call dein#add('machakann/vim-sandwich')
+call dein#add('tpope/vim-surround')
 call dein#add('tpope/vim-fugitive')
+call dein#add('tpope/vim-markdown')
+call dein#add('tpope/vim-repeat')
 call dein#add('sickill/vim-pasta')
 call dein#add('vim-ruby/vim-ruby')
 call dein#add('janko-m/vim-test')
-call dein#add('kana/vim-repeat')
 call dein#add('fatih/vim-go')
 
 if dein#check_install()
@@ -53,13 +51,11 @@ endif
 syntax on
 
 set background=dark
-highlight SpecialKey guibg=NONE ctermbg=NONE
-" if $TERM_PROGRAM =~ "iTerm"
-"   set termguicolors
-" endif
+" set termguicolors
 colorscheme noctu
 
 " highlight trailing spaces in annoying red
+highlight SpecialKey guibg=NONE ctermbg=NONE
 highlight ExtraWhitespace ctermbg=1 guibg=red
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -122,10 +118,11 @@ set wildignore=
   \*/.git/*,
   \*/.hg/*,
   \*/.svn/*
+set wildignorecase
 
 set showmode
 set showcmd
-set showtabline=2
+set showtabline=0
 set hidden
 set number
 set norelativenumber
@@ -139,6 +136,7 @@ set hlsearch
 set noshowmatch
 set matchtime=0
 
+set nojoinspaces
 set splitbelow
 set splitright
 set nowrap
@@ -168,7 +166,11 @@ set complete-=i
 set scrolloff=0
 set synmaxcol=0
 set fillchars+=vert:\!
-set statusline=%F%m%r%h%w\ [%l,%c]\ [%L,%p%%]
+set statusline=%f\ %=\ %Y
+
+if executable('rg')
+  set grepprg=rg\ --vimgrep
+endif
 
 " }}}
 
@@ -267,9 +269,21 @@ augroup END
 
   " Go: {{{2
 
-  let g:go_fmt_command = "goimports"
+  let g:go_fmt_command="goimports"
 
   " }}}
+
+" }}}
+
+" Fuzzy: {{{
+
+if executable('fzf')
+  set runtimepath+=$HOMEBREW/opt/fzf
+
+  nnoremap <silent> <c-p> :call fzf#run({'source': 'rg --files', 'sink': 'e'})<cr>
+  nnoremap <silent> <c-b> :call fzf#run({'source': map(range(1, bufnr('$')), 'bufname(v:val)'), 'sink': 'e')<cr>
+
+endif
 
 " }}}
 
@@ -308,54 +322,6 @@ nnoremap <leader>n :call RenameFile()<cr>
 
 if !&binary && &filetype != 'diff'
   autocmd bufwritepre * :%s/\s\+$//e
-endif
-
-" }}}
-
-" FuzzySearch: {{{
-
-if executable('fzy')
-
-  function! FzyCommand(choice_command, vim_command)
-    try
-      let output = system(a:choice_command . " | fzy ")
-    catch /Vim:Interrupt/
-      " Swallow errors from ^C, allow redraw! below
-    endtry
-    redraw!
-    if v:shell_error == 0 && !empty(output)
-      exec a:vim_command . ' ' . output
-    endif
-  endfunction
-
-  if executable('ag')
-    nnoremap <c-p> :call FzyCommand("ag . -l -g ''", ":e")<cr>
-  else
-    nnoremap <c-p> :call FzyCommand("find -type f", ":e")<cr>
-  endif
-
-  function! FzyBuffer()
-    let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
-    let buffers = map(bufnrs, 'bufname(v:val)')
-    let named_buffers = filter(buffers, '!empty(v:val)')
-    call FzyCommand('echo "' . join(named_buffers, "\n") . '"', ":b")
-  endfunction
-
-  nnoremap <c-b> :call FzyBuffer()<cr>
-
-endif
-
-" }}}
-
-" Macvim: {{{
-
-if has('gui_running')
-  set macligatures
-  set guioptions-=m
-  set guioptions-=T
-  set guioptions-=r
-  set guioptions-=L
-  set guifont=Inconsolata\ LGC:h14
 endif
 
 " }}}
