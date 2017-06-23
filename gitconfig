@@ -1,6 +1,6 @@
 [user]
-  name = Lattapon Yodsuwan
-  email = i@clozed2u.com
+	name = Lattapon Yodsuwan
+	email = i@clozed2u.com
   username = clozed2u
 [core]
   autocrlf = false
@@ -39,3 +39,4 @@
   ll = log --pretty='format:%C(yellow)%h %C(blue)%ad %C(reset)%s%C(red)%d %C(green)%an%C(reset), %C(cyan)%ar' --date=short
   lll = log --color --graph --pretty=format:'%C(red)%h%C(reset) - %C(yellow)%d%C(reset) %s %C(green)%cr%C(reset) %C(bold blue)<%an - %ae>%C(reset)'
   search = log --no-merges -i -E --pretty='%h (%ad) - [%an] %s %d' --date=format:'%b %d %Y' —grep
+  cb = "!git checkout `git branch | pick`"

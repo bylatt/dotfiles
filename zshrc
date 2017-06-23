@@ -2,15 +2,6 @@
 # http://clozed2u.com
 
 # Prepare: {{{
-
-export ZSH_CONFIG_PATH=$HOME/.zsh
-export ZSH_PLUGIN_PATH=$HOME/.zsh/bundle
-
-if [[ ! -d $ZSH_CONFIG_PATH ]]; then
-  mkdir -p $ZSH_CONFIG_PATH
-  mkdir -p $ZSH_PLUGIN_PATH
-fi
-
 # }}}
 
 # Tmux: {{{
@@ -28,15 +19,9 @@ export HOMEBREW=`brew --prefix`
 if [[ -d $HOMEBREW/sbin ]]; then
   export PATH=$HOMEBREW/sbin:$PATH
 fi
-
-install_ruby() {
-  mkdir -p $HOMEBREW/rubies
-  printf "What ruby version you want to install: "
-  read version
-  git clone -q https://github.com/rbenv/ruby-build.git $HOME/ruby-build
-  $HOME/ruby-build/bin/ruby-build $version $HOMEBREW/rubies/ruby-$version
-  rm -rf $HOME/ruby-build
-}
+if [[ -d $HOME/.android-platform-tools ]]; then
+  export PATH=$HOME/.android-platform-tools:$PATH
+fi
 
 # }}}
 
@@ -65,35 +50,12 @@ install_ruby() {
 
   # Language: {{{2
 
-    # Ruby: {{{3
-
-    if [[ -f $HOMEBREW/opt/chruby/share/chruby/chruby.sh ]]; then
-      if [[ ! -d $HOMEBREW/rubies ]]; then
-        install_ruby
-      fi
-
-      source $HOMEBREW/opt/chruby/share/chruby/chruby.sh
-      source $HOMEBREW/opt/chruby/share/chruby/auto.sh
-
-      RUBIES=($HOMEBREW/rubies/*)
-    fi
-
-    # }}}
-
     # Go: {{{3
 
     if [[ -d $HOMEBREW/opt/go/libexec ]]; then
       export GOROOT=$HOMEBREW/opt/go/libexec
-      export GOPATH=$HOME/go
+      export GOPATH=$HOME/Workspace
       export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
-    fi
-
-    # }}}
-
-    # PHP: {{{3
-
-    if [[ -d $HOMEBREW/php5 ]]; then
-      export PATH=$HOMEBREW/php5/bin:$PATH
     fi
 
     # }}}
@@ -105,6 +67,7 @@ install_ruby() {
 # Alias: {{{
 
 alias vi='vim'
+alias vim='vim'
 alias df='df -h'
 alias ll='ls -GFlAhp'
 alias lr='ls -alR'
@@ -118,6 +81,10 @@ alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 for method in GET POST PUT DELETE; do
   alias "$method"="curl -s -X $method"
 done
+
+function work() {
+  cd `find $HOME/Workspace/src/github.com/thothmedia -type d -maxdepth 1 | pick`
+}
 
 # }}}
 
@@ -173,8 +140,8 @@ zstyle ':vcs_info:*:*' check-for-changes true
 zstyle ':vcs_info:*:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*:*' branchformats '%r'
-zstyle ':vcs_info:*:*' formats '%F{green}%m%c%u(%b) %f'
-zstyle ':vcs_info:*:*' actionformats '%F{green}%m%c%u(%b) %f'
+zstyle ':vcs_info:*:*' formats '%F{green}%m%c%u%b %f'
+zstyle ':vcs_info:*:*' actionformats '%F{green}%m%c%u%b %f'
 zstyle ':vcs_info:git*+set-message:*' hooks git-remote git-untracked git-stash
 
 # Get name of remote that we're tracking
@@ -245,7 +212,7 @@ setopt inc_append_history
 setopt share_history
 
 HISTCONTROL='erasedups:ignorespace'
-HISTFILE=$HOME/.zshhistory
+HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000
 SAVEHIST=100000
 HISTFILESIZE=2000000
@@ -268,24 +235,14 @@ autoload -U promptinit colors
 promptinit
 colors
 
-PROMPT='(%F{blue}%1d%f)%F{250};;%f %{$reset_color%}'
+# PROMPT='%F{blue}%1d%f%F{250} ϟϟ%f %{$reset_color%}'
+PROMPT='%F{blue}%1d%f %B%F{red}❯%f%F{yellow}❯%f%F{green}❯%f%b %{$reset_color%}'
 RPROMPT='${vcs_info_msg_0_}'
 
 # }}}
 
 # Plugins: {{{
 
-ZSH_HISTORY_SUBSTRING_SEARCH=$ZSH_PLUGIN_PATH/zsh-history-substring-search
-if [[ ! -d $ZSH_HISTORY_SUBSTRING_SEARCH ]]; then
-  echo "Installing ZSH_HISTORY_SUBSTRING_SEARCH"
-  git clone -q https://github.com/zsh-users/zsh-history-substring-search.git $ZSH_PLUGIN_PATH/zsh-history-substring-search
-fi
-source $ZSH_HISTORY_SUBSTRING_SEARCH/zsh-history-substring-search.zsh
-
-update_zsh_plugin() {
-  local current_path
-  current_path=$PWD
-  cd $ZSH_PLUGIN_PATH; for plugin in `ls`; do cd $plugin; git pull origin master; cd ..; done; cd $current_path; echo "\nUpdate zsh plugins completed\n";
-}
+source $HOMEBREW/opt/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 # }}}

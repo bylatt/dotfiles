@@ -1,19 +1,26 @@
-#!/bin/sh
+#!/bin/bash
+
+if [ ! which brew > /dev/null 2>&1 ]; then
+  echo "Homebrew is required"
+  bash -c 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+  brew bundle
+fi
 
 newdir=$HOME/.dotfiles
-olddir=$HOME/.dotfiles_old
+bakdir=$HOME/.dotfiles_bak
 
-echo "Creating $olddir for backup of any existing dotfiles in home directory"
-mkdir -p $olddir
+echo "Creating $bakdir for backup of any existing dotfiles in home directory"
+mkdir -p $bakdir
 echo "...done"
 
-echo "Changing to the $newdir directory\n"
+echo ""
+echo "Changing to the $newdir directory"
 cd $newdir
 
 for file in `ls`; do
-  if [[ "$file" != "README.md" && "$file" != "setup" ]]; then
-    echo "Moving .$file dotfiles from home directory to $olddir if existing";
-    mv $HOME/.$file $olddir;
+  if [ "$file" != "README.md" && "$file" != "setup" ]; then
+    echo "Moving .$file dotfiles from home directory to $bakdir if existing";
+    mv $HOME/.$file $bakdir;
     echo "Creating symlink to $file in home directory.";
     ln -s $newdir/$file $HOME/.$file;
   fi

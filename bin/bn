@@ -1,5 +1,11 @@
 #!/usr/bin/env ruby
 
+begin
+  Gem::Specification.find_by_name('nokogiri')
+rescue Gem::LoadError
+  puts "Nogokiri gem is required"
+end
+
 require 'nokogiri'
 require 'open-uri'
 

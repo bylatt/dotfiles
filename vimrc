@@ -19,10 +19,13 @@ endif
 
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 call dein#begin(expand($HOME.'/.vim/bundle'))
-call dein#add('tyru/caw.vim')
 call dein#add('shougo/dein.vim')
+call dein#add('calleerlandsson/pick.vim')
+call dein#add('michaeljsmith/vim-indent-object')
 call dein#add('christoomey/vim-tmux-navigator')
 call dein#add('pangloss/vim-javascript')
+call dein#add('mxw/vim-jsx')
+call dein#add('tpope/vim-commentary')
 call dein#add('tpope/vim-surround')
 call dein#add('tpope/vim-fugitive')
 call dein#add('tpope/vim-markdown')
@@ -30,6 +33,7 @@ call dein#add('tpope/vim-repeat')
 call dein#add('sickill/vim-pasta')
 call dein#add('vim-ruby/vim-ruby')
 call dein#add('janko-m/vim-test')
+call dein#add('guns/vim-sexp')
 call dein#add('fatih/vim-go')
 
 if dein#check_install()
@@ -47,6 +51,9 @@ filetype plugin indent on
 set t_Co=256
 if &term=~'256color'
   set t_ut=
+endif
+if has('nvim')
+  set guicursor=
 endif
 syntax on
 
@@ -168,8 +175,8 @@ set synmaxcol=0
 set fillchars+=vert:\!
 set statusline=%f\ %=\ %Y
 
-if executable('rg')
-  set grepprg=rg\ --vimgrep
+if executable('ag')
+  set grepprg=ag\ --vimgrep
 endif
 
 " }}}
@@ -277,11 +284,10 @@ augroup END
 
 " Fuzzy: {{{
 
-if executable('fzf')
-  set runtimepath+=$HOMEBREW/opt/fzf
+if executable('pick')
 
-  nnoremap <silent> <c-p> :call fzf#run({'source': 'rg --files', 'sink': 'e'})<cr>
-  nnoremap <silent> <c-b> :call fzf#run({'source': map(range(1, bufnr('$')), 'bufname(v:val)'), 'sink': 'e')<cr>
+  nnoremap <silent> <c-p> :call PickCommand('ag -S -g ""', "", ":edit", 1)<cr>
+  nnoremap <silent> <c-b> :call PickBuffer()<cr>
 
 endif
 
