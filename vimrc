@@ -20,8 +20,6 @@ endif
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 call dein#begin(expand($HOME.'/.vim/bundle'))
 call dein#add('shougo/dein.vim')
-call dein#add('calleerlandsson/pick.vim')
-call dein#add('michaeljsmith/vim-indent-object')
 call dein#add('christoomey/vim-tmux-navigator')
 call dein#add('pangloss/vim-javascript')
 call dein#add('mxw/vim-jsx')
@@ -33,8 +31,12 @@ call dein#add('tpope/vim-repeat')
 call dein#add('sickill/vim-pasta')
 call dein#add('vim-ruby/vim-ruby')
 call dein#add('janko-m/vim-test')
-call dein#add('guns/vim-sexp')
 call dein#add('fatih/vim-go')
+call dein#add('kana/vim-arpeggio')
+call dein#add('kana/vim-textobj-user')
+call dein#add('kana/vim-operator-user')
+call dein#add('morhetz/gruvbox')
+call dein#add('itchyny/vim-parenmatch')
 
 if dein#check_install()
   call dein#install()
@@ -52,14 +54,11 @@ set t_Co=256
 if &term=~'256color'
   set t_ut=
 endif
-if has('nvim')
-  set guicursor=
-endif
 syntax on
 
 set background=dark
 " set termguicolors
-colorscheme noctu
+colorscheme gruvbox
 
 " highlight trailing spaces in annoying red
 highlight SpecialKey guibg=NONE ctermbg=NONE
@@ -129,7 +128,7 @@ set wildignorecase
 
 set showmode
 set showcmd
-set showtabline=0
+set showtabline=2
 set hidden
 set number
 set norelativenumber
@@ -172,12 +171,18 @@ set complete-=i
 
 set scrolloff=0
 set synmaxcol=0
-set fillchars+=vert:\!
+" set fillchars+=vert:\!
 set statusline=%f\ %=\ %Y
 
 if executable('ag')
   set grepprg=ag\ --vimgrep
 endif
+
+" }}}
+
+" Paren: {{{
+
+let loaded_matchparen=1
 
 " }}}
 
@@ -282,17 +287,6 @@ augroup END
 
 " }}}
 
-" Fuzzy: {{{
-
-if executable('pick')
-
-  nnoremap <silent> <c-p> :call PickCommand('ag -S -g ""', "", ":edit", 1)<cr>
-  nnoremap <silent> <c-b> :call PickBuffer()<cr>
-
-endif
-
-" }}}
-
 " Tab: {{{
 
 function! InsertTabWrapper()
@@ -305,6 +299,31 @@ function! InsertTabWrapper()
 endfunction
 
 inoremap <expr> <silent> <tab> InsertTabWrapper()
+
+" }}}
+
+" Fuzzy: {{{
+
+function! FuzzyCommand(choice_command, vim_command)
+  try
+    let selection = system(a:choice_command . " | fzy ")
+  catch /Vim:Interrupt/
+    redraw!
+    return
+  endtry
+  redraw!
+  exec a:vim_command . " " . selection
+endfunction
+
+nnoremap <c-p> :call FuzzyCommand("ag -S -g ''", ":e")<cr>
+
+function! FuzzyBuffer()
+  let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
+  let buffers = map(bufnrs, 'bufname(v:val)')
+  call FuzzyCommand('echo "' . join(buffers, "\n") . '"', ":b")
+endfunction
+
+nnoremap <c-b> :call FuzzyBuffer()<cr>
 
 " }}}
 

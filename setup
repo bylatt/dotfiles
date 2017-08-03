@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ ! which brew > /dev/null 2>&1 ]; then
   echo "Homebrew is required"
@@ -18,9 +18,11 @@ echo "Changing to the $newdir directory"
 cd $newdir
 
 for file in `ls`; do
-  if [ "$file" != "README.md" && "$file" != "setup" ]; then
-    echo "Moving .$file dotfiles from home directory to $bakdir if existing";
-    mv $HOME/.$file $bakdir;
+  if [ "$file" != "README.md" ] && [ "$file" != "setup" ]; then
+    if [ -e "$HOME/.$file" ]; then
+      echo "Moving .$file dotfiles from home directory to $bakdir if existing";
+      mv $HOME/.$file $bakdir;
+    fi
     echo "Creating symlink to $file in home directory.";
     ln -s $newdir/$file $HOME/.$file;
   fi

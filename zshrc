@@ -60,6 +60,14 @@ fi
 
     # }}}
 
+    # Java: {{{3
+
+    if [[ -d /Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin ]]; then
+      export PATH=/Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:$PATH
+    fi
+
+    # }}}
+
   # }}}
 
 # }}}
@@ -83,7 +91,7 @@ for method in GET POST PUT DELETE; do
 done
 
 function work() {
-  cd `find $HOME/Workspace/src/github.com/thothmedia -type d -maxdepth 1 | pick`
+  cd `find $HOME/Workspace/src/github.com/thothmedia -type d -maxdepth 1 | fzy`
 }
 
 # }}}
@@ -100,7 +108,12 @@ setopt auto_cd
 setopt auto_pushd
 setopt auto_name_dirs
 setopt pushd_ignore_dups
+setopt pushd_silent
+setopt pushd_to_home
+setopt cdable_vars
 setopt auto_menu
+setopt auto_list
+setopt auto_param_slash
 setopt menu_complete
 setopt complete_in_word
 setopt complete_aliases
@@ -109,6 +122,7 @@ setopt always_to_end
 setopt extended_glob
 setopt prompt_subst
 setopt long_list_jobs
+setopt path_dirs
 setopt multios
 
 # }}}
@@ -200,7 +214,9 @@ zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-dir
 # History: {{{
 
 setopt append_history
+setopt inc_append_history
 setopt extended_history
+setopt share_history
 setopt hist_expire_dups_first
 setopt hist_ignore_all_dups
 setopt hist_ignore_dups
@@ -208,8 +224,7 @@ setopt hist_ignore_space
 setopt hist_verify
 setopt hist_find_no_dups
 setopt hist_reduce_blanks
-setopt inc_append_history
-setopt share_history
+setopt hist_save_no_dups
 
 HISTCONTROL='erasedups:ignorespace'
 HISTFILE=$HOME/.zsh_history
@@ -221,11 +236,18 @@ HISTFILESIZE=2000000
 
 # Title: {{{
 
+DISABLE_AUTO_TITLE='true'
+
 function set-window-title {
+  # local full_command="$2 "
+  # local process_name=${${=full_command}[1]}
+  # echo -ne "\e]0;${USER}:${PWD} $process_name\a"
   echo -ne "\e]0;${USER}\a"
 }
 
+add-zsh-hook chpwd set-window-title
 add-zsh-hook precmd set-window-title
+add-zsh-hook preexec set-window-title
 
 # }}}
 
@@ -244,5 +266,11 @@ RPROMPT='${vcs_info_msg_0_}'
 # Plugins: {{{
 
 source $HOMEBREW/opt/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# }}}
+
+# Ensure unique path: {{{
+
+typeset -gU cdpath fpath mailpath path
 
 # }}}
