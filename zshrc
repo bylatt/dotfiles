@@ -91,7 +91,7 @@ for method in GET POST PUT DELETE; do
 done
 
 function work() {
-  cd `find $HOME/Workspace/src/github.com/thothmedia -type d -maxdepth 1 | fzy`
+  cd `find $HOME/Workspace/src/github.com/thothmedia -type d -maxdepth 1 | hs`
 }
 
 # }}}
@@ -257,7 +257,7 @@ autoload -U promptinit colors
 promptinit
 colors
 
-# PROMPT='%F{blue}%1d%f%F{250} ϟϟ%f %{$reset_color%}'
+# PROMPT='%F{blue}%1d%f%F{250} =>%f %{$reset_color%}'
 PROMPT='%F{blue}%1d%f %B%F{red}❯%f%F{yellow}❯%f%F{green}❯%f%b %{$reset_color%}'
 RPROMPT='${vcs_info_msg_0_}'
 
@@ -265,7 +265,7 @@ RPROMPT='${vcs_info_msg_0_}'
 
 # Plugins: {{{
 
-source $HOMEBREW/opt/zsh-history-substring-search/zsh-history-substring-search.zsh
+source $HOMEBREW/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 # }}}
 

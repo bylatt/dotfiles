@@ -67,7 +67,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 nbproject/private/
-build/
 nbbuild/
 dist/
 nbdist/
@@ -102,7 +101,6 @@ tags
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-build/
 DerivedData/
 *.pbxuser
 !default.pbxuser

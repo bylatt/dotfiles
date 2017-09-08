@@ -35,8 +35,9 @@ call dein#add('fatih/vim-go')
 call dein#add('kana/vim-arpeggio')
 call dein#add('kana/vim-textobj-user')
 call dein#add('kana/vim-operator-user')
-call dein#add('morhetz/gruvbox')
 call dein#add('itchyny/vim-parenmatch')
+call dein#add('morhetz/gruvbox')
+call dein#add('jiangmiao/auto-pairs')
 
 if dein#check_install()
   call dein#install()
@@ -57,7 +58,9 @@ endif
 syntax on
 
 set background=dark
-" set termguicolors
+if $TERM_PROGRAM=='iTerm.app'
+  set termguicolors
+endif
 colorscheme gruvbox
 
 " highlight trailing spaces in annoying red
@@ -115,7 +118,6 @@ set wildignore=
   \*.zip,
   \*.gz,
   \*/.DS_Store/*,
-  \*/sass-cache/*,
   \*/tmp/*,
   \*/node_modules/*,
   \*/bower_components/*,
@@ -128,7 +130,7 @@ set wildignorecase
 
 set showmode
 set showcmd
-set showtabline=2
+set showtabline=0
 set hidden
 set number
 set norelativenumber
@@ -174,8 +176,8 @@ set synmaxcol=0
 " set fillchars+=vert:\!
 set statusline=%f\ %=\ %Y
 
-if executable('ag')
-  set grepprg=ag\ --vimgrep
+if executable('rg')
+  set grepprg=rg\ --vimgrep
 endif
 
 " }}}
@@ -306,7 +308,7 @@ inoremap <expr> <silent> <tab> InsertTabWrapper()
 
 function! FuzzyCommand(choice_command, vim_command)
   try
-    let selection = system(a:choice_command . " | fzy ")
+    let selection = system(a:choice_command . " | hs ")
   catch /Vim:Interrupt/
     redraw!
     return
@@ -315,7 +317,7 @@ function! FuzzyCommand(choice_command, vim_command)
   exec a:vim_command . " " . selection
 endfunction
 
-nnoremap <c-p> :call FuzzyCommand("ag -S -g ''", ":e")<cr>
+nnoremap <c-p> :call FuzzyCommand("rg --files", ":e")<cr>
 
 function! FuzzyBuffer()
   let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
