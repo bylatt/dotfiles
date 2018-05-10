@@ -3,11 +3,9 @@
 
 " Initial: {{{
 
-set nocompatible
-set encoding=utf-8
-set fileencoding=utf-8
-set termencoding=utf-8
-set nobomb
+if &compatible
+  set nocompatible
+endif
 
 " }}}
 
@@ -18,32 +16,38 @@ if !isdirectory($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim')
 endif
 
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
-call dein#begin(expand($HOME.'/.vim/bundle'))
-call dein#add('shougo/dein.vim')
-call dein#add('christoomey/vim-tmux-navigator')
-call dein#add('pangloss/vim-javascript')
-call dein#add('mxw/vim-jsx')
-call dein#add('tpope/vim-commentary')
-call dein#add('tpope/vim-surround')
-call dein#add('tpope/vim-fugitive')
-call dein#add('tpope/vim-markdown')
-call dein#add('tpope/vim-repeat')
-call dein#add('sickill/vim-pasta')
-call dein#add('vim-ruby/vim-ruby')
-call dein#add('janko-m/vim-test')
-call dein#add('fatih/vim-go')
-call dein#add('kana/vim-arpeggio')
-call dein#add('kana/vim-textobj-user')
-call dein#add('kana/vim-operator-user')
-call dein#add('itchyny/vim-parenmatch')
-call dein#add('morhetz/gruvbox')
-call dein#add('jiangmiao/auto-pairs')
+if dein#load_state(expand($HOME.'/.vim/bundle'))
+  call dein#begin(expand($HOME.'/.vim/bundle'))
+  call dein#add('shougo/dein.vim')
+  call dein#add('maralla/completor.vim')
+  call dein#add('tpope/vim-rsi')
+  call dein#add('tpope/vim-eunuch')
+  call dein#add('tpope/vim-repeat')
+  call dein#add('tpope/vim-abolish')
+  call dein#add('tpope/vim-fugitive')
+  call dein#add('tpope/vim-markdown')
+  call dein#add('tpope/vim-surround')
+  call dein#add('tpope/vim-commentary')
+  call dein#add('justinmk/vim-dirvish')
+  call dein#add('terryma/vim-expand-region')
+  call dein#add('fatih/vim-go')
+  call dein#add('janko-m/vim-test')
+  call dein#add('sickill/vim-pasta')
+  call dein#add('vim-ruby/vim-ruby')
+  call dein#add('pangloss/vim-javascript')
+  call dein#add('mxw/vim-jsx')
+  call dein#add('christoomey/vim-tmux-navigator')
+  call dein#add('mattn/emmet-vim', {'on_ft': ['javascript', 'javascript.jsx', 'css', 'scss', 'html', 'php']})
+  call dein#add('editorconfig/editorconfig-vim')
+  call dein#end()
+  call dein#save_state()
+endif
 
 if dein#check_install()
   call dein#install()
 endif
 
-call dein#end()
+command PluginUpdate call dein#update()
 
 filetype plugin indent on
 
@@ -52,18 +56,11 @@ filetype plugin indent on
 " Colors: {{{
 
 set t_Co=256
-if &term=~'256color'
-  set t_ut=
-endif
 syntax on
-
 set background=dark
-if $TERM_PROGRAM=='iTerm.app'
-  set termguicolors
-endif
-colorscheme gruvbox
+colorscheme noctu
 
-" highlight trailing spaces in annoying red
+" Highlight extra whitespaces with red color
 highlight SpecialKey guibg=NONE ctermbg=NONE
 highlight ExtraWhitespace ctermbg=1 guibg=red
 match ExtraWhitespace /\s\+$/
@@ -76,17 +73,24 @@ autocmd BufWinLeave * call clearmatches()
 
 " Settings: {{{
 
-set shell=$SHELL
+set encoding=utf-8
+set fileencoding=utf-8
+set termencoding=utf-8
+set nobomb
+set shell=zsh\ -l
 
-" don't allow files with the same name to overwrite each other
+" Backup files and don't allow files with the same name to overwrite each other
 set noswapfile
 set writebackup
 set backupdir=$HOME/.vim/backup
 set undofile
 set undodir=$HOME/.vim/undo
 set directory=$HOME/.vim/tmp
+
+" Enable tags
 set tags=./tags
 
+" Use spaces instead of tabs and auto indent
 set backspace=2
 set laststatus=2
 set tabstop=2
@@ -98,14 +102,18 @@ set smarttab
 set autoindent
 set smartindent
 " set cinoptions=>4,l1,p0,)50,*50,t0
+
+" Autoread and write files
 set autoread
 set autowrite
 set autowriteall
 set linespace=0
 
+" Disalbe annoying prompt message
 set shortmess=atToOI
 set viewoptions+=unix,slash
 
+" Autocomplete menu
 set wildmenu
 set wildmode=list:longest
 set wildignore=
@@ -113,7 +121,6 @@ set wildignore=
   \*.jpg,
   \*.gif,
   \*.gem,
-  \*.so,
   \*.swp,
   \*.zip,
   \*.gz,
@@ -128,7 +135,8 @@ set wildignore=
   \*/.svn/*
 set wildignorecase
 
-set showmode
+" Additional UI configs
+set noshowmode
 set showcmd
 set showtabline=0
 set hidden
@@ -136,6 +144,7 @@ set number
 set norelativenumber
 set ttyfast
 
+" Search
 set ignorecase
 set smartcase
 set infercase
@@ -148,80 +157,67 @@ set nojoinspaces
 set splitbelow
 set splitright
 set nowrap
-" set listchars=tab:▸\ ,eol:¬,trail:•,nbsp:.
 set listchars=tab:\ \ ,eol:\ ,trail:•,nbsp:.
 set list
 
+" Timeout
 set timeout
 set timeoutlen=200
 set ttimeout
 set ttimeoutlen=0
 
+" Folding
 set foldenable
 " set foldmethod=indent
 set foldmethod=manual
 set foldlevel=9999
 
+" Line & column highlighting
 set nocursorline
 set nocursorcolumn
 
+" Completion
 set omnifunc=syntaxcomplete#Complete
 set completefunc=syntaxcomplete#Complete
 set completeopt=longest,menuone
-" defualt complete=.,w,b,u,t,i
+" set complete=.,w,b,u,t,i
 set complete-=i
 
 set scrolloff=0
-set synmaxcol=0
-" set fillchars+=vert:\!
-set statusline=%f\ %=\ %Y
+set synmaxcol=1000
+set statusline=Path:\ %F\ %m\ %=\ %Y
 
+" Use rg for grep if installed
 if executable('rg')
   set grepprg=rg\ --vimgrep
 endif
 
-" }}}
-
-" Paren: {{{
-
-let loaded_matchparen=1
-
-" }}}
-
-" Explorer: {{{
-
-let g:netrw_liststyle=1
-let g:netrw_banner=0
-let g:netrw_altv=1
-let g:netrw_preview=1
-let g:netrw_browse_split=0
-let g:netrw_list_hide=&wildignore
-
-" }}}
-
-" OSSpecific: {{{
-
+" Enable clipboard
 let s:kernel = system('echo -n "$(uname -s)"')
-
-" Mac: {{{2
-
 if s:kernel == 'Darwin'
   set clipboard=unnamed
-
-" }}}
-
-" Linux: {{{2
-
 elseif s:kernel == 'Linux'
   set clipboard=unnamedplus
 endif
 
 " }}}
 
+" Explorer: {{{
+
+" Nicer netrw
+let g:netrw_altv=1
+let g:netrw_banner=0
+let g:netrw_preview=1
+let g:netrw_winsize=25
+let g:netrw_liststyle=3
+let g:netrw_browse_split=0
+let g:netrw_list_hide=&wildignore
+
 " }}}
 
 " Mappings: {{{
 
+" Prefer spaces for leader
 let mapleader = "\<space>"
 
   " Modes: {{{2
@@ -246,21 +242,42 @@ let mapleader = "\<space>"
 
   " }}}
 
+  " Run: {{{2
+
+  autocmd FileType go nnoremap <buffer> <leader>m :!go run %<cr>
+  autocmd FileType php nnoremap <buffer> <leader>m :!php %<cr>
+  autocmd FileType ruby nnoremap <buffer> <leader>m :!ruby %<cr>
+  autocmd FileType python nnoremap <buffer> <leader>m :!python3 %<cr>
+  autocmd FileType javascript nnoremap <buffer> <leader>m :!node %<cr>
+
+  " }}}
+
+  " Split: {{{2
+
+  nnoremap <leader>- <c-w>_<cr>
+  nnoremap <leader>= <c-w>=<cr>
+
+  " }}}
+
 " }}}
 
-" File: {{{
+" Languages: {{{
 
-augroup filetypespecific
+" Focus on the line from last open
+autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+
+" Disable automatic comment insertion
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+augroup LanguageSpecific
   autocmd!
-  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-  autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-  autocmd filetype vim setlocal foldmethod=marker foldlevel=0
-  autocmd filetype zsh setlocal foldmethod=marker foldlevel=0
-  autocmd filetype php setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
-  autocmd filetype ruby setlocal foldmethod=syntax
-  autocmd filetype make setlocal noexpandtab tabstop=4 softtabstop=4
-  autocmd filetype python setlocal nosmartindent tabstop=4 softtabstop=4 shiftwidth=4
-  autocmd filetype javascript setlocal foldmethod=syntax
+  autocmd FileType vim setlocal foldmethod=marker foldlevel=0
+  autocmd FileType zsh setlocal foldmethod=marker foldlevel=0
+  autocmd FileType php setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
+  autocmd FileType ruby setlocal foldmethod=syntax
+  autocmd FileType make setlocal noexpandtab tabstop=4 softtabstop=4
+  autocmd FileType python setlocal nosmartindent tabstop=4 softtabstop=4 shiftwidth=4
+  autocmd FileType javascript,javascript.jsx setlocal foldmethod=syntax
 augroup END
 
 " }}}
@@ -271,19 +288,44 @@ augroup END
 
   let g:test#strategy='basic'
   let g:test#preserve_screen=0
-  let test#ruby#rspec#options='--color'
 
-  nmap <silent> <leader>t :TestNearest<cr>
+  nmap <silent> <leader>m :TestNearest<cr>
   nmap <silent> <leader>f :TestFile<cr>
-  nmap <silent> <leader>a :TestSuite<cr>
   nmap <silent> <leader>l :TestLast<cr>
-  nmap <silent> <leader>g :TestVisit<cr>
 
   " }}}
 
   " Go: {{{2
 
   let g:go_fmt_command="goimports"
+
+  " Highlight
+  " let g:go_highlight_functions = 1
+  " let g:go_highlight_methods = 1
+  " let g:go_highlight_structs = 1
+  " let g:go_highlight_operators = 1
+  " let g:go_highlight_build_constraints = 1
+
+  " }}}
+
+  " Emmet: {{{2
+
+  let g:user_emmet_settings={'javascript.jsx': {'extends': 'jsx'}}
+
+  " }}}
+
+  " JSX: {{{2
+
+  let g:jsx_ext_required=0
+
+  " }}}
+
+  " Completor: {{{2
+
+  let g:completor_python_binary='python3'
+  let g:completor_gocode_binary='gocode'
+  let g:completor_racer_binary='racer'
+  let g:completor_clang_binary='clang'
 
   " }}}
 
@@ -306,26 +348,32 @@ inoremap <expr> <silent> <tab> InsertTabWrapper()
 
 " Fuzzy: {{{
 
-function! FuzzyCommand(choice_command, vim_command)
-  try
-    let selection = system(a:choice_command . " | hs ")
-  catch /Vim:Interrupt/
+if executable('fzy') && executable('fd')
+
+  function! FuzzyCommand(choice_command, vim_command)
+    try
+      let selection = system(a:choice_command . " | fzy ")
+    catch /Vim:Interrupt/
+      redraw!
+      return
+    endtry
     redraw!
-    return
-  endtry
-  redraw!
-  exec a:vim_command . " " . selection
-endfunction
+    if v:shell_error == 0 && !empty(selection)
+      execute a:vim_command . " " . selection
+    endif
+  endfunction
 
-nnoremap <c-p> :call FuzzyCommand("rg --files", ":e")<cr>
+  nnoremap <leader>p :call FuzzyCommand("fd -t f", ":e")<cr>
 
-function! FuzzyBuffer()
-  let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
-  let buffers = map(bufnrs, 'bufname(v:val)')
-  call FuzzyCommand('echo "' . join(buffers, "\n") . '"', ":b")
-endfunction
+  function! FuzzyBuffer()
+    let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
+    let buffers = map(bufnrs, 'bufname(v:val)')
+    call FuzzyCommand('echo "' . join(buffers, "\n") . '"', ":b")
+  endfunction
 
-nnoremap <c-b> :call FuzzyBuffer()<cr>
+  nnoremap <leader>b :call FuzzyBuffer()<cr>
+
+endif
 
 " }}}
 
@@ -355,7 +403,7 @@ endif
 
 " Note: {{{
 
-" "" Default vim key binding for autocomplete
+" ** Default vim key binding for autocomplete
 " <c-x><c-f> for path completion
 " <c-x><c-k> for dictionary conpletion
 " <c-x><c-l> for whole line completion
@@ -366,7 +414,7 @@ endif
 " <c-x><c-v> for vim command line
 " <c-n> for completion for next match keyword
 " <c-p> for completion for previous match keyword
-" "" When stage is on option list
+" ** When stage is on option list
 " <c-n> for next option
 " <c-p> for previous option
 

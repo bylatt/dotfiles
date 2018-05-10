@@ -2,11 +2,14 @@
 	name = Lattapon Yodsuwan
 	email = i@clozed2u.com
   username = clozed2u
+
 [core]
   autocrlf = false
   safecrlf = true
+
 [apply]
   whitespace = nowarn
+
 [color]
   branch = auto
   diff = auto
@@ -14,12 +17,16 @@
   interactive = auto
   ui = always
   pager = true
+
 [credential]
   helper = osxkeychain
+
 [push]
   default = current
+
 [pull]
   default = current
+
 [alias]
   aa = add --all
   bl = blame -C
@@ -40,3 +47,9 @@
   lll = log --color --graph --pretty=format:'%C(red)%h%C(reset) - %C(yellow)%d%C(reset) %s %C(green)%cr%C(reset) %C(bold blue)<%an - %ae>%C(reset)'
   search = log --no-merges -i -E --pretty='%h (%ad) - [%an] %s %d' --date=format:'%b %d %Y' —grep
   cb = "!git checkout `git branch | fzy`"
+
+[url "https://github.com/"]
+  insteadOf = gh:
+
+[url "https://bitbucket.org/"]
+  insteadOf = bb:

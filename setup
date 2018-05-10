@@ -1,42 +1,32 @@
 #!/usr/bin/env bash
 
-if [ ! which brew > /dev/null 2>&1 ]; then
-  echo "Homebrew is required"
+if [ ! which brew > /dev/null 2>&1 ]
+then
   bash -c 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
-  brew bundle
+  brew bundle install --file=$(pwd)/brewrc
 fi
 
 newdir=$HOME/.dotfiles
-bakdir=$HOME/.dotfiles_bak
+bakdir=$HOME/.dotfiles.bak
 
-echo "Creating $bakdir for backup of any existing dotfiles in home directory"
+rm -rf $bakdir
 mkdir -p $bakdir
-echo "...done"
-
-echo ""
-echo "Changing to the $newdir directory"
 cd $newdir
 
-for file in `ls`; do
-  if [ "$file" != "README.md" ] && [ "$file" != "setup" ]; then
-    if [ -e "$HOME/.$file" ]; then
-      echo "Moving .$file dotfiles from home directory to $bakdir if existing";
-      mv $HOME/.$file $bakdir;
+for file in `ls`
+do
+  if [ "$file" != "README.md" ] && [ "$file" != "setup" ]
+  then
+    if [ -e "$HOME/.$file" ]
+    then
+      mv $HOME/.$file $bakdir
     fi
-    echo "Creating symlink to $file in home directory.";
-    ln -s $newdir/$file $HOME/.$file;
+    ln -s $newdir/$file $HOME/.$file
   fi
 done
 
-echo ""
-echo "Creating directories for gitignore"
 mkdir -p $HOME/.config/git
 ln -s $newdir/gitignore $HOME/.config/git/ignore
 ln -s $newdir/gitconfig $HOME/.config/git/config
 
-echo ""
-echo "Creating directories for vim"
 mkdir -p $HOME/.vim/{autoload,backup,bundle,colors,tmp,undo}
-
-echo ""
-echo "Done!!"

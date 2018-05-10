@@ -1,27 +1,23 @@
 # github.com/clozed2u :: @clozed2u
 # http://clozed2u.com
 
-# Prepare: {{{
-# }}}
+unsetopt global_rcs
 
-# Tmux: {{{
+# iTerm: {{{
 
-if [[ -f /etc/zprofile ]]; then
-  PATH=''
-  source /etc/zprofile
-fi
+export SSH_COMMAND=""
+
+[[ -e $HOME/.iterm2_shell_integration.zsh ]] && source $HOME/.iterm2_shell_integration.zsh
+
+function iterm2_print_user_vars() {
+  iterm2_set_user_var sshStatus $(echo ${SSH_COMMAND})
+}
 
 # }}}
 
 # Homebrew: {{{
 
-export HOMEBREW=`brew --prefix`
-if [[ -d $HOMEBREW/sbin ]]; then
-  export PATH=$HOMEBREW/sbin:$PATH
-fi
-if [[ -d $HOME/.android-platform-tools ]]; then
-  export PATH=$HOME/.android-platform-tools:$PATH
-fi
+export HOMEBREW=/usr/local
 
 # }}}
 
@@ -31,20 +27,15 @@ fi
 
   export LANG=en_US.UTF-8
   export LC_ALL=en_US.UTF-8
+  export LC_CTYPE=en_US.UTF-8
   export TERM=xterm-256color
   export CLICOLOR=1
   export KEYTIMEOUT=1
   export VISUAL=vim
   export EDITOR=vim
+  export PAGER=less
   export LSCOLORS=ExFxCxDxBxegedabagacad
-
-  # }}}
-
-  # Bin: {{{2
-
-  if [[ -d $HOME/.bin ]]; then
-    export PATH=$HOME/.bin:$PATH
-  fi
+  export PYTHONSTARTUP=$HOME/.pythonrc
 
   # }}}
 
@@ -52,18 +43,12 @@ fi
 
     # Go: {{{3
 
-    if [[ -d $HOMEBREW/opt/go/libexec ]]; then
+    if [[ -d $HOMEBREW/opt/go/libexec ]]
+    then
       export GOROOT=$HOMEBREW/opt/go/libexec
       export GOPATH=$HOME/Workspace
-      export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
-    fi
-
-    # }}}
-
-    # Java: {{{3
-
-    if [[ -d /Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin ]]; then
-      export PATH=/Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin:$PATH
+      export GOBIN=$GOPATH/bin
+      export PATH=$GOROOT/bin:$GOBIN:$PATH
     fi
 
     # }}}
@@ -72,10 +57,22 @@ fi
 
 # }}}
 
+# Path: {{{
+
+path=(
+  $HOMEBREW/{bin,sbin}
+  $HOME/.bin
+  $HOME/.cargo/bin
+  $GOROOT/bin
+  $GOPATH/bin
+  $path
+)
+
+# }}}
+
 # Alias: {{{
 
 alias vi='vim'
-alias vim='vim'
 alias df='df -h'
 alias ll='ls -GFlAhp'
 alias lr='ls -alR'
@@ -83,22 +80,19 @@ alias cp='cp -ivR'
 alias mv='mv -iv'
 alias mkd='mkdir -pv'
 alias his='history -1000 -1'
-alias flushdns='dscacheutil -flushcache && killall -HUP mDNSResponder'
-alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
+alias tmux='tmux -f $HOME/.tmuxrc'
+alias flushdns='dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
 
-for method in GET POST PUT DELETE; do
+for method in GET POST PUT DELETE
+do
   alias "$method"="curl -s -X $method"
 done
-
-function work() {
-  cd `find $HOME/Workspace/src/github.com/thothmedia -type d -maxdepth 1 | hs`
-}
 
 # }}}
 
 # Settings: {{{
 
-autoload -U add-zsh-hook
+autoload -Uz add-zsh-hook
 
 unsetopt beep
 unsetopt correct_all
@@ -124,6 +118,7 @@ setopt prompt_subst
 setopt long_list_jobs
 setopt path_dirs
 setopt multios
+setopt interactivecomments
 
 # }}}
 
@@ -145,7 +140,7 @@ bindkey -M vicmd '^r' redo
 
 # VCS: {{{
 
-autoload -U vcs_info
+autoload -Uz vcs_info
 vcs_info
 
 zstyle ':vcs_info:*' enable git
@@ -154,8 +149,8 @@ zstyle ':vcs_info:*:*' check-for-changes true
 zstyle ':vcs_info:*:*' stagedstr '%F{yellow}'
 zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
 zstyle ':vcs_info:*:*' branchformats '%r'
-zstyle ':vcs_info:*:*' formats '%F{green}%m%c%u%b %f'
-zstyle ':vcs_info:*:*' actionformats '%F{green}%m%c%u%b %f'
+zstyle ':vcs_info:*:*' formats '%F{green}%m%c%u%b%f'
+zstyle ':vcs_info:*:*' actionformats '%F{green}%m%c%u%b%f'
 zstyle ':vcs_info:git*+set-message:*' hooks git-remote git-untracked git-stash
 
 # Get name of remote that we're tracking
@@ -183,7 +178,8 @@ function +vi-git-untracked() {
 function +vi-git-stash() {
 local -a stashes
 
-if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
+if [[ -s ${hook_com[base]}/.git/refs/stash ]]
+then
   stashes=(${(@f)$(git stash list 2>/dev/null)})
   # Sometimes refs/stash exists even with 0 stashes
   # Make sure we have at least 1 stash before adding this info
@@ -199,8 +195,14 @@ add-zsh-hook precmd vcs_info
 
 # Autocomplete: {{{
 
-autoload -U compinit
-compinit -d $HOME/.zshcompdump
+autoload -Uz compinit
+
+if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' $HOME/.zcompdump) ]
+then
+  compinit
+else
+  compinit -C
+fi
 
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion:*' cache-path ~/.cache/zsh
@@ -227,7 +229,7 @@ setopt hist_reduce_blanks
 setopt hist_save_no_dups
 
 HISTCONTROL='erasedups:ignorespace'
-HISTFILE=$HOME/.zsh_history
+HISTFILE=~/.zsh_history
 HISTSIZE=100000
 SAVEHIST=100000
 HISTFILESIZE=2000000
@@ -239,10 +241,20 @@ HISTFILESIZE=2000000
 DISABLE_AUTO_TITLE='true'
 
 function set-window-title {
-  # local full_command="$2 "
-  # local process_name=${${=full_command}[1]}
-  # echo -ne "\e]0;${USER}:${PWD} $process_name\a"
-  echo -ne "\e]0;${USER}\a"
+  # echo -ne "\e]0;${USER}:${PWD}\a"
+  local FULL_COMMAND="$2 "
+  if [[ ! -z "$FULL_COMMAND" && "$FULL_COMMAND" != "" && "$FULL_COMMAND" != " " ]]; then
+    local PROCESS_NAME=${${=FULL_COMMAND}[1]}
+    if [[ "$PROCESS_NAME" == "ssh" ]]; then
+      export SSH_COMMAND=$(echo ${FULL_COMMAND:4:-1})
+      iterm2_print_user_vars
+    fi
+    echo -ne "\e]0;${PROCESS_NAME}\a"
+  else
+    export SSH_COMMAND=""
+    iterm2_print_user_vars
+    echo -ne "\e]0;${USER}\a"
+  fi
 }
 
 add-zsh-hook chpwd set-window-title
@@ -253,24 +265,35 @@ add-zsh-hook preexec set-window-title
 
 # Prompt: {{{
 
-autoload -U promptinit colors
+autoload -Uz promptinit colors
 promptinit
 colors
 
-# PROMPT='%F{blue}%1d%f%F{250} =>%f %{$reset_color%}'
-PROMPT='%F{blue}%1d%f %B%F{red}❯%f%F{yellow}❯%f%F{green}❯%f%b %{$reset_color%}'
+PROMPT='%B%F{blue}%1d%f%b $ %{$reset_color%}'
 RPROMPT='${vcs_info_msg_0_}'
 
 # }}}
 
 # Plugins: {{{
 
-source $HOMEBREW/opt/zsh-history-substring-search/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+source $HOMEBREW/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 # }}}
 
 # Ensure unique path: {{{
 
 typeset -gU cdpath fpath mailpath path
+
+# }}}
+
+# Funcs: {{{
+
+work() {
+  cd $HOME/Workspace/src/github.com/thothmedia/ && cd $(fd -t d -d 1 | fzy)
+}
+
+me() {
+  cd $HOME/Workspace/src/github.com/clozed2u/ && cd $(fd -t d -d 1 | fzy)
+}
 
 # }}}

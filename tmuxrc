@@ -81,9 +81,9 @@ set -g status-position bottom
 set -g status-interval 1
 set -g status-justify left
 set -g status-left-length '100'
-set -g status-left '#S #[fg=blue]⧉#[default] '
+set -g status-left '#[bg=green,fg=colour234,bold] #S #[default] #[fg=blue]⧉ #[default] '
 set -g status-right-length '100'
-set -g status-right '#[fg=blue]#(batt) #[default]%m/%d/%y %I:%M'
+set -g status-right '#[fg=blue]#(batt)#[default] #[bg=green,fg=colour234,bold] %m/%d/%y %I:%M #[default]'
 
 # default window title colors
 setw -g window-status-fg default
@@ -95,7 +95,7 @@ setw -g window-status-format '#I:#W'
 setw -g window-status-current-fg colour234
 setw -g window-status-current-bg green
 setw -g window-status-current-attr bright
-setw -g window-status-current-format ' #I:#W* '
+setw -g window-status-current-format ' #I:#W '
 
 # bell alerted window color
 setw -g window-status-bell-bg red
