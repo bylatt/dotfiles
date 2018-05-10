@@ -23,7 +23,6 @@
 
 # editor
 .metadata
-bin/
 tmp/
 *.tmp
 *.bak
