@@ -53,6 +53,12 @@ export HOMEBREW=/usr/local
 
     # }}}
 
+    # FZF: {{{3
+
+    export FZF_DEFAULT_COMMAND='fd -t f'
+
+    # }}}
+
   # }}}
 
 # }}}
@@ -62,7 +68,7 @@ export HOMEBREW=/usr/local
 path=(
   $HOMEBREW/{bin,sbin}
   $HOME/.bin
-  $HOME/.cargo/bin
+  $HOME/.composer/vendor/bin
   $GOROOT/bin
   $GOPATH/bin
   $path
@@ -74,14 +80,20 @@ path=(
 
 alias vi='vim'
 alias df='df -h'
-alias ll='ls -GFlAhp'
-alias lr='ls -alR'
+# alias ll='ls -GFlAhp'
+# alias lr='ls -alR'
+alias ls='exa'
+alias ll='exa -l'
 alias cp='cp -ivR'
 alias mv='mv -iv'
+alias git='hub'
+alias cat='bat'
 alias mkd='mkdir -pv'
 alias his='history -1000 -1'
 alias tmux='tmux -f $HOME/.tmuxrc'
 alias flushdns='dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
+alias dphp='docker run --rm -it -v $(pwd):/app thothzocial/php:7.2-cli php'
+alias dcomposer='docker run --rm -it -v $(pwd):/app thothzocial/php:7.2-cli composer'
 
 for method in GET POST PUT DELETE
 do
@@ -170,7 +182,7 @@ function +vi-git-untracked() {
   untracked=$(git ls-files --other --exclude-standard 2>/dev/null)
 
   if [[ -n $untracked ]]; then
-    hook_com[misc]="%F{red}"
+    hook_com[misc]='%F{red}'
   fi
 }
 
@@ -245,7 +257,7 @@ function set-window-title {
   local FULL_COMMAND="$2 "
   if [[ ! -z "$FULL_COMMAND" && "$FULL_COMMAND" != "" && "$FULL_COMMAND" != " " ]]; then
     local PROCESS_NAME=${${=FULL_COMMAND}[1]}
-    if [[ "$PROCESS_NAME" == "ssh" ]]; then
+    if [[ "$PROCESS_NAME" == 'ssh' ]]; then
       export SSH_COMMAND=$(echo ${FULL_COMMAND:4:-1})
       iterm2_print_user_vars
     fi
@@ -277,6 +289,7 @@ RPROMPT='${vcs_info_msg_0_}'
 # Plugins: {{{
 
 source $HOMEBREW/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+source $HOMEBREW/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # }}}
 
@@ -289,11 +302,15 @@ typeset -gU cdpath fpath mailpath path
 # Funcs: {{{
 
 work() {
-  cd $HOME/Workspace/src/github.com/thothmedia/ && cd $(fd -t d -d 1 | fzy)
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | fzf)
 }
 
 me() {
-  cd $HOME/Workspace/src/github.com/clozed2u/ && cd $(fd -t d -d 1 | fzy)
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | fzf)
+}
+
+serveo() {
+  ssh -R 80:localhost:$1 serveo.net
 }
 
 # }}}

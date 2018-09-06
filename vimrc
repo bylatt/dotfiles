@@ -15,15 +15,17 @@ if !isdirectory($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim')
   silent !git clone -q https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 endif
 
+set runtimepath+=$HOMEBREW/opt/fzf
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 if dein#load_state(expand($HOME.'/.vim/bundle'))
   call dein#begin(expand($HOME.'/.vim/bundle'))
   call dein#add('shougo/dein.vim')
-  call dein#add('maralla/completor.vim')
+  call dein#add('wellle/targets.vim')
   call dein#add('tpope/vim-rsi')
   call dein#add('tpope/vim-eunuch')
   call dein#add('tpope/vim-repeat')
   call dein#add('tpope/vim-abolish')
+  call dein#add('tpope/vim-dispatch')
   call dein#add('tpope/vim-fugitive')
   call dein#add('tpope/vim-markdown')
   call dein#add('tpope/vim-surround')
@@ -37,8 +39,6 @@ if dein#load_state(expand($HOME.'/.vim/bundle'))
   call dein#add('pangloss/vim-javascript')
   call dein#add('mxw/vim-jsx')
   call dein#add('christoomey/vim-tmux-navigator')
-  call dein#add('mattn/emmet-vim', {'on_ft': ['javascript', 'javascript.jsx', 'css', 'scss', 'html', 'php']})
-  call dein#add('editorconfig/editorconfig-vim')
   call dein#end()
   call dein#save_state()
 endif
@@ -58,7 +58,7 @@ filetype plugin indent on
 set t_Co=256
 syntax on
 set background=dark
-colorscheme noctu
+colorscheme grb
 
 " Highlight extra whitespaces with red color
 highlight SpecialKey guibg=NONE ctermbg=NONE
@@ -289,7 +289,7 @@ augroup END
   let g:test#strategy='basic'
   let g:test#preserve_screen=0
 
-  nmap <silent> <leader>m :TestNearest<cr>
+  nmap <silent> <leader>n :TestNearest<cr>
   nmap <silent> <leader>f :TestFile<cr>
   nmap <silent> <leader>l :TestLast<cr>
 
@@ -300,17 +300,11 @@ augroup END
   let g:go_fmt_command="goimports"
 
   " Highlight
-  " let g:go_highlight_functions = 1
-  " let g:go_highlight_methods = 1
-  " let g:go_highlight_structs = 1
-  " let g:go_highlight_operators = 1
-  " let g:go_highlight_build_constraints = 1
-
-  " }}}
-
-  " Emmet: {{{2
-
-  let g:user_emmet_settings={'javascript.jsx': {'extends': 'jsx'}}
+  " let g:go_highlight_functions=1
+  " let g:go_highlight_methods=1
+  " let g:go_highlight_structs=1
+  " let g:go_highlight_operators=1
+  " let g:go_highlight_build_constraints=1
 
   " }}}
 
@@ -320,12 +314,14 @@ augroup END
 
   " }}}
 
-  " Completor: {{{2
+  " NERDTree: {{{2
 
-  let g:completor_python_binary='python3'
-  let g:completor_gocode_binary='gocode'
-  let g:completor_racer_binary='racer'
-  let g:completor_clang_binary='clang'
+  nnoremap <leader>w :NERDTreeToggle<enter>
+  nnoremap <silent> <leader>v :NERDTreeFind<cr>
+  let NERDTreeQuitOnOpen=1
+  let NERDTreeAutoDeleteBuffer=1
+  let NERDTreeMinimalUI=1
+  let NERDTreeDirArrows=1
 
   " }}}
 
@@ -348,48 +344,31 @@ inoremap <expr> <silent> <tab> InsertTabWrapper()
 
 " Fuzzy: {{{
 
-if executable('fzy') && executable('fd')
+nnoremap <leader>p :call fzf#run({'source': 'fd -t f .', 'sink': 'e', 'up': '40%'})<cr>
+nnoremap <leader>o :call fzf#run({'source': map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'), 'sink': 'e', 'down': '40%'})<cr>
 
-  function! FuzzyCommand(choice_command, vim_command)
-    try
-      let selection = system(a:choice_command . " | fzy ")
-    catch /Vim:Interrupt/
-      redraw!
-      return
-    endtry
-    redraw!
-    if v:shell_error == 0 && !empty(selection)
-      execute a:vim_command . " " . selection
-    endif
-  endfunction
+" function! FuzzyCommand(choice_command, vim_command)
+"   try
+"     let selection = system(a:choice_command . " | fzy -l 18")
+"   catch /Vim:Interrupt/
+"     redraw!
+"     return
+"   endtry
+"   redraw!
+"   if v:shell_error == 0 && !empty(selection)
+"     execute a:vim_command . " " . selection
+"   endif
+" endfunction
 
-  nnoremap <leader>p :call FuzzyCommand("fd -t f", ":e")<cr>
+" nnoremap <leader>p :call FuzzyCommand("fd -t f .", ":e")<cr>
 
-  function! FuzzyBuffer()
-    let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
-    let buffers = map(bufnrs, 'bufname(v:val)')
-    call FuzzyCommand('echo "' . join(buffers, "\n") . '"', ":b")
-  endfunction
+" function! FuzzyBuffer()
+"   let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
+"   let buffers = map(bufnrs, 'bufname(v:val)')
+"   call FuzzyCommand('echo "' . join(buffers, "\n") . '"', ":b")
+" endfunction
 
-  nnoremap <leader>b :call FuzzyBuffer()<cr>
-
-endif
-
-" }}}
-
-" Rename: {{{
-
-function! RenameFile()
-  let old_name = expand('%')
-  let new_name = input('New file name: ', expand('%'), 'file')
-  if new_name != '' && new_name != old_name
-    execute ':saveas ' . new_name
-    execute ':silent !rm ' . old_name
-    redraw!
-  endif
-endfunction
-
-nnoremap <leader>n :call RenameFile()<cr>
+" nnoremap <leader>o :call FuzzyBuffer()<cr>
 
 " }}}
 
