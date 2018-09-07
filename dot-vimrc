@@ -138,7 +138,7 @@ set wildignorecase
 " Additional UI configs
 set noshowmode
 set showcmd
-set showtabline=0
+set showtabline=2
 set hidden
 set number
 set norelativenumber

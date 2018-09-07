@@ -1,7 +1,11 @@
 # github.com/clozed2u :: @clozed2u
 # http://clozed2u.com
 
+# Initial: {{{
+
 unsetopt global_rcs
+
+# }}}
 
 # iTerm: {{{
 
@@ -9,7 +13,7 @@ export SSH_COMMAND=""
 
 [[ -e $HOME/.iterm2_shell_integration.zsh ]] && source $HOME/.iterm2_shell_integration.zsh
 
-function iterm2_print_user_vars() {
+iterm2_print_user_vars() {
   iterm2_set_user_var sshStatus $(echo ${SSH_COMMAND})
 }
 
@@ -35,6 +39,7 @@ export HOMEBREW=/usr/local
   export EDITOR=vim
   export PAGER=less
   export LSCOLORS=ExFxCxDxBxegedabagacad
+  export GREP_OPTIONS='--color=auto'
   export PYTHONSTARTUP=$HOME/.pythonrc
 
   # }}}
@@ -43,13 +48,10 @@ export HOMEBREW=/usr/local
 
     # Go: {{{3
 
-    if [[ -d $HOMEBREW/opt/go/libexec ]]
-    then
-      export GOROOT=$HOMEBREW/opt/go/libexec
-      export GOPATH=$HOME/Workspace
-      export GOBIN=$GOPATH/bin
-      export PATH=$GOROOT/bin:$GOBIN:$PATH
-    fi
+    export GOROOT=$HOMEBREW/opt/go/libexec
+    export GOPATH=$HOME/Workspace
+    export GOBIN=$GOPATH/bin
+    export PATH=$GOROOT/bin:$GOBIN:$PATH
 
     # }}}
 
@@ -67,8 +69,8 @@ export HOMEBREW=/usr/local
 
 path=(
   $HOMEBREW/{bin,sbin}
+  $HOMEBREW/php5/bin
   $HOME/.bin
-  $HOME/.composer/vendor/bin
   $GOROOT/bin
   $GOPATH/bin
   $path
@@ -80,20 +82,15 @@ path=(
 
 alias vi='vim'
 alias df='df -h'
-# alias ll='ls -GFlAhp'
-# alias lr='ls -alR'
 alias ls='exa'
-alias ll='exa -l'
+alias ll='exa -la'
 alias cp='cp -ivR'
 alias mv='mv -iv'
 alias git='hub'
 alias cat='bat'
 alias mkd='mkdir -pv'
-alias his='history -1000 -1'
 alias tmux='tmux -f $HOME/.tmuxrc'
 alias flushdns='dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
-alias dphp='docker run --rm -it -v $(pwd):/app thothzocial/php:7.2-cli php'
-alias dcomposer='docker run --rm -it -v $(pwd):/app thothzocial/php:7.2-cli composer'
 
 for method in GET POST PUT DELETE
 do
@@ -301,16 +298,12 @@ typeset -gU cdpath fpath mailpath path
 
 # Funcs: {{{
 
-work() {
+go2work() {
   cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | fzf)
 }
 
-me() {
+go2priv() {
   cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | fzf)
-}
-
-serveo() {
-  ssh -R 80:localhost:$1 serveo.net
 }
 
 # }}}
