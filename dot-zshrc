@@ -1,13 +1,13 @@
 # github.com/clozed2u :: @clozed2u
 # http://clozed2u.com
 
-# Initial: {{{
+# Initial {{{
 
 unsetopt global_rcs
 
 # }}}
 
-# iTerm: {{{
+# iTerm {{{
 
 export SSH_COMMAND=""
 
@@ -19,15 +19,15 @@ iterm2_print_user_vars() {
 
 # }}}
 
-# Homebrew: {{{
+# Homebrew {{{
 
 export HOMEBREW=/usr/local
 
 # }}}
 
-# Export: {{{
+# Export {{{
 
-  # Global: {{{2
+  # Global {{{2
 
   export LANG=en_US.UTF-8
   export LC_ALL=en_US.UTF-8
@@ -44,9 +44,9 @@ export HOMEBREW=/usr/local
 
   # }}}
 
-  # Language: {{{2
+  # Language {{{2
 
-    # Go: {{{3
+    # Go {{{3
 
     export GOROOT=$HOMEBREW/opt/go/libexec
     export GOPATH=$HOME/Workspace
@@ -55,17 +55,11 @@ export HOMEBREW=/usr/local
 
     # }}}
 
-    # FZF: {{{3
-
-    export FZF_DEFAULT_COMMAND='fd -t f'
-
-    # }}}
-
   # }}}
 
 # }}}
 
-# Path: {{{
+# Path {{{
 
 path=(
   $HOMEBREW/{bin,sbin}
@@ -78,15 +72,13 @@ path=(
 
 # }}}
 
-# Alias: {{{
+# Alias {{{
 
 alias vi='vim'
-alias df='df -h'
 alias ls='exa'
 alias ll='exa -la'
 alias cp='cp -ivR'
 alias mv='mv -iv'
-alias git='hub'
 alias cat='bat'
 alias mkd='mkdir -pv'
 alias tmux='tmux -f $HOME/.tmuxrc'
@@ -99,7 +91,7 @@ done
 
 # }}}
 
-# Settings: {{{
+# Settings {{{
 
 autoload -Uz add-zsh-hook
 
@@ -131,7 +123,7 @@ setopt interactivecomments
 
 # }}}
 
-# Mapping: {{{
+# Mapping {{{
 
 bindkey -v
 bindkey -M viins '^p' history-substring-search-up
@@ -147,7 +139,7 @@ bindkey -M vicmd '^r' redo
 
 # }}}
 
-# VCS: {{{
+# VCS {{{
 
 autoload -Uz vcs_info
 vcs_info
@@ -202,7 +194,7 @@ add-zsh-hook precmd vcs_info
 
 # }}}
 
-# Autocomplete: {{{
+# Autocomplete {{{
 
 autoload -Uz compinit
 
@@ -222,7 +214,7 @@ zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-dir
 
 # }}}
 
-# History: {{{
+# History {{{
 
 setopt append_history
 setopt inc_append_history
@@ -245,7 +237,7 @@ HISTFILESIZE=2000000
 
 # }}}
 
-# Title: {{{
+# Title {{{
 
 DISABLE_AUTO_TITLE='true'
 
@@ -272,7 +264,7 @@ add-zsh-hook preexec set-window-title
 
 # }}}
 
-# Prompt: {{{
+# Prompt {{{
 
 autoload -Uz promptinit colors
 promptinit
@@ -283,27 +275,27 @@ RPROMPT='${vcs_info_msg_0_}'
 
 # }}}
 
-# Plugins: {{{
+# Plugins {{{
 
 source $HOMEBREW/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 source $HOMEBREW/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # }}}
 
-# Ensure unique path: {{{
+# Ensure unique path {{{
 
 typeset -gU cdpath fpath mailpath path
 
 # }}}
 
-# Funcs: {{{
+# Funcs {{{
 
 go2work() {
-  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | fzf)
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | fzy)
 }
 
 go2priv() {
-  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | fzf)
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | fzy)
 }
 
 # }}}

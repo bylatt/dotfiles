@@ -1,7 +1,7 @@
 " github.com/clozed2u :: @clozed2u
 " http://clozed2u.com
 
-" Initial: {{{
+" Initial {{{
 
 if &compatible
   set nocompatible
@@ -9,13 +9,12 @@ endif
 
 " }}}
 
-" Plugins: {{{
+" Plugins {{{
 
 if !isdirectory($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim')
   silent !git clone -q https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 endif
 
-set runtimepath+=$HOMEBREW/opt/fzf
 set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 if dein#load_state(expand($HOME.'/.vim/bundle'))
   call dein#begin(expand($HOME.'/.vim/bundle'))
@@ -34,6 +33,7 @@ if dein#load_state(expand($HOME.'/.vim/bundle'))
   call dein#add('terryma/vim-expand-region')
   call dein#add('fatih/vim-go')
   call dein#add('janko-m/vim-test')
+  call dein#add('ap/vim-buftabline')
   call dein#add('sickill/vim-pasta')
   call dein#add('vim-ruby/vim-ruby')
   call dein#add('pangloss/vim-javascript')
@@ -49,178 +49,275 @@ endif
 
 command PluginUpdate call dein#update()
 
-filetype plugin indent on
+  " Filetype detection {{{2
+
+    filetype on
+    filetype plugin on
+    filetype indent on
+
+  " }}}
 
 " }}}
 
-" Colors: {{{
+" PluginSettings {{{
 
-set t_Co=256
-syntax on
-set background=dark
-colorscheme grb
+  " Test {{{2
 
-" Highlight extra whitespaces with red color
-highlight SpecialKey guibg=NONE ctermbg=NONE
-highlight ExtraWhitespace ctermbg=1 guibg=red
-match ExtraWhitespace /\s\+$/
-autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()
+  let g:test#strategy='basic'
+  let g:test#preserve_screen=0
 
-" }}}
+  nmap <silent> <leader>n :TestNearest<cr>
+  nmap <silent> <leader>f :TestFile<cr>
+  nmap <silent> <leader>l :TestLast<cr>
 
-" Settings: {{{
+  " }}}
 
-set encoding=utf-8
-set fileencoding=utf-8
-set termencoding=utf-8
-set nobomb
-set shell=zsh\ -l
+  " Go {{{2
 
-" Backup files and don't allow files with the same name to overwrite each other
-set noswapfile
-set writebackup
-set backupdir=$HOME/.vim/backup
-set undofile
-set undodir=$HOME/.vim/undo
-set directory=$HOME/.vim/tmp
+  let g:go_fmt_command="goimports"
 
-" Enable tags
-set tags=./tags
+  " Highlight
+  " let g:go_highlight_functions=1
+  " let g:go_highlight_methods=1
+  " let g:go_highlight_structs=1
+  " let g:go_highlight_operators=1
+  " let g:go_highlight_build_constraints=1
 
-" Use spaces instead of tabs and auto indent
-set backspace=2
-set laststatus=2
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
-" set shiftround
-set expandtab
-set smarttab
-set autoindent
-set smartindent
-" set cinoptions=>4,l1,p0,)50,*50,t0
+  " }}}
 
-" Autoread and write files
-set autoread
-set autowrite
-set autowriteall
-set linespace=0
+  " JSX {{{2
 
-" Disalbe annoying prompt message
-set shortmess=atToOI
-set viewoptions+=unix,slash
+  let g:jsx_ext_required=0
 
-" Autocomplete menu
-set wildmenu
-set wildmode=list:longest
-set wildignore=
-  \*.png,
-  \*.jpg,
-  \*.gif,
-  \*.gem,
-  \*.swp,
-  \*.zip,
-  \*.gz,
-  \*/.DS_Store/*,
-  \*/tmp/*,
-  \*/node_modules/*,
-  \*/bower_components/*,
-  \*/vendor/*,
-  \*/.gem/*,
-  \*/.git/*,
-  \*/.hg/*,
-  \*/.svn/*
-set wildignorecase
+  " }}}
 
-" Additional UI configs
-set noshowmode
-set showcmd
-set showtabline=2
-set hidden
-set number
-set norelativenumber
-set ttyfast
+  " NERDTree {{{2
 
-" Search
-set ignorecase
-set smartcase
-set infercase
-set incsearch
-set hlsearch
-set noshowmatch
-set matchtime=0
+  nnoremap <leader>w :NERDTreeToggle<enter>
+  nnoremap <silent> <leader>v :NERDTreeFind<cr>
+  let NERDTreeQuitOnOpen=1
+  let NERDTreeAutoDeleteBuffer=1
+  let NERDTreeMinimalUI=1
+  let NERDTreeDirArrows=1
 
-set nojoinspaces
-set splitbelow
-set splitright
-set nowrap
-set listchars=tab:\ \ ,eol:\ ,trail:•,nbsp:.
-set list
-
-" Timeout
-set timeout
-set timeoutlen=200
-set ttimeout
-set ttimeoutlen=0
-
-" Folding
-set foldenable
-" set foldmethod=indent
-set foldmethod=manual
-set foldlevel=9999
-
-" Line & column highlighting
-set nocursorline
-set nocursorcolumn
-
-" Completion
-set omnifunc=syntaxcomplete#Complete
-set completefunc=syntaxcomplete#Complete
-set completeopt=longest,menuone
-" set complete=.,w,b,u,t,i
-set complete-=i
-
-set scrolloff=0
-set synmaxcol=1000
-set statusline=Path:\ %F\ %m\ %=\ %Y
-
-" Use rg for grep if installed
-if executable('rg')
-  set grepprg=rg\ --vimgrep
-endif
-
-" Enable clipboard
-let s:kernel = system('echo -n "$(uname -s)"')
-if s:kernel == 'Darwin'
-  set clipboard=unnamed
-elseif s:kernel == 'Linux'
-  set clipboard=unnamedplus
-endif
+  " }}}
 
 " }}}
 
-" Explorer: {{{
+" Environment {{{
 
-" Nicer netrw
-let g:netrw_altv=1
-let g:netrw_banner=0
-let g:netrw_preview=1
-let g:netrw_winsize=25
-let g:netrw_liststyle=3
-let g:netrw_browse_split=0
-let g:netrw_list_hide=&wildignore
+  set encoding=utf-8
+  set fileencoding=utf-8
+  set termencoding=utf-8
+  set nobomb
+  set shell=zsh\ -l
+
+  " Backup and undos {{{2
+
+    set noswapfile
+    set writebackup
+    set backupdir=$HOME/.vim/backup
+    set undofile
+    set undodir=$HOME/.vim/undo
+    set undolevels=1000
+    set undoreload=10000
+    set directory=$HOME/.vim/tmp
+
+  " }}}
+
+  set tags=./tags
+
+  " Autoread and write files {{{2
+
+    set autoread
+    set autowrite
+    set autowriteall
+
+  " }}}
+
+  set mouse=a
+
+  " Use rg for grep {{{2
+    set grepprg=rg\ -i\ --vimgrep
+  " }}}
+
+  " Enable clipboard {{{2
+
+    let s:kernel = system('echo -n "$(uname -s)"')
+    if s:kernel == 'Darwin'
+      set clipboard=unnamed
+    elseif s:kernel == 'Linux'
+      set clipboard=unnamedplus
+    endif
+
+  " }}}
 
 " }}}
 
-" Mappings: {{{
+" Appearance {{{
+
+  " Color {{{2
+
+    set t_Co=256
+    syntax on
+    set background=dark
+    colorscheme grb
+
+  " }}}
+
+  " Extra whitespace: {{{2
+
+    highlight SpecialKey guibg=NONE ctermbg=NONE
+    highlight ExtraWhitespace ctermbg=1 guibg=red
+    match ExtraWhitespace /\s\+$/
+    autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+    autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+    autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+    autocmd BufWinLeave * call clearmatches()
+
+  " }}}
+
+  set linespace=0
+  set shortmess=atToOI
+  set viewoptions+=unix,slash
+  set noshowmode
+  set showcmd
+  set showtabline=0
+  set hidden
+  set number
+  set norelativenumber
+  set noshowmatch
+  set matchtime=0
+  set nowrap
+  set listchars=tab:\ \ ,eol:\ ,trail:•,nbsp:.
+  set list
+  set scrolloff=0
+  set synmaxcol=1000
+  set statusline=Path:\ %F\ %m\ %=\ %Y
+  set nocursorline
+  set nocursorcolumn
+
+  " Nicer netrw {{{2
+
+    let g:netrw_altv=1
+    let g:netrw_banner=0
+    let g:netrw_preview=1
+    let g:netrw_winsize=25
+    let g:netrw_liststyle=3
+    let g:netrw_browse_split=0
+    let g:netrw_list_hide=&wildignore
+
+  " }}}
+
+" }}}
+
+" Editing {{{
+
+  " Use spaces instead of tabs and auto indent {{{2
+
+    set backspace=2
+    set laststatus=2
+    set tabstop=2
+    set softtabstop=2
+    set shiftwidth=2
+    set shiftround
+    set expandtab
+    set smarttab
+    set autoindent
+    set smartindent
+    " set cinoptions=>4,l1,p0,)50,*50,t0
+
+  " }}}
+
+
+  " Completion {{{2
+
+    set wildmenu
+    set wildmode=list:longest
+    set wildignore=
+      \*.png,
+      \*.jpg,
+      \*.gif,
+      \*.gem,
+      \*.swp,
+      \*.zip,
+      \*.gz,
+      \*/.DS_Store/*,
+      \*/tmp/*,
+      \*/node_modules/*,
+      \*/bower_components/*,
+      \*/vendor/*,
+      \*/.gem/*,
+      \*/.git/*,
+      \*/.hg/*,
+      \*/.svn/*
+    set wildignorecase
+
+  " }}}
+
+  " Search {{{2
+
+    set ignorecase
+    set smartcase
+    set infercase
+    set incsearch
+    set hlsearch
+
+  " }}}
+
+  " Split and join {{{2
+
+    set nojoinspaces
+    set splitbelow
+    set splitright
+
+  " }}}
+
+  " Timeout {{{2
+
+    set timeout
+    set timeoutlen=5000
+    set ttimeout
+    set ttimeoutlen=0
+    set ttyfast
+
+  " }}}
+
+  " Completion {{{2
+
+    set omnifunc=syntaxcomplete#Complete
+    set completefunc=syntaxcomplete#Complete
+    set completeopt=longest,menuone
+    " set complete=.,w,b,u,t,i
+    set complete-=i
+
+  " }}}
+
+  " Folding {{{2
+
+    set foldenable
+    " set foldmethod=indent
+    set foldmethod=manual
+    set foldlevel=1000
+
+  " }}}
+
+  " Trim trailing white space {{{2
+
+    if !&binary && &filetype != 'diff'
+      autocmd bufwritepre * :%s/\s\+$//e
+    endif
+
+  " }}}
+
+" }}}
+
+" Mappings {{{
 
 " Prefer spaces for leader
 let mapleader = "\<space>"
 
-  " Modes: {{{2
+  " Modes {{{2
 
   nnoremap j gj
   nnoremap k gk
@@ -233,7 +330,7 @@ let mapleader = "\<space>"
 
   " }}}
 
-  " Navigation: {{{2
+  " Navigation {{{2
 
   nnoremap <c-j> <c-w>j
   nnoremap <c-k> <c-w>k
@@ -242,7 +339,7 @@ let mapleader = "\<space>"
 
   " }}}
 
-  " Run: {{{2
+  " QuickRun {{{2
 
   autocmd FileType go nnoremap <buffer> <leader>m :!go run %<cr>
   autocmd FileType php nnoremap <buffer> <leader>m :!php %<cr>
@@ -252,7 +349,7 @@ let mapleader = "\<space>"
 
   " }}}
 
-  " Split: {{{2
+  " Split {{{2
 
   nnoremap <leader>- <c-w>_<cr>
   nnoremap <leader>= <c-w>=<cr>
@@ -261,7 +358,7 @@ let mapleader = "\<space>"
 
 " }}}
 
-" Languages: {{{
+" Languages {{{
 
 " Focus on the line from last open
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
@@ -282,105 +379,49 @@ augroup END
 
 " }}}
 
-" PluginSettings: {{{
+" Tab {{{
 
-  " Test: {{{2
-
-  let g:test#strategy='basic'
-  let g:test#preserve_screen=0
-
-  nmap <silent> <leader>n :TestNearest<cr>
-  nmap <silent> <leader>f :TestFile<cr>
-  nmap <silent> <leader>l :TestLast<cr>
-
-  " }}}
-
-  " Go: {{{2
-
-  let g:go_fmt_command="goimports"
-
-  " Highlight
-  " let g:go_highlight_functions=1
-  " let g:go_highlight_methods=1
-  " let g:go_highlight_structs=1
-  " let g:go_highlight_operators=1
-  " let g:go_highlight_build_constraints=1
-
-  " }}}
-
-  " JSX: {{{2
-
-  let g:jsx_ext_required=0
-
-  " }}}
-
-  " NERDTree: {{{2
-
-  nnoremap <leader>w :NERDTreeToggle<enter>
-  nnoremap <silent> <leader>v :NERDTreeFind<cr>
-  let NERDTreeQuitOnOpen=1
-  let NERDTreeAutoDeleteBuffer=1
-  let NERDTreeMinimalUI=1
-  let NERDTreeDirArrows=1
-
-  " }}}
-
-" }}}
-
-" Tab: {{{
-
-function! InsertTabWrapper()
+fun! InsertTabWrapper()
   let col = col('.') - 1
   if !col || getline('.')[col - 1] !~ '\k'
     return "\<tab>"
   else
     return "\<c-p>"
   endif
-endfunction
+endf
 
 inoremap <expr> <silent> <tab> InsertTabWrapper()
 
 " }}}
 
-" Fuzzy: {{{
+" Fuzzy {{{
 
-nnoremap <leader>p :call fzf#run({'source': 'fd -t f .', 'sink': 'e', 'up': '40%'})<cr>
-nnoremap <leader>o :call fzf#run({'source': map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'), 'sink': 'e', 'down': '40%'})<cr>
+fun! FuzzyCommand(choice_command, vim_command)
+  try
+    let selection = system(a:choice_command . " | fzy -l 18")
+  catch /Vim:Interrupt/
+    redraw!
+    return
+  endtry
+  redraw!
+  if v:shell_error == 0 && !empty(selection)
+    execute a:vim_command . " " . selection
+  endif
+endf
 
-" function! FuzzyCommand(choice_command, vim_command)
-"   try
-"     let selection = system(a:choice_command . " | fzy -l 18")
-"   catch /Vim:Interrupt/
-"     redraw!
-"     return
-"   endtry
-"   redraw!
-"   if v:shell_error == 0 && !empty(selection)
-"     execute a:vim_command . " " . selection
-"   endif
-" endfunction
+nnoremap <leader>p :call FuzzyCommand("fd -t f .", ":e")<cr>
 
-" nnoremap <leader>p :call FuzzyCommand("fd -t f .", ":e")<cr>
+fun! FuzzyBuffer()
+  let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
+  let buffers = map(bufnrs, 'bufname(v:val)')
+  call FuzzyCommand('echo "' . join(buffers, "\n") . '"', ":b")
+endf
 
-" function! FuzzyBuffer()
-"   let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
-"   let buffers = map(bufnrs, 'bufname(v:val)')
-"   call FuzzyCommand('echo "' . join(buffers, "\n") . '"', ":b")
-" endfunction
-
-" nnoremap <leader>o :call FuzzyBuffer()<cr>
+nnoremap <leader>o :call FuzzyBuffer()<cr>
 
 " }}}
 
-" TrimTrailingWhitespace: {{{
-
-if !&binary && &filetype != 'diff'
-  autocmd bufwritepre * :%s/\s\+$//e
-endif
-
-" }}}
-
-" Note: {{{
+" Note {{{
 
 " ** Default vim key binding for autocomplete
 " <c-x><c-f> for path completion
