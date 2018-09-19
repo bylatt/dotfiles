@@ -1,24 +1,6 @@
 # github.com/clozed2u :: @clozed2u
 # http://clozed2u.com
 
-# Initial {{{
-
-unsetopt global_rcs
-
-# }}}
-
-# iTerm {{{
-
-export SSH_COMMAND=""
-
-[[ -e $HOME/.iterm2_shell_integration.zsh ]] && source $HOME/.iterm2_shell_integration.zsh
-
-iterm2_print_user_vars() {
-  iterm2_set_user_var sshStatus $(echo ${SSH_COMMAND})
-}
-
-# }}}
-
 # Homebrew {{{
 
 export HOMEBREW=/usr/local
@@ -65,6 +47,7 @@ path=(
   $HOMEBREW/{bin,sbin}
   $HOMEBREW/php5/bin
   $HOME/.bin
+  $HOME/.jdk10/Contents/Home/bin
   $GOROOT/bin
   $GOPATH/bin
   $path
@@ -75,17 +58,14 @@ path=(
 # Alias {{{
 
 alias vi='vim'
-alias ls='exa'
-alias ll='exa -la'
+alias ll='ls -Glah'
 alias cp='cp -ivR'
 alias mv='mv -iv'
-alias cat='bat'
 alias mkd='mkdir -pv'
 alias tmux='tmux -f $HOME/.tmuxrc'
 alias flushdns='dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
 
-for method in GET POST PUT DELETE
-do
+for method in GET POST PUT DELETE HEAD; do
   alias "$method"="curl -s -X $method"
 done
 
@@ -95,6 +75,7 @@ done
 
 autoload -Uz add-zsh-hook
 
+unsetopt global_rcs
 unsetopt beep
 unsetopt correct_all
 unsetopt flowcontrol
@@ -123,19 +104,14 @@ setopt interactivecomments
 
 # }}}
 
-# Mapping {{{
+# Vim {{{
 
 bindkey -v
-bindkey -M viins '^p' history-substring-search-up
-bindkey -M viins '^n' history-substring-search-down
-bindkey -M vicmd 'k' history-substring-search-up
-bindkey -M vicmd 'j' history-substring-search-down
+bindkey '^p' up-line-or-search
+bindkey '^n' down-line-or-search
+bindkey '^r' history-incremental-search-backward
 bindkey -M viins '^a' beginning-of-line
 bindkey -M viins '^e' end-of-line
-bindkey -M viins '^o' vi-backward-kill-word
-bindkey -M vicmd 'yy' vi-yank-whole-line
-bindkey -M vicmd 'u' undo
-bindkey -M vicmd '^r' redo
 
 # }}}
 
@@ -160,7 +136,7 @@ function +vi-git-remote() {
   remote=$(git remote | tr '\n' '/' | sed 's/.$//' 2>/dev/null)
 
   if [[ -n $remote ]]; then
-    # hook_com[branch]="${remote}/${hook_com[branch]}"
+    hook_com[branch]="${remote}/${hook_com[branch]}"
     hook_com[branch]="${hook_com[branch]}"
   fi
 }
@@ -179,8 +155,7 @@ function +vi-git-untracked() {
 function +vi-git-stash() {
 local -a stashes
 
-if [[ -s ${hook_com[base]}/.git/refs/stash ]]
-then
+if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
   stashes=(${(@f)$(git stash list 2>/dev/null)})
   # Sometimes refs/stash exists even with 0 stashes
   # Make sure we have at least 1 stash before adding this info
@@ -198,8 +173,7 @@ add-zsh-hook precmd vcs_info
 
 autoload -Uz compinit
 
-if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' $HOME/.zcompdump) ]
-then
+if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' $HOME/.zcompdump) ]; then
   compinit
 else
   compinit -C
@@ -235,25 +209,23 @@ HISTSIZE=100000
 SAVEHIST=100000
 HISTFILESIZE=2000000
 
+function fh() {
+  eval $(fc -ln 0 | fzy)
+}
+
 # }}}
 
 # Title {{{
 
 DISABLE_AUTO_TITLE='true'
 
-function set-window-title {
+function set-window-title() {
   # echo -ne "\e]0;${USER}:${PWD}\a"
   local FULL_COMMAND="$2 "
   if [[ ! -z "$FULL_COMMAND" && "$FULL_COMMAND" != "" && "$FULL_COMMAND" != " " ]]; then
     local PROCESS_NAME=${${=FULL_COMMAND}[1]}
-    if [[ "$PROCESS_NAME" == 'ssh' ]]; then
-      export SSH_COMMAND=$(echo ${FULL_COMMAND:4:-1})
-      iterm2_print_user_vars
-    fi
     echo -ne "\e]0;${PROCESS_NAME}\a"
   else
-    export SSH_COMMAND=""
-    iterm2_print_user_vars
     echo -ne "\e]0;${USER}\a"
   fi
 }
@@ -270,15 +242,135 @@ autoload -Uz promptinit colors
 promptinit
 colors
 
-PROMPT='%B%F{blue}%1d%f%b $ %{$reset_color%}'
-RPROMPT='${vcs_info_msg_0_}'
+function show-vcs-prompt-if-exists() {
+  if [[ -n ${vcs_info_msg_0_} ]]; then
+    PROMPT='%B%1d%b ${vcs_info_msg_0_} $ %{$reset_color%}'
+  else
+    PROMPT='%B%1d%b $ %{$reset_color%}'
+  fi
+}
+
+add-zsh-hook precmd show-vcs-prompt-if-exists
 
 # }}}
 
-# Plugins {{{
+# Clipboard {{{
 
-source $HOMEBREW/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-source $HOMEBREW/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# github.com/kutsan/zsh-system-clipboard
+
+typeset -A ZSH_SYSTEM_CLIPBOARD
+typeset -g ZSH_SYSTEM_CLIPBOARD[set]='pbcopy'
+typeset -g ZSH_SYSTEM_CLIPBOARD[get]='pbpaste'
+
+function _zsh_system_clipboard_set() {
+  if (hash tmux &>/dev/null && [[ "$TMUX" != '' ]]) {
+    tmux set-buffer -- "$*"
+  }
+	echo -n "$*" | eval "${ZSH_SYSTEM_CLIPBOARD[set]}"
+	return true
+}
+
+function _zsh_system_clipboard_get() {
+	eval "${ZSH_SYSTEM_CLIPBOARD[get]}"
+	return true
+}
+
+function zsh-system-clipboard-vicmd-vi-yank() {
+	zle vi-yank
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-yank
+
+function zsh-system-clipboard-vicmd-vi-yank-whole-line() {
+	zle vi-yank-whole-line
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-yank-whole-line
+
+function zsh-system-clipboard-vicmd-vi-put-after() {
+	local CLIPBOARD=$(_zsh_system_clipboard_get)
+	BUFFER="${BUFFER:0:$(( ${CURSOR} + 1 ))}${CLIPBOARD}${BUFFER:$(( ${CURSOR} + 1 ))}"
+	CURSOR=$(( $#LBUFFER + $#CLIPBOARD ))
+}
+zle -N zsh-system-clipboard-vicmd-vi-put-after
+
+function zsh-system-clipboard-vicmd-vi-put-before() {
+	local CLIPBOARD=$(_zsh_system_clipboard_get)
+
+	BUFFER="${BUFFER:0:$(( ${CURSOR} ))}${CLIPBOARD}${BUFFER:$(( ${CURSOR} ))}"
+	CURSOR=$(( $#LBUFFER + $#CLIPBOARD - 1 ))
+}
+zle -N zsh-system-clipboard-vicmd-vi-put-before
+
+function zsh-system-clipboard-vicmd-vi-delete() {
+	zle vi-delete
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-delete
+
+function zsh-system-clipboard-vicmd-vi-delete-char() {
+	zle vi-delete-char
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-delete-char
+
+function zsh-system-clipboard-vicmd-vi-change-eol() {
+	zle vi-change-eol
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-change-eol
+
+function zsh-system-clipboard-vicmd-vi-kill-eol() {
+	zle vi-kill-eol
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-kill-eol
+
+function zsh-system-clipboard-vicmd-vi-change-whole-line() {
+	zle vi-change-whole-line
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-change-whole-line
+
+function zsh-system-clipboard-vicmd-vi-change() {
+	zle vi-change
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-change
+
+function zsh-system-clipboard-vicmd-vi-substitue() {
+	zle vi-substitue
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-substitue
+
+function zsh-system-clipboard-vicmd-vi-delete-char() {
+	zle vi-delete-char
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-delete-char
+
+function zsh-system-clipboard-vicmd-vi-backward-delete-char() {
+	zle vi-backward-delete-char
+	_zsh_system_clipboard_set "$CUTBUFFER"
+}
+zle -N zsh-system-clipboard-vicmd-vi-backward-delete-char
+
+# Bind keys to widgets
+function () {
+	local binded_keys i parts key cmd keymap
+	for keymap in vicmd visual emacs; do
+		binded_keys=(${(f)"$(bindkey -M $keymap)"})
+		for (( i = 1; i < ${#binded_keys[@]}; ++i )); do
+			parts=("${(z)binded_keys[$i]}")
+			key="${parts[1]}"
+			cmd="${parts[2]}"
+			if (( $+functions[zsh-system-clipboard-$keymap-$cmd] )); then
+				eval bindkey -M $keymap $key zsh-system-clipboard-$keymap-$cmd
+			fi
+		done
+	done
+}
 
 # }}}
 
@@ -290,11 +382,11 @@ typeset -gU cdpath fpath mailpath path
 
 # Funcs {{{
 
-go2work() {
+function work() {
   cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | fzy)
 }
 
-go2priv() {
+function priv() {
   cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | fzy)
 }
 
