@@ -47,7 +47,8 @@ path=(
   $HOMEBREW/{bin,sbin}
   $HOMEBREW/php5/bin
   $HOME/.bin
-  $HOME/.jdk10/Contents/Home/bin
+  # $HOME/.jdk10/Contents/Home/bin
+  $HOME/.jdk11/Contents/Home/bin
   $GOROOT/bin
   $GOPATH/bin
   $path
@@ -61,6 +62,7 @@ alias vi='vim'
 alias ll='ls -Glah'
 alias cp='cp -ivR'
 alias mv='mv -iv'
+alias mp='multipass'
 alias mkd='mkdir -pv'
 alias tmux='tmux -f $HOME/.tmuxrc'
 alias flushdns='dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
@@ -242,15 +244,18 @@ autoload -Uz promptinit colors
 promptinit
 colors
 
-function show-vcs-prompt-if-exists() {
-  if [[ -n ${vcs_info_msg_0_} ]]; then
-    PROMPT='%B%1d%b ${vcs_info_msg_0_} $ %{$reset_color%}'
-  else
-    PROMPT='%B%1d%b $ %{$reset_color%}'
-  fi
-}
+PROMPT='%B%1d%b $ %{$reset_color%}'
+RPROMPT='${vcs_info_msg_0_}'
 
-add-zsh-hook precmd show-vcs-prompt-if-exists
+# function show-vcs-prompt-if-exists() {
+#   if [[ -n ${vcs_info_msg_0_} ]]; then
+#     PROMPT='%B%1d%b ${vcs_info_msg_0_} $ %{$reset_color%}'
+#   else
+#     PROMPT='%B%1d%b $ %{$reset_color%}'
+#   fi
+# }
+
+# add-zsh-hook precmd show-vcs-prompt-if-exists
 
 # }}}
 

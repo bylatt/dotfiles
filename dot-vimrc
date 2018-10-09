@@ -12,10 +12,10 @@ endif
 " Plugins {{{
 
 if !isdirectory($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim')
-  silent !git clone -q https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
+  sil !git clone -q https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 endif
 
-set runtimepath+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
+set rtp+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 if dein#load_state(expand($HOME.'/.vim/bundle'))
   call dein#begin(expand($HOME.'/.vim/bundle'))
   call dein#add('shougo/dein.vim')
@@ -30,10 +30,10 @@ if dein#load_state(expand($HOME.'/.vim/bundle'))
   call dein#add('tpope/vim-surround')
   call dein#add('tpope/vim-commentary')
   call dein#add('justinmk/vim-dirvish')
+  call dein#add('junegunn/vim-easy-align')
   call dein#add('terryma/vim-expand-region')
   call dein#add('fatih/vim-go')
   call dein#add('janko-m/vim-test')
-  call dein#add('ap/vim-buftabline')
   call dein#add('sickill/vim-pasta')
   call dein#add('vim-ruby/vim-ruby')
   call dein#add('pangloss/vim-javascript')
@@ -47,7 +47,7 @@ if dein#check_install()
   call dein#install()
 endif
 
-command PluginUpdate call dein#update()
+com PluginUpdate call dein#update()
 
   " Filetype detection {{{2
 
@@ -66,9 +66,9 @@ command PluginUpdate call dein#update()
   let g:test#strategy='basic'
   let g:test#preserve_screen=0
 
-  nmap <silent> <leader>n :TestNearest<cr>
-  nmap <silent> <leader>f :TestFile<cr>
-  nmap <silent> <leader>l :TestLast<cr>
+  nm <silent> <leader>n :TestNearest<cr>
+  nm <silent> <leader>f :TestFile<cr>
+  nm <silent> <leader>l :TestLast<cr>
 
   " }}}
 
@@ -93,12 +93,19 @@ command PluginUpdate call dein#update()
 
   " NERDTree {{{2
 
-  nnoremap <leader>w :NERDTreeToggle<enter>
-  nnoremap <silent> <leader>v :NERDTreeFind<cr>
+  nn <leader>w :NERDTreeToggle<enter>
+  nn <silent> <leader>v :NERDTreeFind<cr>
   let NERDTreeQuitOnOpen=1
   let NERDTreeAutoDeleteBuffer=1
   let NERDTreeMinimalUI=1
   let NERDTreeDirArrows=1
+
+  " }}}
+
+  " EasyAlign {{{2
+
+  xm ga <plug>(EasyAlign)
+  nm ga <plug>(EasyAlign)
 
   " }}}
 
@@ -138,7 +145,9 @@ command PluginUpdate call dein#update()
   set mouse=a
 
   " Use rg for grep {{{2
+
     set grepprg=rg\ -i\ --vimgrep
+
   " }}}
 
   " Enable clipboard {{{2
@@ -161,51 +170,54 @@ command PluginUpdate call dein#update()
     set t_Co=256
     syntax on
     set background=dark
-    colorscheme grb
-    " colorscheme default
+    colo grb
+    " colo default
 
   " }}}
 
   " " Enhance default {{{2
 
-  "   highlight DiffAdd    ctermfg=0 ctermbg=2
-  "   highlight DiffChange ctermfg=0 ctermbg=3
-  "   highlight DiffDelete ctermfg=0 ctermbg=1
-  "   highlight DiffText   ctermfg=0 ctermbg=11 cterm=bold
+  "   hi DiffAdd    ctermfg=0 ctermbg=2
+  "   hi DiffChange ctermfg=0 ctermbg=3
+  "   hi DiffDelete ctermfg=0 ctermbg=1
+  "   hi DiffText   ctermfg=0 ctermbg=11 cterm=bold
 
-  "   highlight Visual     ctermfg=NONE ctermbg=NONE cterm=inverse
+  "   hi Visual     ctermfg=NONE ctermbg=NONE cterm=inverse
 
   "   if &background == "light"
-  "     highlight LineNr      ctermfg=7
-  "     highlight Comment     ctermfg=7
-  "     highlight ColorColumn ctermfg=8 ctermbg=7
-  "     highlight Folded      ctermfg=8 ctermbg=7
-  "     highlight FoldColumn  ctermfg=8 ctermbg=7
-  "     highlight Pmenu       ctermfg=0 ctermbg=7
-  "     highlight PmenuSel    ctermfg=7 ctermbg=0
-  "     highlight SpellCap    ctermbg=7
+  "     hi LineNr      ctermfg=7
+  "     hi Comment     ctermfg=7
+  "     hi ColorColumn ctermfg=8 ctermbg=7
+  "     hi Folded      ctermfg=8 ctermbg=7
+  "     hi FoldColumn  ctermfg=8 ctermbg=7
+  "     hi Pmenu       ctermfg=0 ctermbg=7
+  "     hi PmenuSel    ctermfg=7 ctermbg=0
+  "     hi SpellCap    ctermbg=7
   "   else
-  "     highlight LineNr      ctermfg=8
-  "     highlight Comment     ctermfg=8
-  "     highlight ColorColumn ctermfg=7 ctermbg=8
-  "     highlight Folded      ctermfg=7 ctermbg=8
-  "     highlight FoldColumn  ctermfg=7 ctermbg=8
-  "     highlight Pmenu       ctermfg=15 ctermbg=8
-  "     highlight PmenuSel    ctermfg=8 ctermbg=15
-  "     highlight SpellCap    ctermbg=8
+  "     hi LineNr      ctermfg=8
+  "     hi Comment     ctermfg=8
+  "     hi ColorColumn ctermfg=7 ctermbg=8
+  "     hi Folded      ctermfg=7 ctermbg=8
+  "     hi FoldColumn  ctermfg=7 ctermbg=8
+  "     hi Pmenu       ctermfg=15 ctermbg=8
+  "     hi PmenuSel    ctermfg=8 ctermbg=15
+  "     hi SpellCap    ctermbg=8
   "   endif
 
   " " }}}
 
   " Extra whitespace: {{{2
 
-    highlight SpecialKey guibg=NONE ctermbg=NONE
-    highlight ExtraWhitespace ctermbg=1 guibg=red
+    hi SpecialKey guibg=NONE ctermbg=NONE
+    hi ExtraWhitespace ctermbg=1 guibg=red
     match ExtraWhitespace /\s\+$/
-    autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-    autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-    autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-    autocmd BufWinLeave * call clearmatches()
+    aug HighlightExtraWhitespace
+      au!
+      au BufWinEnter * match ExtraWhitespace /\s\+$/
+      au * match ExtraWhitespace /\s\+\%#\@<!$/
+      au * match ExtraWhitespace /\s\+$/
+      au BufWinLeave * call clearmatches()
+    aug end
 
   " }}}
 
@@ -225,7 +237,6 @@ command PluginUpdate call dein#update()
   set list
   set scrolloff=0
   set synmaxcol=1000
-  set statusline=File:\ %F\ %m\ %=\ %Y
   set nocursorline
   set nocursorcolumn
 
@@ -241,6 +252,79 @@ command PluginUpdate call dein#update()
 
   " }}}
 
+  " Nicer statusline {{{2
+
+  set laststatus=2
+
+
+  let g:modes={
+        \ 'n':  'Normal',
+        \ 'no': 'N·Operator Pending',
+        \ 'v':  'Visual',
+        \ 'V':  'V·Line',
+        \ '^V': 'V·Block',
+        \ 's':  'Select',
+        \ 'S':  'S·Line',
+        \ '^S': 'S·Block',
+        \ 'i':  'Insert',
+        \ 'R':  'Replace',
+        \ 'Rv': 'V·Replace',
+        \ 'c':  'Command',
+        \ 'cv': 'Vim Ex',
+        \ 'ce': 'Ex',
+        \ 'r':  'Prompt',
+        \ 'rm': 'More',
+        \ 'r?': 'Confirm',
+        \ '!':  'Shell',
+        \ 't':  'Terminal'}
+
+  fun! STLine()
+    let curline=line('.')
+    let curcol=len(curline)
+    let allcol=len(line('$'))
+    let cols=allcol-curcol
+    if allcol<=2
+      let cols+=1
+    endif
+    let padding=repeat(" ", cols+1)
+    let linenum=padding.curline
+    retu linenum
+  endf
+
+  fun! STFileType()
+    retu tolower(&filetype)
+  endf
+
+  fun! STMode()
+    retu tolower(g:modes[mode()])
+  endf
+
+  fun! STFilePath()
+    retu expand('%:p')
+  endf
+
+  fun! STModified()
+    if &mod ==# 1
+      retu ':: changed'
+    endif
+    retu ''
+  endf
+
+  set statusline=%{STLine()}\ ::\ %{STFilePath()}\ %{STModified()}\ %=\ %{STMode()}\ ::\ %{STFileType()}
+
+  " }}}
+
+  aug LanguageSpecific
+    au!
+    au filetype vim setlocal foldmethod=marker foldlevel=0
+    au filetype zsh setlocal foldmethod=marker foldlevel=0
+    au filetype php setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
+    au filetype ruby setlocal foldmethod=syntax
+    au filetype make setlocal noexpandtab tabstop=4 softtabstop=4
+    au filetype python setlocal nosmartindent tabstop=4 softtabstop=4 shiftwidth=4
+    au filetype javascript,javascript.jsx setlocal foldmethod=syntax
+  aug end
+
 " }}}
 
 " Editing {{{
@@ -248,7 +332,6 @@ command PluginUpdate call dein#update()
   " Use spaces instead of tabs and auto indent {{{2
 
     set backspace=2
-    set laststatus=2
     set tabstop=2
     set softtabstop=2
     set shiftwidth=2
@@ -336,9 +419,49 @@ command PluginUpdate call dein#update()
 
   " Trim trailing white space {{{2
 
+  fun! RemoveTrailingWhitespaces()
     if !&binary && &filetype != 'diff'
-      autocmd bufwritepre * :%s/\s\+$//e
+      :%s/\s\+$//e
     endif
+  endf
+
+  aug RemoveTrailingWhitespaces
+    au!
+    au BufWritePre * call RemoveTrailingWhitespaces()
+  aug end
+
+  " }}}
+
+  " Focus on the line from last open {{{2
+
+  aug FocusLastLine
+    au!
+    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+  aug end
+
+  " }}}
+
+  " Disable automatic comment insertion {{{2
+
+  aug DisableAutoComment
+    au!
+    au filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+  aug end
+
+  " }}}
+
+  " Better tab {{{2
+
+  fun! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+      retu "\<tab>"
+    else
+      retu "\<c-p>"
+    endif
+  endf
+
+  ino <expr> <silent> <tab> InsertTabWrapper()
 
   " }}}
 
@@ -351,78 +474,45 @@ let mapleader = "\<space>"
 
   " Modes {{{2
 
-  nnoremap j gj
-  nnoremap k gk
-  nnoremap qq :q!<cr>
-  nnoremap ; :
-  nnoremap <cr> :nohlsearch<cr>
+  nn j gj
+  nn k gk
+  nn qq :q!<cr>
+  nn ; :
+  nn <cr> :nohlsearch<cr>
 
-  vmap <  <gv
-  vmap > >gv
+  vm <  <gv
+  vm > >gv
 
   " }}}
 
   " Navigation {{{2
 
-  nnoremap <c-j> <c-w>j
-  nnoremap <c-k> <c-w>k
-  nnoremap <c-h> <c-w>h
-  nnoremap <c-l> <c-w>l
+  nn <c-j> <c-w>j
+  nn <c-k> <c-w>k
+  nn <c-h> <c-w>h
+  nn <c-l> <c-w>l
 
   " }}}
 
   " QuickRun {{{2
 
-  autocmd FileType go nnoremap <buffer> <leader>m :!go run %<cr>
-  autocmd FileType php nnoremap <buffer> <leader>m :!php %<cr>
-  autocmd FileType ruby nnoremap <buffer> <leader>m :!ruby %<cr>
-  autocmd FileType python nnoremap <buffer> <leader>m :!python3 %<cr>
-  autocmd FileType javascript nnoremap <buffer> <leader>m :!node %<cr>
+  aug QuickRun
+    au!
+    au filetype go nn <buffer> <leader>m :!go run %<cr>
+    au filetype php nn <buffer> <leader>m :!php %<cr>
+    au filetype ruby nn <buffer> <leader>m :!ruby %<cr>
+    au filetype python nn <buffer> <leader>m :!python3 %<cr>
+    au filetype javascript nn <buffer> <leader>m :!node %<cr>
+  aug end
 
   " }}}
 
   " Split {{{2
 
-  nnoremap <leader>- <c-w>_<cr>
-  nnoremap <leader>= <c-w>=<cr>
+  nn <leader>- <c-w>_<cr>
+  nn <leader>= <c-w>=<cr>
 
   " }}}
-
-" }}}
-
-" Languages {{{
-
-" Focus on the line from last open
-autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-
-" Disable automatic comment insertion
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
-augroup LanguageSpecific
-  autocmd!
-  autocmd FileType vim setlocal foldmethod=marker foldlevel=0
-  autocmd FileType zsh setlocal foldmethod=marker foldlevel=0
-  autocmd FileType php setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
-  autocmd FileType ruby setlocal foldmethod=syntax
-  autocmd FileType make setlocal noexpandtab tabstop=4 softtabstop=4
-  autocmd FileType python setlocal nosmartindent tabstop=4 softtabstop=4 shiftwidth=4
-  autocmd FileType javascript,javascript.jsx setlocal foldmethod=syntax
-augroup END
-
-" }}}
-
-" Tab {{{
-
-fun! InsertTabWrapper()
-  let col = col('.') - 1
-  if !col || getline('.')[col - 1] !~ '\k'
-    return "\<tab>"
-  else
-    return "\<c-p>"
-  endif
-endf
-
-inoremap <expr> <silent> <tab> InsertTabWrapper()
 
 " }}}
 
@@ -431,17 +521,17 @@ inoremap <expr> <silent> <tab> InsertTabWrapper()
 fun! FuzzyCommand(choice_command, vim_command)
   try
     let selection = system(a:choice_command . " | fzy -l 18")
-  catch /Vim:Interrupt/
-    redraw!
-    return
-  endtry
-  redraw!
+  cat /Vim:Interrupt/
+    redr!
+    retu
+  endt
+  redr!
   if v:shell_error == 0 && !empty(selection)
-    execute a:vim_command . " " . selection
+    exe a:vim_command . " " . selection
   endif
 endf
 
-nnoremap <leader>p :call FuzzyCommand("fd -t f .", ":e")<cr>
+nn <leader>p :call FuzzyCommand("fd -t f .", ":e")<cr>
 
 fun! FuzzyBuffer()
   let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
@@ -449,7 +539,7 @@ fun! FuzzyBuffer()
   call FuzzyCommand('echo "' . join(buffers, "\n") . '"', ":b")
 endf
 
-nnoremap <leader>o :call FuzzyBuffer()<cr>
+nn <leader>o :call FuzzyBuffer()<cr>
 
 " }}}
 
