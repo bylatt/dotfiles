@@ -422,49 +422,49 @@ com PluginUpdate call dein#update()
 
   " Trim trailing white space {{{2
 
-  fun! RemoveTrailingWhitespaces()
-    if !&binary && &filetype != 'diff'
-      :%s/\s\+$//e
-    endif
-  endf
+    fun! RemoveTrailingWhitespaces()
+      if !&binary && &filetype != 'diff'
+        :%s/\s\+$//e
+      endif
+    endf
 
-  aug RemoveTrailingWhitespaces
-    au!
-    au BufWritePre * call RemoveTrailingWhitespaces()
-  aug end
+    aug RemoveTrailingWhitespaces
+      au!
+      au BufWritePre * call RemoveTrailingWhitespaces()
+    aug end
 
   " }}}
 
   " Focus on the line from last open {{{2
 
-  aug FocusLastLine
-    au!
-    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-  aug end
+    aug FocusLastLine
+      au!
+      au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+    aug end
 
   " }}}
 
   " Disable automatic comment insertion {{{2
 
-  aug DisableAutoComment
-    au!
-    au filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-  aug end
+    aug DisableAutoComment
+      au!
+      au filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+    aug end
 
   " }}}
 
   " Better tab {{{2
 
-  fun! InsertTabWrapper()
-    let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-      retu "\<tab>"
-    else
-      retu "\<c-p>"
-    endif
-  endf
+    fun! InsertTabWrapper()
+      let col = col('.') - 1
+      if !col || getline('.')[col - 1] !~ '\k'
+        retu "\<tab>"
+      else
+        retu "\<c-p>"
+      endif
+    endf
 
-  ino <expr> <silent> <tab> InsertTabWrapper()
+    ino <expr> <silent> <tab> InsertTabWrapper()
 
   " }}}
 
@@ -477,43 +477,43 @@ let mapleader = "\<space>"
 
   " Modes {{{2
 
-  nn j gj
-  nn k gk
-  nn qq :q!<cr>
-  nn ; :
-  nn <cr> :nohlsearch<cr>
+    nn j gj
+    nn k gk
+    nn qq :q!<cr>
+    nn ; :
+    nn <cr> :nohlsearch<cr>
 
-  vm <  <gv
-  vm > >gv
+    vm <  <gv
+    vm > >gv
 
   " }}}
 
   " Navigation {{{2
 
-  nn <c-j> <c-w>j
-  nn <c-k> <c-w>k
-  nn <c-h> <c-w>h
-  nn <c-l> <c-w>l
+    nn <c-j> <c-w>j
+    nn <c-k> <c-w>k
+    nn <c-h> <c-w>h
+    nn <c-l> <c-w>l
 
   " }}}
 
   " QuickRun {{{2
 
-  aug QuickRun
-    au!
-    au filetype go nn <buffer> <leader>m :!go run %<cr>
-    au filetype php nn <buffer> <leader>m :!php %<cr>
-    au filetype ruby nn <buffer> <leader>m :!ruby %<cr>
-    au filetype python nn <buffer> <leader>m :!python3 %<cr>
-    au filetype javascript nn <buffer> <leader>m :!node %<cr>
-  aug end
+    aug QuickRun
+      au!
+      au filetype go nn <buffer> <leader>m :!go run %<cr>
+      au filetype php nn <buffer> <leader>m :!php %<cr>
+      au filetype ruby nn <buffer> <leader>m :!ruby %<cr>
+      au filetype python nn <buffer> <leader>m :!python3 %<cr>
+      au filetype javascript nn <buffer> <leader>m :!node %<cr>
+    aug end
 
   " }}}
 
   " Split {{{2
 
-  nn <leader>- <c-w>_<cr>
-  nn <leader>= <c-w>=<cr>
+    nn <leader>- <c-w>_<cr>
+    nn <leader>= <c-w>=<cr>
 
   " }}}
 
