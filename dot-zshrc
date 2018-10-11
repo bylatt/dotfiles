@@ -162,7 +162,7 @@ if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
   # Sometimes refs/stash exists even with 0 stashes
   # Make sure we have at least 1 stash before adding this info
   if (( ${#stashes} )); then
-    hook_com[misc]+="${#stashes}S"
+    hook_com[misc]+="${#stashes}s/"
   fi
 fi
 }
@@ -244,18 +244,8 @@ autoload -Uz promptinit colors
 promptinit
 colors
 
-PROMPT='%B%1d%b $ %{$reset_color%}'
+PROMPT='%B%(3~|</%3d|%d)%b ○ %{$reset_color%}'
 RPROMPT='${vcs_info_msg_0_}'
-
-# function show-vcs-prompt-if-exists() {
-#   if [[ -n ${vcs_info_msg_0_} ]]; then
-#     PROMPT='%B%1d%b ${vcs_info_msg_0_} $ %{$reset_color%}'
-#   else
-#     PROMPT='%B%1d%b $ %{$reset_color%}'
-#   fi
-# }
-
-# add-zsh-hook precmd show-vcs-prompt-if-exists
 
 # }}}
 

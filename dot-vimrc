@@ -117,7 +117,7 @@ com PluginUpdate call dein#update()
   set fileencoding=utf-8
   set termencoding=utf-8
   set nobomb
-  set shell=zsh\ -l
+  set shell=zsh
 
   " Backup and undos {{{2
 
@@ -226,6 +226,7 @@ com PluginUpdate call dein#update()
   set viewoptions+=unix,slash
   set noshowmode
   set showcmd
+  set cmdheight=1
   set showtabline=0
   set hidden
   set number
@@ -291,7 +292,10 @@ com PluginUpdate call dein#update()
     endf
 
     fun! STFileType()
-      retu tolower(&filetype)
+      if &filetype != ''
+        retu '  :: '.tolower(&filetype)
+      else
+        retu ''
     endf
 
     fun! STMode()
@@ -299,17 +303,21 @@ com PluginUpdate call dein#update()
     endf
 
     fun! STFilePath()
-      retu expand('%:p')
-    endf
-
-    fun! STModified()
-      if &mod ==# 1
-        retu ':: changed'
+      let filepath=expand('%:p')
+      if len(filepath) !=# 0
+        retu '  » '.filepath
       endif
       retu ''
     endf
 
-    set statusline=%{STLine()}\ ::\ %{STFilePath()}\ %{STModified()}\ %=\ %{STMode()}\ ::\ %{STFileType()}
+    fun! STModified()
+      if &mod ==# 1
+        retu '  [modified]'
+      endif
+      retu ''
+    endf
+
+    set statusline=%{STLine()}%{STFilePath()}%{STModified()}%=%{STMode()}\%{STFileType()}
 
   " }}}
 
@@ -351,7 +359,8 @@ com PluginUpdate call dein#update()
   " Completion {{{2
 
     set wildmenu
-    set wildmode=list:longest
+    " set wildmode=list:longest
+    set wildmode=longest,list,full
     set wildignore=
       \*.png,
       \*.jpg,
