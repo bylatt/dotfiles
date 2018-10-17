@@ -262,13 +262,13 @@ com PluginUpdate call dein#update()
           \ 'no': 'N·Operator Pending',
           \ 'v':  'Visual',
           \ 'V':  'V·Line',
-          \ '^V': 'V·Block',
+          \ '': 'V·Block',
           \ 's':  'Select',
           \ 'S':  'S·Line',
           \ '^S': 'S·Block',
           \ 'i':  'Insert',
           \ 'R':  'Replace',
-          \ 'Rv': 'V·Replace',
+          \ 'Rv': 'VReplace',
           \ 'c':  'Command',
           \ 'cv': 'Vim Ex',
           \ 'ce': 'Ex',
@@ -276,7 +276,8 @@ com PluginUpdate call dein#update()
           \ 'rm': 'More',
           \ 'r?': 'Confirm',
           \ '!':  'Shell',
-          \ 't':  'Terminal'}
+          \ 't':  'Terminal',
+          \}
 
     fun! STLine()
       let curline=line('.')
