@@ -33,12 +33,14 @@ if dein#load_state(expand($HOME.'/.vim/bundle'))
   call dein#add('junegunn/vim-easy-align')
   call dein#add('terryma/vim-expand-region')
   call dein#add('fatih/vim-go')
+  call dein#add('isa/vim-matchit')
   call dein#add('janko-m/vim-test')
   call dein#add('sickill/vim-pasta')
   call dein#add('vim-ruby/vim-ruby')
   call dein#add('pangloss/vim-javascript')
   call dein#add('mxw/vim-jsx')
   call dein#add('christoomey/vim-tmux-navigator')
+  call dein#add('lifepillar/vim-solarized8')
   call dein#end()
   call dein#save_state()
 endif
@@ -59,53 +61,94 @@ com PluginUpdate call dein#update()
 
 " }}}
 
+" Mappings {{{
+
+" Prefer spaces for leader
+let mapleader = "\<space>"
+
+  " Modes {{{2
+
+    nn j gj
+    nn k gk
+    nn qq :q!<cr>
+    nn ; :
+    nn <cr> :nohlsearch<cr>
+
+    vm <  <gv
+    vm > >gv
+
+  " }}}
+
+  " Navigation {{{2
+
+    nn <c-j> <c-w>j
+    nn <c-k> <c-w>k
+    nn <c-h> <c-w>h
+    nn <c-l> <c-w>l
+
+  " }}}
+
+  " QuickRun {{{2
+
+    aug QuickRun
+      au!
+      au filetype go nn <buffer> <leader>m :!go run %<cr>
+      au filetype php nn <buffer> <leader>m :!php %<cr>
+      au filetype ruby nn <buffer> <leader>m :!ruby %<cr>
+      au filetype python nn <buffer> <leader>m :!python3 %<cr>
+      au filetype javascript nn <buffer> <leader>m :!node %<cr>
+    aug end
+
+  " }}}
+
+  " Split {{{2
+
+    nn <leader>- <c-w>_<cr>
+    nn <leader>= <c-w>=<cr>
+
+  " }}}
+
+" }}}
+
 " PluginSettings {{{
 
   " Test {{{2
 
-  let g:test#strategy='basic'
-  let g:test#preserve_screen=0
-
-  nm <silent> <leader>n :TestNearest<cr>
-  nm <silent> <leader>f :TestFile<cr>
-  nm <silent> <leader>l :TestLast<cr>
+    nm <silent> <leader>n :TestNearest<cr>
+    nm <silent> <leader>f :TestFile<cr>
+    nm <silent> <leader>l :TestLast<cr>
 
   " }}}
+
 
   " Go {{{2
 
-  let g:go_fmt_command="goimports"
+    let g:go_fmt_command="goimports"
 
-  " Highlight
-  " let g:go_highlight_functions=1
-  " let g:go_highlight_methods=1
-  " let g:go_highlight_structs=1
-  " let g:go_highlight_operators=1
-  " let g:go_highlight_build_constraints=1
-
-  " }}}
-
-  " JSX {{{2
-
-  let g:jsx_ext_required=0
+    " " Highlight
+    " let g:go_highlight_functions=1
+    " let g:go_highlight_methods=1
+    " let g:go_highlight_structs=1
+    " let g:go_highlight_operators=1
+    " let g:go_highlight_build_constraints=1
 
   " }}}
 
   " NERDTree {{{2
 
-  nn <leader>w :NERDTreeToggle<enter>
-  nn <silent> <leader>v :NERDTreeFind<cr>
-  let NERDTreeQuitOnOpen=1
-  let NERDTreeAutoDeleteBuffer=1
-  let NERDTreeMinimalUI=1
-  let NERDTreeDirArrows=1
+    nn <leader>w :NERDTreeToggle<enter>
+    nn <silent> <leader>v :NERDTreeFind<cr>
+    let NERDTreeQuitOnOpen=1
+    let NERDTreeAutoDeleteBuffer=1
+    let NERDTreeMinimalUI=1
+    let NERDTreeDirArrows=1
 
   " }}}
 
   " EasyAlign {{{2
 
-  xm ga <plug>(EasyAlign)
-  nm ga <plug>(EasyAlign)
+    xm ga <plug>(EasyAlign)
+    nm ga <plug>(EasyAlign)
 
   " }}}
 
@@ -147,6 +190,7 @@ com PluginUpdate call dein#update()
   " Use rg for grep {{{2
 
     set grepprg=rg\ -i\ --vimgrep
+    set grepformat=%f:%l:%c:%m
 
   " }}}
 
@@ -169,42 +213,12 @@ com PluginUpdate call dein#update()
 
     set t_Co=256
     syntax on
-    set background=dark
-    colo grb
-    " colo default
+    set background=light
+    colo solarized8
+    set termguicolors
+    set guicursor=
 
   " }}}
-
-  " " Enhance default {{{2
-
-  "   hi DiffAdd    ctermfg=0 ctermbg=2
-  "   hi DiffChange ctermfg=0 ctermbg=3
-  "   hi DiffDelete ctermfg=0 ctermbg=1
-  "   hi DiffText   ctermfg=0 ctermbg=11 cterm=bold
-
-  "   hi Visual     ctermfg=NONE ctermbg=NONE cterm=inverse
-
-  "   if &background == "light"
-  "     hi LineNr      ctermfg=7
-  "     hi Comment     ctermfg=7
-  "     hi ColorColumn ctermfg=8 ctermbg=7
-  "     hi Folded      ctermfg=8 ctermbg=7
-  "     hi FoldColumn  ctermfg=8 ctermbg=7
-  "     hi Pmenu       ctermfg=0 ctermbg=7
-  "     hi PmenuSel    ctermfg=7 ctermbg=0
-  "     hi SpellCap    ctermbg=7
-  "   else
-  "     hi LineNr      ctermfg=8
-  "     hi Comment     ctermfg=8
-  "     hi ColorColumn ctermfg=7 ctermbg=8
-  "     hi Folded      ctermfg=7 ctermbg=8
-  "     hi FoldColumn  ctermfg=7 ctermbg=8
-  "     hi Pmenu       ctermfg=15 ctermbg=8
-  "     hi PmenuSel    ctermfg=8 ctermbg=15
-  "     hi SpellCap    ctermbg=8
-  "   endif
-
-  " " }}}
 
   " Extra whitespace: {{{2
 
@@ -238,7 +252,7 @@ com PluginUpdate call dein#update()
   set list
   set scrolloff=0
   set synmaxcol=1000
-  set nocursorline
+  set cursorline
   set nocursorcolumn
 
   " Nicer netrw {{{2
@@ -480,60 +494,11 @@ com PluginUpdate call dein#update()
 
 " }}}
 
-" Mappings {{{
-
-" Prefer spaces for leader
-let mapleader = "\<space>"
-
-  " Modes {{{2
-
-    nn j gj
-    nn k gk
-    nn qq :q!<cr>
-    nn ; :
-    nn <cr> :nohlsearch<cr>
-
-    vm <  <gv
-    vm > >gv
-
-  " }}}
-
-  " Navigation {{{2
-
-    nn <c-j> <c-w>j
-    nn <c-k> <c-w>k
-    nn <c-h> <c-w>h
-    nn <c-l> <c-w>l
-
-  " }}}
-
-  " QuickRun {{{2
-
-    aug QuickRun
-      au!
-      au filetype go nn <buffer> <leader>m :!go run %<cr>
-      au filetype php nn <buffer> <leader>m :!php %<cr>
-      au filetype ruby nn <buffer> <leader>m :!ruby %<cr>
-      au filetype python nn <buffer> <leader>m :!python3 %<cr>
-      au filetype javascript nn <buffer> <leader>m :!node %<cr>
-    aug end
-
-  " }}}
-
-  " Split {{{2
-
-    nn <leader>- <c-w>_<cr>
-    nn <leader>= <c-w>=<cr>
-
-  " }}}
-
-" }}}
-
 " Fuzzy {{{
 
 fun! FuzzyCommand(choice_command, vim_command)
   try
-    let selection = system(a:choice_command . " | fzy -l 18")
+    let selection = system(a:choice_command . " | hs")
   cat /Vim:Interrupt/
     redr!
     retu
@@ -553,6 +518,10 @@ fun! FuzzyBuffer()
 endf
 
 nn <leader>o :call FuzzyBuffer()<cr>
+
+" nm <silent> <leader>n :TestNearest<cr>
+" nm <silent> <leader>f :TestFile<cr>
+" nm <silent> <leader>l :TestLast<cr>
 
 " }}}
 
