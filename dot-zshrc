@@ -37,12 +37,6 @@ export HOMEBREW=/usr/local
 
     # }}}
 
-    # JAVA {{{3
-
-    export JAVA_HOME=$HOME/.jdk/Contents/Home
-
-    # }}}
-
   # }}}
 
 # }}}
@@ -51,7 +45,6 @@ export HOMEBREW=/usr/local
 
 path=(
   $HOMEBREW/{bin,sbin}
-  $HOMEBREW/php5/bin
   $HOME/.bin
   $path
 )

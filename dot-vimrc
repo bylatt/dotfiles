@@ -10,9 +10,8 @@ endif
 " }}}
 
 " Plugins {{{
-
-if !isdirectory($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim')
-  sil !git clone -q https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
+if empty(glob($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim'))
+  sil !git clone -q --depth 1 https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
 endif
 
 set rtp+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
@@ -39,6 +38,7 @@ if dein#load_state(expand($HOME.'/.vim/bundle'))
   call dein#add('vim-ruby/vim-ruby')
   call dein#add('pangloss/vim-javascript')
   call dein#add('mxw/vim-jsx')
+  call dein#add('sgur/vim-editorconfig')
   call dein#add('christoomey/vim-tmux-navigator')
   call dein#add('lifepillar/vim-solarized8')
   call dein#end()
@@ -297,9 +297,12 @@ let mapleader = "\<space>"
       let curline=line('.')
       let curcol=len(curline)
       let allcol=len(line('$'))
-      let cols=allcol-curcol
-      if allcol<=2
-        let cols+=1
+      if allcol==1
+        let cols=2
+      elseif allcol==2
+        let cols=1
+      else
+        let cols=allcol-curcol
       endif
       let padding=repeat(" ", cols+1)
       let linenum=padding.curline
