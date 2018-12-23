@@ -36,6 +36,7 @@ if dein#load_state(expand($HOME.'/.vim/bundle'))
   call dein#add('janko-m/vim-test')
   call dein#add('sickill/vim-pasta')
   call dein#add('vim-ruby/vim-ruby')
+  call dein#add('wlangstroth/vim-racket')
   call dein#add('pangloss/vim-javascript')
   call dein#add('mxw/vim-jsx')
   call dein#add('sgur/vim-editorconfig')
@@ -297,13 +298,10 @@ let mapleader = "\<space>"
       let curline=line('.')
       let curcol=len(curline)
       let allcol=len(line('$'))
-      if allcol==1
-        let cols=2
-      elseif allcol==2
-        let cols=1
-      else
-        let cols=allcol-curcol
+      if allcol<=3
+        let allcol=3
       endif
+      let cols=allcol-curcol
       let padding=repeat(" ", cols+1)
       let linenum=padding.curline
       retu linenum
