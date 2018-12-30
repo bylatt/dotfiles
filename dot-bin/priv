@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+function priv() {
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | hs)
+}
+
+priv

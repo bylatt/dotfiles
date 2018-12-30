@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+function work() {
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | hs)
+}
+
+work
