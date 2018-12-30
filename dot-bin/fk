@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+function fk() {
+  ps aux | grep "$1" | awk '{print $2}' | xargs kill -9
+}
+
+fk $1
