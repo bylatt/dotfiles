@@ -17,8 +17,8 @@ export HOMEBREW=/usr/local
   export TERM=xterm-256color
   export CLICOLOR=1
   export KEYTIMEOUT=1
-  export VISUAL=vim
-  export EDITOR=vim
+  export VISUAL=nvim
+  export EDITOR=nvim
   export PAGER=less
   export LSCOLORS=ExFxCxDxBxegedabagacad
   export GREP_OPTIONS='--color=auto'
@@ -59,11 +59,11 @@ path=(
 
 # Alias {{{
 
-alias vi='vim'
+alias vi='nvim'
 alias ll='ls -Glah'
 alias cp='cp -ivR'
 alias mv='mv -iv'
-alias mp='multipass'
+alias vim='nvim'
 alias mkd='mkdir -pv'
 alias tmux='tmux -f $HOME/.tmuxrc'
 alias flushdns='dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
@@ -367,5 +367,17 @@ function () {
 # Ensure unique path {{{
 
 typeset -gU cdpath fpath mailpath path
+
+# }}}
+
+# Funcs {{{
+
+function work() {
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | hs)
+}
+
+function priv() {
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | hs)
+}
 
 # }}}

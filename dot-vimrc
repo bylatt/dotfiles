@@ -3,62 +3,43 @@
 
 " Initial {{{
 
-if &compatible
-  set nocompatible
-endif
+set nocompatible
 
 " }}}
 
 " Plugins {{{
-if empty(glob($HOME.'/.vim/bundle/repos/github.com/shougo/dein.vim'))
-  sil !git clone -q --depth 1 https://github.com/shougo/dein.vim.git $HOME/.vim/bundle/repos/github.com/shougo/dein.vim
+
+if !filereadable(expand($HOME.'/.vim/autoload/plug.vim'))
+  silent !curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 endif
 
-set rtp+=$HOME/.vim/bundle/repos/github.com/shougo/dein.vim
-if dein#load_state(expand($HOME.'/.vim/bundle'))
-  call dein#begin(expand($HOME.'/.vim/bundle'))
-  call dein#add('shougo/dein.vim')
-  call dein#add('wellle/targets.vim')
-  call dein#add('tpope/vim-rsi')
-  call dein#add('tpope/vim-eunuch')
-  call dein#add('tpope/vim-repeat')
-  call dein#add('tpope/vim-abolish')
-  call dein#add('tpope/vim-dispatch')
-  call dein#add('tpope/vim-fugitive')
-  call dein#add('tpope/vim-markdown')
-  call dein#add('tpope/vim-surround')
-  call dein#add('tpope/vim-commentary')
-  call dein#add('justinmk/vim-dirvish')
-  call dein#add('junegunn/vim-easy-align')
-  call dein#add('terryma/vim-expand-region')
-  call dein#add('fatih/vim-go')
-  call dein#add('isa/vim-matchit')
-  call dein#add('janko-m/vim-test')
-  call dein#add('sickill/vim-pasta')
-  call dein#add('vim-ruby/vim-ruby')
-  call dein#add('wlangstroth/vim-racket')
-  call dein#add('pangloss/vim-javascript')
-  call dein#add('mxw/vim-jsx')
-  call dein#add('sgur/vim-editorconfig')
-  call dein#add('christoomey/vim-tmux-navigator')
-  call dein#add('lifepillar/vim-solarized8')
-  call dein#end()
-  call dein#save_state()
-endif
+call plug#begin($HOME.'/.vim/plug')
+  Plug 'tpope/vim-rsi'
+  Plug 'tpope/vim-eunuch'
+  Plug 'tpope/vim-repeat'
+  Plug 'tpope/vim-markdown'
+  Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-commentary'
+  Plug 'terryma/vim-expand-region'
+  Plug 'fatih/vim-go'
+  Plug 'pangloss/vim-javascript'
+  Plug 'jparise/vim-graphql'
+  Plug 'mxw/vim-jsx'
+  Plug 'sgur/vim-editorconfig'
+  Plug 'sickill/vim-pasta'
+  Plug 'isa/vim-matchit'
+  Plug 'christoomey/vim-tmux-navigator'
+  Plug 'w0rp/ale'
+  Plug 'scrooloose/nerdtree'
+  Plug 'alessandroyorba/breve'
+  Plug 'neoclide/coc.nvim', {'do': 'yarn'}
+  Plug 'shougo/denite.nvim', {'do': ':UpdateRemotePlugins'}
+	Plug 'neoclide/coc-denite'
+call plug#end()
 
-if dein#check_install()
-  call dein#install()
-endif
+command! CocInstallDefaultExtensions :CocInstall 'coc-html' 'coc-css' 'coc-gocode' 'coc-rls' 'coc-pyls' 'coc-tsserver' 'coc-json' 'coc-yaml'
 
-com PluginUpdate call dein#update()
-
-  " Filetype detection {{{2
-
-    filetype on
-    filetype plugin on
-    filetype indent on
-
-  " }}}
+filetype plugin indent on
 
 " }}}
 
@@ -69,43 +50,40 @@ let mapleader = "\<space>"
 
   " Modes {{{2
 
-    nn j gj
-    nn k gk
-    nn qq :q!<cr>
-    nn ; :
-    nn <cr> :nohlsearch<cr>
+    nnoremap j gj
+    nnoremap k gk
+    nnoremap ; :
+    nnoremap <cr> :nohlsearch<cr>
 
-    vm <  <gv
-    vm > >gv
+    vmap <  <gv
+    vmap > >gv
 
   " }}}
 
   " Navigation {{{2
 
-    nn <c-j> <c-w>j
-    nn <c-k> <c-w>k
-    nn <c-h> <c-w>h
-    nn <c-l> <c-w>l
+    nnoremap <c-j> <c-w>j
+    nnoremap <c-k> <c-w>k
+    nnoremap <c-h> <c-w>h
+    nnoremap <c-l> <c-w>l
 
   " }}}
 
   " QuickRun {{{2
 
-    aug QuickRun
-      au!
-      au filetype go nn <buffer> <leader>m :!go run %<cr>
-      au filetype php nn <buffer> <leader>m :!php %<cr>
-      au filetype ruby nn <buffer> <leader>m :!ruby %<cr>
-      au filetype python nn <buffer> <leader>m :!python3 %<cr>
-      au filetype javascript nn <buffer> <leader>m :!node %<cr>
-    aug end
+    augroup QuickRun
+      autocmd!
+      autocmd filetype go nnoremap <buffer> <leader>m :!go run %<cr>
+      autocmd filetype python nnoremap <buffer> <leader>m :!python3 %<cr>
+      autocmd filetype javascript nnoremap <buffer> <leader>m :!node %<cr>
+    augroup end
 
   " }}}
 
   " Split {{{2
 
-    nn <leader>- <c-w>_<cr>
-    nn <leader>= <c-w>=<cr>
+    nnoremap <leader>- <c-w>_<cr>
+    nnoremap <leader>= <c-w>=<cr>
 
   " }}}
 
@@ -113,17 +91,10 @@ let mapleader = "\<space>"
 
 " PluginSettings {{{
 
-  " Test {{{2
-
-    nm <silent> <leader>n :TestNearest<cr>
-    nm <silent> <leader>f :TestFile<cr>
-    nm <silent> <leader>l :TestLast<cr>
-
-  " }}}
-
-
   " Go {{{2
 
+    let g:go_auto_type_info=1
+    let g:go_metalinter_autosave=1
     let g:go_fmt_command="goimports"
 
     " " Highlight
@@ -135,21 +106,91 @@ let mapleader = "\<space>"
 
   " }}}
 
-  " NERDTree {{{2
+  " Nerdtree {{{2
 
-    nn <leader>w :NERDTreeToggle<enter>
-    nn <silent> <leader>v :NERDTreeFind<cr>
-    let NERDTreeQuitOnOpen=1
-    let NERDTreeAutoDeleteBuffer=1
-    let NERDTreeMinimalUI=1
-    let NERDTreeDirArrows=1
+    let g:NERDTreeHijackNetrw=1
+    let g:NERDTreeShowHidden=1
+    let g:NERDTreeWinSize=35
+    let g:NERDTreeAutoDeleteBuffer=1
+    let g:NERDTreeMinimalUI=1
+    let g:NERDTreeDirArrows=1
+    let g:NERDTreeIgnore=[
+          \ '^\.DS_Store$[[file]]',
+          \ '^\.git$[[dir]]',
+          \ '^node_modules$[[dir]]']
+    let g:NERDTreeNaturalSort=1
+    nnoremap <leader>f :packadd nerdtree <bar> NERDTreeToggle <cr>
 
   " }}}
 
-  " EasyAlign {{{2
+  " Ale {{{2
 
-    xm ga <plug>(EasyAlign)
-    nm ga <plug>(EasyAlign)
+    let g:ale_sign_column_always=1
+    let g:ale_sign_error='⨉'
+    let g:ale_sign_warning='⚠'
+    let g:ale_statusline_format=['⨉ %d', '⚠ %d', '']
+    let g:ale_fixers = {
+          \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+          \ 'html': ['prettier'],
+          \ 'css': ['prettier'],
+          \ 'sass': ['prettier'],
+          \ 'javascript': ['prettier'],
+          \ 'javascript.jsx': ['prettier'],
+          \ 'json': ['prettier'],
+          \ 'graphql': ['prettier'],
+          \ 'markdown': ['prettier'],
+          \ 'python': ['black'],
+          \ 'go': ['gofmt'],
+          \ 'rust': ['rustfmt'] }
+    let g:ale_fix_on_save=1
+
+  " }}}
+
+  " Coc {{{2
+
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+
+    inoremap <silent><expr> <tab>
+          \ pumvisible() ? "\<c-n>" :
+          \ <SID>check_back_space() ? "\<tab>" :
+          \ coc#refresh()
+    inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<c-h>"
+    inoremap <silent><expr> <c-space> coc#refresh()
+    inoremap <expr> <cr> pumvisible() ? "\<c-y>" : "\<c-g>u\<cr>"
+
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
+
+    function! s:show_documentation()
+      if &filetype == 'vim'
+        execute 'h '.expand('<cword>')
+      else
+        call CocAction('doHover')
+      endif
+    endfunction
+
+    nnoremap <silent> K :call <SID>show_documentation()<cr>
+
+  " }}}
+
+  " Denite {{{2
+
+    call denite#custom#option('default', {'prompt': '»'})
+    call denite#custom#var('file_rec', 'command', ['fd', '--type', 'file', '--follow', '--color', 'never', '.'])
+    call denite#custom#var('grep', 'command', ['rg'])
+    call denite#custom#var('grep', 'default_opts', ['--hidden', '--vimgrep', '--smart-case'])
+    call denite#custom#var('grep', 'recursive_opts', [])
+    call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+    call denite#custom#var('grep', 'separator', ['--'])
+    call denite#custom#var('grep', 'final_opts', [])
+
+    nnoremap <leader>p :Denite file_rec<cr>
+    nnoremap <leader>o :Denite buffer<cr>
 
   " }}}
 
@@ -176,8 +217,6 @@ let mapleader = "\<space>"
 
   " }}}
 
-  set tags=./tags
-
   " Autoread and write files {{{2
 
     set autoread
@@ -197,12 +236,12 @@ let mapleader = "\<space>"
 
   " Enable clipboard {{{2
 
-    let s:kernel = system('echo -n "$(uname -s)"')
-    if s:kernel == 'Darwin'
-      set clipboard=unnamed
-    elseif s:kernel == 'Linux'
-      set clipboard=unnamedplus
-    endif
+    let g:clipboard={
+          \ 'name': 'pbcopy',
+          \ 'copy': {'+': 'pbcopy', '*': 'pbcopy'},
+          \ 'paste': {'+': 'pbpaste', '*': 'pbpaste'},
+          \ 'cache_enabled': 0 }
+    set clipboard=unnamed
 
   " }}}
 
@@ -215,7 +254,11 @@ let mapleader = "\<space>"
     set t_Co=256
     syntax on
     set background=light
-    colo solarized8
+    try
+      color breve
+    catch
+      color default
+    endtry
     set termguicolors
     set guicursor=
 
@@ -223,16 +266,16 @@ let mapleader = "\<space>"
 
   " Extra whitespace: {{{2
 
-    hi SpecialKey guibg=NONE ctermbg=NONE
-    hi ExtraWhitespace ctermbg=1 guibg=red
+    highlight SpecialKey guibg=NONE ctermbg=NONE
+    highlight ExtraWhitespace ctermbg=1 guibg=red
     match ExtraWhitespace /\s\+$/
-    aug HighlightExtraWhitespace
-      au!
-      au BufWinEnter * match ExtraWhitespace /\s\+$/
-      au * match ExtraWhitespace /\s\+\%#\@<!$/
-      au * match ExtraWhitespace /\s\+$/
-      au BufWinLeave * call clearmatches()
-    aug end
+    augroup HighlightExtraWhitespace
+      autocmd!
+      autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+      autocmd * match ExtraWhitespace /\s\+\%#\@<!$/
+      autocmd * match ExtraWhitespace /\s\+$/
+      autocmd BufWinLeave * call clearmatches()
+    augroup end
 
   " }}}
 
@@ -253,13 +296,15 @@ let mapleader = "\<space>"
   set list
   set scrolloff=0
   set synmaxcol=1000
-  set cursorline
+  set nocursorline
   set nocursorcolumn
 
   " Nicer netrw {{{2
 
-    let g:netrw_altv=1
+    let g:netrw_menu=0
     let g:netrw_banner=0
+    let g:netrw_altv=1
+    let g:netrw_bannoremaper=0
     let g:netrw_preview=1
     let g:netrw_winsize=25
     let g:netrw_liststyle=3
@@ -291,10 +336,9 @@ let mapleader = "\<space>"
           \ 'rm': 'More',
           \ 'r?': 'Confirm',
           \ '!':  'Shell',
-          \ 't':  'Terminal',
-          \}
+          \ 't':  'Terminal' }
 
-    fun! STLine()
+    function! STLinenum()
       let curline=line('.')
       let curcol=len(curline)
       let allcol=len(line('$'))
@@ -302,53 +346,53 @@ let mapleader = "\<space>"
         let allcol=3
       endif
       let cols=allcol-curcol
-      let padding=repeat(" ", cols+1)
+      let padding=repeat(" ", cols+3)
       let linenum=padding.curline
-      retu linenum
-    endf
+      return linenum
+    endfunction
 
-    fun! STFileType()
+    function! STFiletype()
       if &filetype != ''
-        retu '  :: '.tolower(&filetype)
+        return '  :: '.tolower(&filetype)
       else
-        retu ''
-    endf
+        return ''
+    endfunction
 
-    fun! STMode()
-      retu tolower(g:modes[mode()])
-    endf
+    function! STMode()
+      return tolower(g:modes[mode()])
+    endfunction
 
-    fun! STFilePath()
+    function! STFilepath()
       let filepath=expand('%:p')
       if len(filepath) !=# 0
-        retu '  » '.filepath
+        return '  » '.filepath
       endif
-      retu ''
-    endf
+      return ''
+    endfunction
 
-    fun! STModified()
+    function! STModified()
       if &mod ==# 1
-        retu '  [modified]'
+        return '  [modified]'
       endif
-      retu ''
-    endf
+      return ''
+    endfunction
 
-    set statusline=%{STLine()}%{STFilePath()}%{STModified()}%=%{STMode()}\%{STFileType()}
+    set statusline=%{STLinenum()}%{STFilepath()}%{STModified()}%=%{STMode()}\%{STFiletype()}
 
   " }}}
 
   " Per language settings {{{2
 
-    aug LanguageSpecific
-      au!
-      au filetype vim setlocal foldmethod=marker foldlevel=0
-      au filetype zsh setlocal foldmethod=marker foldlevel=0
-      au filetype php setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
-      au filetype ruby setlocal foldmethod=syntax
-      au filetype make setlocal noexpandtab tabstop=4 softtabstop=4
-      au filetype python setlocal nosmartindent tabstop=4 softtabstop=4 shiftwidth=4
-      au filetype javascript,javascript.jsx setlocal foldmethod=syntax
-    aug end
+    augroup LanguageSpecific
+      autocmd!
+      autocmd filetype vim setlocal foldmethod=marker foldlevel=0
+      autocmd filetype zsh setlocal foldmethod=marker foldlevel=0
+      autocmd filetype php setlocal shiftwidth=4 tabstop=4 softtabstop=4 foldmethod=syntax
+      autocmd filetype ruby setlocal foldmethod=syntax
+      autocmd filetype make setlocal noexpandtab tabstop=4 softtabstop=4
+      autocmd filetype python setlocal nosmartindent tabstop=4 softtabstop=4 shiftwidth=4
+      autocmd filetype javascript,javascript.jsx setlocal foldmethod=syntax
+    augroup end
 
   " }}}
 
@@ -447,82 +491,36 @@ let mapleader = "\<space>"
 
   " Trim trailing white space {{{2
 
-    fun! RemoveTrailingWhitespaces()
+    function! RemoveTrailingWhitespaces()
       if !&binary && &filetype != 'diff'
         :%s/\s\+$//e
       endif
-    endf
+    endfunction
 
-    aug RemoveTrailingWhitespaces
-      au!
-      au BufWritePre * call RemoveTrailingWhitespaces()
-    aug end
+    augroup RemoveTrailingWhitespaces
+      autocmd!
+      autocmd BufWritePre * call RemoveTrailingWhitespaces()
+    augroup end
 
   " }}}
 
   " Focus on the line from last open {{{2
 
-    aug FocusLastLine
-      au!
-      au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-    aug end
+    augroup FocusLastLine
+      autocmd!
+      autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif
+    augroup end
 
   " }}}
 
   " Disable automatic comment insertion {{{2
 
-    aug DisableAutoComment
-      au!
-      au filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-    aug end
+    augroup DisableAutoComment
+      autocmd!
+      autocmd filetype * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+    augroup end
 
   " }}}
-
-  " Better tab {{{2
-
-    fun! InsertTabWrapper()
-      let col = col('.') - 1
-      if !col || getline('.')[col - 1] !~ '\k'
-        retu "\<tab>"
-      else
-        retu "\<c-p>"
-      endif
-    endf
-
-    ino <expr> <silent> <tab> InsertTabWrapper()
-
-  " }}}
-
-" }}}
-
-" Fuzzy {{{
-
-fun! FuzzyCommand(choice_command, vim_command)
-  try
-    let selection = system(a:choice_command . " | hs")
-  cat /Vim:Interrupt/
-    redr!
-    retu
-  endt
-  redr!
-  if v:shell_error == 0 && !empty(selection)
-    exe a:vim_command . " " . selection
-  endif
-endf
-
-nn <leader>p :call FuzzyCommand("fd -t f .", ":e")<cr>
-
-fun! FuzzyBuffer()
-  let bufnrs = filter(range(1, bufnr("$")), 'buflisted(v:val)')
-  let buffers = map(bufnrs, 'bufname(v:val)')
-  call FuzzyCommand('echo "' . join(buffers, "\n") . '"', ":b")
-endf
-
-nn <leader>o :call FuzzyBuffer()<cr>
-
-" nm <silent> <leader>n :TestNearest<cr>
-" nm <silent> <leader>f :TestFile<cr>
-" nm <silent> <leader>l :TestLast<cr>
 
 " }}}
 
@@ -539,7 +537,6 @@ nn <leader>o :call FuzzyBuffer()<cr>
 " <c-x><c-v> for vim command line
 " <c-n> for completion for next match keyword
 " <c-p> for completion for previous match keyword
-" ** When stage is on option list
 " <c-n> for next option
 " <c-p> for previous option
 
