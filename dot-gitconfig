@@ -48,8 +48,5 @@
   search = log --no-merges -i -E --pretty='%h (%ad) - [%an] %s %d' --date=format:'%b %d %Y' —grep
   cb = "!git checkout `git branch | fzy`"
 
-[url "https://github.com/"]
-  insteadOf = gh:
-
-[url "https://bitbucket.org/"]
-  insteadOf = bb:
+[url "git@github.com:"]
+	insteadOf = https://github.com/

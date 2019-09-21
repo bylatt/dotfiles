@@ -39,7 +39,7 @@ export HOMEBREW=/usr/local
 
     # Java {{{3
 
-    export JAVA_HOME=$HOME/.jdk/Contents/Home
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Home
 
     # }}}
 
@@ -52,6 +52,7 @@ export HOMEBREW=/usr/local
 path=(
   $HOMEBREW/{bin,sbin}
   $HOME/.bin
+  $HOME/.google-cloud-sdk/bin
   $path
 )
 
@@ -60,7 +61,8 @@ path=(
 # Alias {{{
 
 alias vi='nvim'
-alias ll='ls -Glah'
+alias ls='exa'
+alias ll='exa -gla'
 alias cp='cp -ivR'
 alias mv='mv -iv'
 alias vim='nvim'
@@ -156,16 +158,16 @@ function +vi-git-untracked() {
 
 # Show number of stashed changes.
 function +vi-git-stash() {
-local -a stashes
+  local -a stashes
 
-if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
-  stashes=(${(@f)$(git stash list 2>/dev/null)})
-  # Sometimes refs/stash exists even with 0 stashes
-  # Make sure we have at least 1 stash before adding this info
-  if (( ${#stashes} )); then
-    hook_com[misc]+="${#stashes}s/"
+  if [[ -s ${hook_com[base]}/.git/refs/stash ]]; then
+    stashes=(${(@f)$(git stash list 2>/dev/null)})
+    # Sometimes refs/stash exists even with 0 stashes
+    # Make sure we have at least 1 stash before adding this info
+    if (( ${#stashes} )); then
+      hook_com[misc]+="${#stashes}s/"
+    fi
   fi
-fi
 }
 
 add-zsh-hook precmd vcs_info
@@ -212,10 +214,6 @@ HISTSIZE=100000
 SAVEHIST=100000
 HISTFILESIZE=2000000
 
-function fh() {
-  eval $(fc -ln 0 | hs)
-}
-
 # }}}
 
 # Title {{{
@@ -245,8 +243,7 @@ autoload -Uz promptinit colors
 promptinit
 colors
 
-# PROMPT='%B%(3~|</%3d|%d)%b ○ %{$reset_color%}'
-PROMPT='#!%35<\<<%d ○ %{$reset_color%}'
+PROMPT='%F{blue}%42<\<<%d/%f !#$ %{$reset_color%}'
 RPROMPT='${vcs_info_msg_0_}'
 
 # }}}
@@ -263,10 +260,10 @@ alias zsh-system-clipboard-get="${ZSH_SYSTEM_CLIPBOARD[get]}"
 function zsh-system-clipboard-vicmd-vi-yank() {
   zle vi-yank
   if [[ "${KEYS}" == "y" ]]; then # A new line should be added to the end
-    printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-  else
-    printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-  fi
+  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
+else
+  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
+fi
 }
 zle -N zsh-system-clipboard-vicmd-vi-yank
 
@@ -372,12 +369,21 @@ typeset -gU cdpath fpath mailpath path
 
 # Funcs {{{
 
-function work() {
+function fh() {
+  eval $(fc -ln 0 | hs)
+}
+
+function wk() {
   cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | hs)
 }
 
-function priv() {
+function me() {
   cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | hs)
+}
+
+function switch_aws_profile() {
+  rm -rf $HOME/.aws/credentials
+  cp $HOME/.aws/credentials.$1 $HOME/.aws/credentials
 }
 
 # }}}
