@@ -20,7 +20,6 @@ export HOMEBREW=/usr/local
   export VISUAL=nvim
   export EDITOR=nvim
   export PAGER=less
-  export LSCOLORS=ExFxCxDxBxegedabagacad
   export GREP_OPTIONS='--color=auto'
   export PYTHONSTARTUP=$HOME/.pythonrc
 
@@ -39,7 +38,7 @@ export HOMEBREW=/usr/local
 
     # Java {{{3
 
-    export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Home
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
 
     # }}}
 
@@ -61,18 +60,14 @@ path=(
 # Alias {{{
 
 alias vi='nvim'
-alias ls='exa'
-alias ll='exa -gla'
+alias ls='exa --color=never'
+alias ll='exa -gla --color=never'
+alias tree='exa --tree'
 alias cp='cp -ivR'
 alias mv='mv -iv'
 alias vim='nvim'
 alias mkd='mkdir -pv'
 alias tmux='tmux -f $HOME/.tmuxrc'
-alias flushdns='dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
-
-for method in GET POST PUT DELETE HEAD; do
-  alias "$method"="curl -s -X $method"
-done
 
 # }}}
 
@@ -243,7 +238,8 @@ autoload -Uz promptinit colors
 promptinit
 colors
 
-PROMPT='%F{blue}%42<\<<%d/%f !#$ %{$reset_color%}'
+# PROMPT='%F{blue}%42<\<<%d/%f !#$ %{$reset_color%}'
+PROMPT='%42<\<<%~ !# %{$reset_color%}'
 RPROMPT='${vcs_info_msg_0_}'
 
 # }}}
@@ -369,21 +365,26 @@ typeset -gU cdpath fpath mailpath path
 
 # Funcs {{{
 
-function fh() {
-  eval $(fc -ln 0 | hs)
-}
-
 function wk() {
-  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | hs)
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | fzf)
 }
 
 function me() {
-  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | hs)
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | fzf)
 }
 
 function switch_aws_profile() {
   rm -rf $HOME/.aws/credentials
   cp $HOME/.aws/credentials.$1 $HOME/.aws/credentials
 }
+
+# }}}
+
+# FZF {{{
+
+  . $HOMEBREW/opt/fzf/shell/key-bindings.zsh
+  . $HOMEBREW/opt/fzf/shell/completion.zsh
+  export FZF_DEFAULT_COMMAND='fd --type f'
+  export FZF_DEFAULT_OPTS="--layout=reverse --color=bw"
 
 # }}}

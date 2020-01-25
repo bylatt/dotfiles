@@ -24,16 +24,13 @@ call plug#begin($HOME.'/.vim/plug')
   Plug 'terryma/vim-expand-region'
   Plug 'pangloss/vim-javascript'
   Plug 'maxmellon/vim-jsx-pretty'
-  Plug 'fatih/vim-go'
   Plug 'sgur/vim-editorconfig'
   Plug 'isa/vim-matchit'
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'janko/vim-test'
-  Plug 'jeffkreeftmeijer/vim-dim'
-  Plug 'autozimu/languageclient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
-  Plug 'shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  Plug 'shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-  Plug 'shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
+  Plug 'andreypopp/vim-colors-plain'
+  Plug 'natebosch/vim-lsc'
+  Plug 'lifepillar/vim-mucomplete'
 call plug#end()
 
 filetype plugin indent on
@@ -88,150 +85,30 @@ let mapleader = "\<space>"
 
 " PluginSettings {{{
 
-  " Go {{{2
-
-    let g:go_auto_type_info=v:true
-    let g:go_fmt_command='goimports'
-    let g:go_def_mode='gopls'
-    let g:go_info_mode='gopls'
-
-    " Highlight
-    let g:go_highlight_functions=v:true
-    let g:go_highlight_methods=v:true
-    let g:go_highlight_structs=v:true
-    let g:go_highlight_operators=v:true
-    let g:go_highlight_build_constraints=v:true
-
-  " }}}
-
   " FZF {{{2
 
-    " nnoremap <silent> <leader>p :call fzf#run({'sink': 'e'})<cr>
-    " nnoremap <silent> <leader>o :call fzf#run({'source': map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'), 'sink': 'e'})<cr>
+    nnoremap <silent> <leader>p :call fzf#run({'sink': 'e'})<cr>
+    nnoremap <silent> <leader>o :call fzf#run({'source': map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'), 'sink': 'e'})<cr>
 
   " }}}
 
-  " LanguageClient {{{2
-
-  let g:LanguageClient_serverCommands={
-        \ 'rust': ['rls'],
-        \ 'go': ['gopls'],
-        \ 'python': ['pyls'],
-        \ 'javascript': ['typescript-language-server', '--stdio'],
-        \ 'javascript.jsx': ['typescript-language-server', '--stdio'],
-        \ }
-  nnoremap <silent> K :call LanguageClient#textDocument_hover()<cr>
-  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<cr>
-  autocmd bufWritePre *.rs :call LanguageClient#textDocument_formatting_sync()
-  autocmd bufWritePre *.py :call LanguageClient#textDocument_formatting_sync()
-  autocmd bufWritePre *.go :call LanguageClient#textDocument_formatting_sync()
-
+  " LSC {{{2
+    let g:lsc_auto_map=v:true
+    let g:lsc_server_commands={
+          \ 'python': 'pyls',
+          \ 'go': {'command': 'gopls serve', 'log_level': -1, 'suppress_stderr': v:true},
+          \ 'rust': 'rls',
+          \ 'javascript': 'typescript-language-server --stdio',
+          \ 'javascript.jsx': 'typescript-language-server --stdio',
+          \ }
   " }}}
 
-  " Deoplete {{{2
+  " Mucomplete {{{2
 
-  let g:deoplete#enable_at_startup=1
-  function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-  endfunction
-  inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : <sid>check_back_space() ? "\<tab>" : deoplete#manual_complete()
+    let g:mucomplete#enable_auto_at_startup=1
+    let g:mucomplete#completion_delay=1
 
   " }}}
-
-  " Defx {{{2
-
-    autocmd filetype defx call s:defx_my_settings()
-
-    noremap <silent><leader>f :Defx<cr>
-
-    call defx#custom#option('_', {
-          \ 'winwidth': 45,
-          \ 'columns': 'mark:indent:filename',
-          \ 'split': 'vertical',
-          \ 'direction': 'topleft',
-          \ 'show_ignored_files': v:true,
-          \ 'buffer_name': '',
-          \ 'toggle': v:true,
-          \ 'resume': v:true,
-          \ 'root_marker': ':: ',
-          \ })
-
-    function! s:defx_my_settings() abort
-      setl nospell
-      setl signcolumn=no
-      setl nonumber
-      nnoremap <silent><buffer><expr> <cr> defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('drop')
-      nnoremap <silent><buffer><expr> c defx#do_action('copy')
-      nnoremap <silent><buffer><expr> p defx#do_action('paste')
-      nnoremap <silent><buffer><expr> m defx#do_action('rename')
-      nnoremap <silent><buffer><expr> d defx#do_action('remove')
-      nnoremap <silent><buffer><expr> a defx#do_action('new_multiple_files')
-      nnoremap <silent><buffer><expr> s defx#do_action('open', 'vsplit')
-      nnoremap <silent><buffer><expr> u defx#do_action('cd', ['..'])
-      nnoremap <silent><buffer><expr> . defx#do_action('toggle_ignored_files')
-      nnoremap <silent><buffer><expr> <space> defx#do_action('toggle_select')
-      nnoremap <silent><buffer><expr> * defx#do_action('toggle_select_all')
-      nnoremap <silent><buffer><expr> r defx#do_action('redraw')
-    endfunction
-
-  " }}}
-
-  " Denite {{{2
-
-    call denite#custom#var('file/rec', 'command', ['fd', '--type', 'file', '--follow', '--hidden', '--exclude', '.git', '.'])
-    call denite#custom#source('grep', 'vars', {
-          \ 'command': ['rg'],
-          \ 'default_opts': ['--hidden', '--vimgrep', '--heading', '-S'],
-          \ 'recursive_opts': [],
-          \ 'pattern_opt': ['--regexp'],
-          \ 'separator': ['--'],
-          \ 'final_opts': [],
-          \ })
-    call denite#custom#var('buffer', 'date_format', '')
-
-    call denite#custom#option('_', {
-          \ 'split': 'floating',
-          \ 'start_filter': v:true,
-          \ 'auto_resize': v:true,
-          \ 'source_names': 'short',
-          \ 'prompt': '',
-          \ 'statusline': v:false,
-          \ 'highlight_matched_char': 'WildMenu',
-          \ 'highlight_matched_range': 'Visual',
-          \ 'highlight_window_background': 'Visual',
-          \ 'highlight_filter_background': 'StatusLine',
-          \ 'highlight_prompt': 'StatusLine',
-          \ 'winrow': v:true,
-          \ 'vertical_preview': v:true,
-          \ })
-
-    autocmd FileType denite-filter call s:denite_filter_my_settings()
-    function! s:denite_filter_my_settings() abort
-      imap <silent><buffer> <c-o> <Plug>(denite_filter_quit)
-      inoremap <silent><buffer><expr> <esc> denite#do_map('quit')
-      nnoremap <silent><buffer><expr> <esc> denite#do_map('quit')
-      inoremap <silent><buffer><expr> <cr> denite#do_map('do_action')
-    endfunction
-
-    autocmd FileType denite call s:denite_my_settings()
-    function! s:denite_my_settings() abort
-      nnoremap <silent><buffer><expr> <cr> denite#do_map('do_action')
-      nnoremap <silent><buffer><expr> q denite#do_map('quit')
-      nnoremap <silent><buffer><expr> <esc> denite#do_map('quit')
-      nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
-      nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
-      nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
-      nnoremap <silent><buffer><expr> <c-o> denite#do_map('open_filter_buffer')
-    endfunction
-
-    noremap <silent> <leader>p :Denite file/rec<cr>
-    noremap <silent> <leader>b :Denite buffer<cr>
-    noremap <silent> <leader>l :Denite line<cr>
-    noremap <silent> <leader>t :Denite filetype<cr>
-
-  " }}}
-
 
 " }}}
 
@@ -295,7 +172,9 @@ let mapleader = "\<space>"
     set background=dark
     " set termguicolors
     set guicursor=
-    color dim
+    color plain
+    " Make StatusLine of plain colorscheme more clearer
+    highlight StatusLine ctermfg=255
 
   " }}}
 
@@ -316,6 +195,8 @@ let mapleader = "\<space>"
 
   set linespace=0
   set shortmess=atToOI
+  set shortmess+=c
+  set belloff+=ctrlg
   set viewoptions+=unix,slash
   set noshowmode
   set showcmd
@@ -526,7 +407,8 @@ let mapleader = "\<space>"
 
     set omnifunc=syntaxcomplete#Complete
     set completefunc=syntaxcomplete#Complete
-    set completeopt=longest,menuone
+    " set completeopt=longest,menu,menuone,noinsert,noselect
+    set completeopt=menu,menuone,noinsert,noselect
     " set complete=.,w,b,u,t,i
     set complete-=i
 

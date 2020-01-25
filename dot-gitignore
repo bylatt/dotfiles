@@ -2,7 +2,7 @@
 *.7z
 *.jar
 *.rar
-*.zip
+# *.zip
 # *.gz
 *.bzip
 *.bz2
