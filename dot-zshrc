@@ -1,9 +1,8 @@
-# github.com/clozed2u :: @clozed2u
-# http://clozed2u.com
+# vim: set sw=2 ts=2 sts=0 et fdm=marker :nospell:
 
 # Homebrew {{{
 
-export HOMEBREW=/usr/local
+export HOMEBREW=$(brew --prefix)
 
 # }}}
 
@@ -51,7 +50,6 @@ export HOMEBREW=/usr/local
 path=(
   $HOMEBREW/{bin,sbin}
   $HOME/.bin
-  $HOME/.google-cloud-sdk/bin
   $path
 )
 
@@ -60,14 +58,17 @@ path=(
 # Alias {{{
 
 alias vi='nvim'
-alias ls='exa --color=never'
-alias ll='exa -gla --color=never'
+alias ls='exa'
+alias ll='exa -gla'
 alias tree='exa --tree'
 alias cp='cp -ivR'
 alias mv='mv -iv'
 alias vim='nvim'
 alias mkd='mkdir -pv'
 alias tmux='tmux -f $HOME/.tmuxrc'
+alias cc='clear'
+alias ..='cd ..'
+alias ...='cd ../..'
 
 # }}}
 
@@ -245,8 +246,8 @@ RPROMPT='${vcs_info_msg_0_}'
 # }}}
 
 # Clipboard {{{
+# github.com/kutsan/zsh-system-clipboard
 
-# Rip from github.com/kutsan/zsh-system-clipboard
 typeset -A ZSH_SYSTEM_CLIPBOARD
 typeset -g ZSH_SYSTEM_CLIPBOARD[set]='pbcopy'
 typeset -g ZSH_SYSTEM_CLIPBOARD[get]='pbpaste'
@@ -363,10 +364,50 @@ typeset -gU cdpath fpath mailpath path
 
 # }}}
 
+# Lazy load {{{
+# https://github.com/qoomon/zsh-lazyload
+
+declare -gA _lazyload
+function lazyload {
+  if [[ $1 == ':' ]]
+  then
+    shift
+    local cmd=$funcstack[2]
+    unfunction $cmd
+    local load_cmd=${_lazyload[$cmd]}
+    eval $load_cmd
+    $cmd $@
+  else
+    local seperator='--'
+    local seperator_index=${@[(ie)--]}
+    local cmd_list=(${@:1:(($seperator_index - 1))}); 
+    local load_cmd=${@[(($seperator_index + 1))]};
+    local cmd
+    for cmd in $cmd_list
+    do
+      _lazyload[$cmd]=$load_cmd
+      function $cmd {
+        lazyload : $@
+      }
+    done
+  fi
+}
+
+# }}}
+
+# FZF {{{
+
+  source $HOMEBREW/opt/fzf/shell/key-bindings.zsh
+  lazyload fzf -- "source $HOMEBREW/opt/fzf/shell/completion.zsh"
+  export FZF_DEFAULT_COMMAND='fd --type f'
+  export FZF_DEFAULT_OPTS='--color fg:242,bg:-1,hl:238,fg+:243,bg+:-1,hl+:166 --color info:248,prompt:243,spinner:242,pointer:242,marker:166 --layout=reverse'
+
+# }}}
+
 # Funcs {{{
 
 function wk() {
-  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/thothmedia/ | fzf)
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/wisesight/ | fzf)
 }
 
 function me() {
@@ -377,14 +418,5 @@ function switch_aws_profile() {
   rm -rf $HOME/.aws/credentials
   cp $HOME/.aws/credentials.$1 $HOME/.aws/credentials
 }
-
-# }}}
-
-# FZF {{{
-
-  . $HOMEBREW/opt/fzf/shell/key-bindings.zsh
-  . $HOMEBREW/opt/fzf/shell/completion.zsh
-  export FZF_DEFAULT_COMMAND='fd --type f'
-  export FZF_DEFAULT_OPTS="--layout=reverse --color=bw"
 
 # }}}

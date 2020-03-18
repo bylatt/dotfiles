@@ -1,108 +1,135 @@
-# Settings: {{{
+# vim: ft=tmux
 
-# # change prefix key
-# unbind C-b
-# set -g prefix C-c
+# Upgrade $TERM
+set -g  default-terminal             "tmux-256color"
+set -ga terminal-overrides           ",xterm-256color:Tc"
 
-# Faster command sequence
-set -g escape-time 0
+# Address vim mode switching delay (http://superuser.com/a/252717/65504)
+set -s  escape-time                  10
 
-# zsh is kinda tight
-set -g default-command $SHELL
-set -g default-shell $SHELL
+# Required (again) since macOS Sierra
+# https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard/commit/c67238179ce456fa21b047c5ae22e9ac6a9310f6
+set -g  default-command              "reattach-to-user-namespace -l ${SHELL}"
 
-# fix copy and paste
-set-option -g default-command "reattach-to-user-namespace -l $SHELL"
+# Increase scrollback buffer size
+set -g  history-limit                50000
 
-# look good
-set -g default-terminal 'xterm-256color'
-set-option -ga terminal-overrides ",xterm-256color:Tc"
+# Do not rename windows automatically
+set -g  allow-rename                 on
 
-# enable mouse
-set -g mouse on
+# Display Tmux messages for 3 seconds
+set -g  display-time                 3000
 
-# window and split pane start at 1
-set -g base-index 1
-set -g pane-base-index 1
-set -g escape-time 1
-set -g renumber-windows on
+# Display pane numbers for half a second
+set -g  display-panes-time           500
 
-# highlight window when it has new activity
-set -g monitor-activity off
-set -g visual-activity off
-set -g visual-bell off
-set -g visual-silence off
-set -g bell-action none
+# Count windows from 1
+set -g  base-index                   1
 
-# increase scrollback lines
-set -g history-limit 10000
+# Use Vim-like key bindings in copy and choice mode
+set -g  mode-keys                    vi
 
-# }}}
+# Use shell-like key bindings in the command prompt
+set -g  status-keys                  emacs
 
-# Key Binding: {{{
+# Enable mouse
+set -g  mouse                        on
 
-# reload config file
-unbind r
-bind r source-file ~/.tmuxrc
+# Appearance
+set -g  status-position              bottom
+set -g  status-justify               left
+set -g  status-left-length           50  # Default is 10
+set -g  status-right-length          50  # Default is 40
+set -g  mode-style                   fg=colour255,bg=colour241
+set -g  message-style                fg=colour255,bg=colour236
+set -g  status-style                 fg=colour255,bg=colour241
+set -g  status-left-style            fg=colour255,bg=colour237
+set -g  status-right-style           fg=colour255,bg=colour237
+set -g  status-left                  '  #S  '
+set -g  status-right                 '#{?client_prefix, tmux  ,}#{?window_zoomed_flag, Zoomed in  ,}  #H  '
+set -g  window-status-separator      ''
+set -g  window-status-format         '#[fg=colour255]  #I #W  '
+set -g  window-status-current-format '#[fg=colour255,bg=colour244,bold]  #W  #[default]#[fg=colour255]'
+set -g  pane-active-border-style     fg=colour241
+set -g  pane-border-style            fg=colour241
+set -g  pane-border-format           ' #{?pane_active,#[fg=colour166]●#[default],#{pane_index}} #{pane_current_command} '
+set -g  pane-border-status           bottom
+set -g  visual-activity              on
 
-# act like vim
-set -g mode-keys vi
-set -g status-keys vi
-bind-key -T copy-mode-vi 'v' send -X begin-selection
-# bind-key -T copy-mode-vi 'y' send -X copy-selection
-bind-key -T copy-mode-vi 'y' send -X copy-pipe-and-cancel 'reattach-to-user-namespace pbcopy'
-unbind-key -T copy-mode-vi Enter
-bind-key -T copy-mode-vi Enter send -X cancel
+# Change prefix to C-q or C-Space
+set -g  prefix                       C-q
+set -g  prefix2                      C-Space
 
-# easy to remember split pane
-bind | split-window -h
-bind - split-window -v
-unbind '"'
-unbind %
+unbind-key  C-b
+bind-key    C-Space                  send-prefix
 
-# resize panes with vim movement keys
-bind -r H resize-pane -L 5
-bind -r J resize-pane -D 5
-bind -r K resize-pane -U 5
-bind -r L resize-pane -R 5
+# Easier and faster switching between next/prev window
+bind-key    C-p                      previous-window
+bind-key    C-n                      next-window
 
-# smart pane switching with awareness of vim splits
+# New bindings for s and l (which we override below)
+bind-key    S                        choose-tree
+bind-key    b                        last-window
+
+# Vim-like window splitting
+bind-key    s                        split-window -v
+bind-key    v                        split-window -h
+
+# Easier and faster pane resizing
+bind-key    h                        resize-pane -L 5
+bind-key    l                        resize-pane -R 5
+bind-key    j                        resize-pane -D 5
+bind-key    k                        resize-pane -U 5
+
+# # Vim-like pane switching
+# bind-key    C-h                      select-pane -L
+# bind-key    C-j                      select-pane -D
+# bind-key    C-k                      select-pane -U
+# bind-key    C-l                      select-pane -R
+
+# Enable seamless navigation between Vim and tmux
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
-bind-key -n C-h if-shell "$is_vim" "send-keys C-h"  "select-pane -L"
-bind-key -n C-j if-shell "$is_vim" "send-keys C-j"  "select-pane -D"
-bind-key -n C-k if-shell "$is_vim" "send-keys C-k"  "select-pane -U"
-bind-key -n C-l if-shell "$is_vim" "send-keys C-l"  "select-pane -R"
-bind-key -T copy-mode-vi C-h select-pane -L
-bind-key -T copy-mode-vi C-j select-pane -D
-bind-key -T copy-mode-vi C-k select-pane -U
-bind-key -T copy-mode-vi C-l select-pane -R
 
-# }}}
+# bind-key -n M-h                      if-shell "$is_vim" "send-keys M-h"  "select-pane -L"
+# bind-key -n M-j                      if-shell "$is_vim" "send-keys M-j"  "select-pane -D"
+# bind-key -n M-k                      if-shell "$is_vim" "send-keys M-k"  "select-pane -U"
+# bind-key -n M-l                      if-shell "$is_vim" "send-keys M-l"  "select-pane -R"
 
-# My StatusLine: {{{
+# # Allow using alt in macOS without enabling “Use Option as Meta key”
+# bind-key -n ˙                        if-shell "$is_vim" "send-keys ˙"  "select-pane -L"
+# bind-key -n ∆                        if-shell "$is_vim" "send-keys ∆"  "select-pane -D"
+# bind-key -n ˚                        if-shell "$is_vim" "send-keys ˚"  "select-pane -U"
+# bind-key -n ¬                        if-shell "$is_vim" "send-keys ¬"  "select-pane -R"
 
-set -g status-position top
-set -g status-interval 1
-set -g status-justify right
-set -g status-left-length '100'
-set -g status-left '#S'
-set -g status-right-length '100'
-set -g status-right ''
-set -g status-bg colour8
-set -g status-fg colour15
+# In the better way
+bind-key -n 'C-h'                   if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
+bind-key -n 'C-j'                   if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
+bind-key -n 'C-k'                   if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
+bind-key -n 'C-l'                   if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
 
-# default window title
-setw -g window-status-format '#I:#W'
+bind-key -T copy-mode-vi 'C-h' select-pane -L
+bind-key -T copy-mode-vi 'C-j' select-pane -D
+bind-key -T copy-mode-vi 'C-k' select-pane -U
+bind-key -T copy-mode-vi 'C-l' select-pane -R
+bind-key -T copy-mode-vi 'C-\' select-pane -l
 
-# active window title
-setw -g window-status-current-format ' #I:#W '
-# setw -g window-status-current-style fg=colour15,bg=colour16,noitalics
+# Change window order
+bind-key    <                        swap-window -t -1
+bind-key    >                        swap-window -t +1
 
-# setw -g window-status-current-style
-# setw -g window-status-activity-style
-# setw -g window-status-bell-style
+# Reload Tmux configuration (see `man tmux`)
+bind-key    r                        source-file ~/.tmuxrc \; display-message "Tmux configuration reloaded"
 
-setw -g pane-border-style fg=colour8
-setw -g pane-active-border-style fg=colour4
+# Use Space to toggle between block/line mode instead of default v
+bind-key   -Tcopy-mode-vi Space      send-keys -X rectangle-toggle
 
-# }}}
+# Use v to start selection
+unbind-key -Tcopy-mode-vi v
+bind-key   -Tcopy-mode-vi v          send-keys -X begin-selection
+
+# To copy a mouse selection to macOS's system clipboard, use one of the following:
+# 1. In Terminal.app, press fn and drag the mouse, then use Cmd-C as usual (works also in Vim).
+# 2. In iTerm2.app, press Option and drag the mouse, then use Cmd-C as usual (works also in Vim).
+# 3. In any terminal, start dragging with the mouse, then, while keeping the mouse button down, press y.
+# See also: https://github.com/tmux/tmux/wiki/FAQ
+bind-key   -Tcopy-mode-vi y          send -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
