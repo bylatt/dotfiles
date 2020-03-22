@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function install_homebrew() {
-  bash -c 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   brew bundle install --file=$PWD/dot-brewrc
 }
 
