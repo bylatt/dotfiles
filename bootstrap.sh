@@ -38,9 +38,11 @@ if [ ! which brew > /dev/null 2>&1 ]; then
   install_homebrew
 fi
 
-read -p "This will overwrite existing files in your home directory. Are you sure? (y/n) " -n 1
+read -p "This will overwrite existing files in your home directory. Are you sure? (y/n) " reply
 echo ""
 
-if [ $REPLY =~ ^[Yy]$ ]; then
-  connect_the_dots
-fi
+case $reply in
+  [Yy]* ) connect_the_dots;;
+  [Nn]* ) exit;;
+  * ) echo "Yes or No only";;
+esac
