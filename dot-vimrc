@@ -13,6 +13,7 @@ if !filereadable(expand($HOME.'/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin($HOME.'/.vim/plug')
+  Plug '$HOMEBREW/opt/fzf'
   Plug 'tpope/vim-rsi'
   Plug 'tpope/vim-eunuch'
   Plug 'tpope/vim-repeat'
@@ -31,7 +32,7 @@ call plug#begin($HOME.'/.vim/plug')
   Plug 'andymass/vim-matchup'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'shougo/defx.nvim', {'do': ':UpdateRemotePlugins'}
-  Plug 'shougo/denite.nvim', {'do': ':UpdateRemotePlugins'}
+  " Plug 'shougo/denite.nvim', {'do': ':UpdateRemotePlugins'}
   " Plug 'shougo/deoplete.nvim'
 call plug#end()
 
@@ -87,6 +88,13 @@ let mapleader = "\<space>"
 " }}}
 
 " PluginSettings {{{
+  " Test {{{2
+
+    noremap <silent><leader>a :TestNearest<cr>
+    noremap <silent><leader>s :TestFile<cr>
+
+  " }}}
+
 
   " Coc {{{2
 
@@ -168,60 +176,67 @@ let mapleader = "\<space>"
 
   " }}}
 
-  " Denite {{{2
+  " FZF {{{2
 
-    call denite#custom#var('file/rec', 'command', ['fd', '--type', 'file', '--follow', '--hidden', '--exclude', '.git', '.'])
-    call denite#custom#source('grep', 'vars', {
-          \ 'command': ['rg'],
-          \ 'default_opts': ['--hidden', '--vimgrep', '--heading', '-S'],
-          \ 'recursive_opts': [],
-          \ 'pattern_opt': ['--regexp'],
-          \ 'separator': ['--'],
-          \ 'final_opts': [],
-          \ })
-    call denite#custom#var('buffer', 'date_format', '')
-
-    call denite#custom#option('_', {
-          \ 'split': 'floating',
-          \ 'start_filter': v:true,
-          \ 'auto_resize': v:false,
-          \ 'source_names': 'short',
-          \ 'prompt': '',
-          \ 'statusline': v:false,
-          \ 'highlight_matched_char': 'WildMenu',
-          \ 'highlight_matched_range': 'Visual',
-          \ 'highlight_window_background': 'Visual',
-          \ 'highlight_filter_background': 'StatusLine',
-          \ 'highlight_prompt': 'StatusLine',
-          \ 'winrow': v:true,
-          \ 'vertical_preview': v:true,
-          \ })
-
-    autocmd FileType denite-filter call s:denite_filter_my_settings()
-    function! s:denite_filter_my_settings() abort
-      imap <silent><buffer> <c-o> <Plug>(denite_filter_quit)
-      inoremap <silent><buffer><expr> <esc> denite#do_map('quit')
-      nnoremap <silent><buffer><expr> <esc> denite#do_map('quit')
-      inoremap <silent><buffer><expr> <cr> denite#do_map('do_action')
-    endfunction
-
-    autocmd FileType denite call s:denite_my_settings()
-    function! s:denite_my_settings() abort
-      nnoremap <silent><buffer><expr> <cr> denite#do_map('do_action')
-      nnoremap <silent><buffer><expr> q denite#do_map('quit')
-      nnoremap <silent><buffer><expr> <esc> denite#do_map('quit')
-      nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
-      nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
-      nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
-      nnoremap <silent><buffer><expr> <c-o> denite#do_map('open_filter_buffer')
-    endfunction
-
-    noremap <silent> <leader>p :Denite file/rec<cr>
-    noremap <silent> <leader>b :Denite buffer<cr>
-    noremap <silent> <leader>l :Denite line<cr>
-    noremap <silent> <leader>t :Denite filetype<cr>
+    nnoremap <silent> <leader>p :call fzf#run({'sink': 'e'})<cr>
+    nnoremap <silent> <leader>o :call fzf#run({'source': map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'), 'sink': 'e'})<cr>
 
   " }}}
+
+  " " Denite {{{2
+
+  "   call denite#custom#var('file/rec', 'command', ['fd', '--type', 'file', '--follow', '--hidden', '--exclude', '.git', '.'])
+  "   call denite#custom#source('grep', 'vars', {
+  "         \ 'command': ['rg'],
+  "         \ 'default_opts': ['--hidden', '--vimgrep', '--heading', '-S'],
+  "         \ 'recursive_opts': [],
+  "         \ 'pattern_opt': ['--regexp'],
+  "         \ 'separator': ['--'],
+  "         \ 'final_opts': [],
+  "         \ })
+  "   call denite#custom#var('buffer', 'date_format', '')
+
+  "   call denite#custom#option('_', {
+  "         \ 'split': 'floating',
+  "         \ 'start_filter': v:true,
+  "         \ 'auto_resize': v:false,
+  "         \ 'source_names': 'short',
+  "         \ 'prompt': '',
+  "         \ 'statusline': v:false,
+  "         \ 'highlight_matched_char': 'WildMenu',
+  "         \ 'highlight_matched_range': 'Visual',
+  "         \ 'highlight_window_background': 'Visual',
+  "         \ 'highlight_filter_background': 'StatusLine',
+  "         \ 'highlight_prompt': 'StatusLine',
+  "         \ 'winrow': v:true,
+  "         \ 'vertical_preview': v:true,
+  "         \ })
+
+  "   autocmd FileType denite-filter call s:denite_filter_my_settings()
+  "   function! s:denite_filter_my_settings() abort
+  "     imap <silent><buffer> <c-o> <Plug>(denite_filter_quit)
+  "     inoremap <silent><buffer><expr> <esc> denite#do_map('quit')
+  "     nnoremap <silent><buffer><expr> <esc> denite#do_map('quit')
+  "     inoremap <silent><buffer><expr> <cr> denite#do_map('do_action')
+  "   endfunction
+
+  "   autocmd FileType denite call s:denite_my_settings()
+  "   function! s:denite_my_settings() abort
+  "     nnoremap <silent><buffer><expr> <cr> denite#do_map('do_action')
+  "     nnoremap <silent><buffer><expr> q denite#do_map('quit')
+  "     nnoremap <silent><buffer><expr> <esc> denite#do_map('quit')
+  "     nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
+  "     nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
+  "     nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
+  "     nnoremap <silent><buffer><expr> <c-o> denite#do_map('open_filter_buffer')
+  "   endfunction
+
+  "   noremap <silent> <leader>p :Denite file/rec<cr>
+  "   noremap <silent> <leader>b :Denite buffer<cr>
+  "   noremap <silent> <leader>l :Denite line<cr>
+  "   noremap <silent> <leader>t :Denite filetype<cr>
+
+  " " }}}
 
   " " Deoplete {{{2
 

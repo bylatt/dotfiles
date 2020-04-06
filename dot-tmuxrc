@@ -57,11 +57,11 @@ set -g  pane-border-status           bottom
 set -g  visual-activity              on
 
 # Change prefix to C-q or C-Space
-set -g  prefix                       C-q
-set -g  prefix2                      C-Space
+# set -g  prefix                       C-q
+# set -g  prefix2                      C-Space
 
-unbind-key  C-b
-bind-key    C-Space                  send-prefix
+# unbind-key  C-b
+# bind-key    C-Space                  send-prefix
 
 # Easier and faster switching between next/prev window
 bind-key    C-p                      previous-window

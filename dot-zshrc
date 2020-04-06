@@ -420,3 +420,5 @@ function switch_aws_profile() {
 }
 
 # }}}
+
+export PATH=$HOME/node/bin:$PATH
