@@ -26,6 +26,8 @@ call plug#begin($HOME.'/.vim/plug')
   Plug 'sgur/vim-editorconfig'
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'lifepillar/vim-gruvbox8'
+  Plug 'lifepillar/vim-solarized8'
+  Plug 'noahfrederick/vim-noctu'
   Plug 'janko/vim-test'
   Plug 'justinmk/vim-sneak'
   Plug 'chiel92/vim-autoformat'
@@ -33,7 +35,7 @@ call plug#begin($HOME.'/.vim/plug')
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'shougo/defx.nvim', {'do': ':UpdateRemotePlugins'}
   " Plug 'shougo/denite.nvim', {'do': ':UpdateRemotePlugins'}
-  " Plug 'shougo/deoplete.nvim'
+  " Plug 'shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 call plug#end()
 
 filetype plugin indent on
@@ -105,7 +107,6 @@ let mapleader = "\<space>"
           \ 'coc-clangd',
           \ 'coc-go',
           \ 'coc-json',
-          \ 'coc-html',
           \ 'coc-css',
           \ 'coc-dictionary',
           \ 'coc-lists',
@@ -321,9 +322,9 @@ let mapleader = "\<space>"
     set t_Co=256
     syntax on
     set background=dark
-    set termguicolors
+    " set termguicolors
     set guicursor=
-    color gruvbox8
+    color noctu
 
   " }}}
 
