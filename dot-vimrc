@@ -13,7 +13,6 @@ if !filereadable(expand($HOME.'/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin($HOME.'/.vim/plug')
-  Plug '$HOMEBREW/opt/fzf'
   Plug 'tpope/vim-rsi'
   Plug 'tpope/vim-eunuch'
   Plug 'tpope/vim-repeat'
@@ -27,7 +26,6 @@ call plug#begin($HOME.'/.vim/plug')
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'lifepillar/vim-gruvbox8'
   Plug 'lifepillar/vim-solarized8'
-  Plug 'noahfrederick/vim-noctu'
   Plug 'janko/vim-test'
   Plug 'justinmk/vim-sneak'
   Plug 'chiel92/vim-autoformat'
@@ -76,6 +74,7 @@ let mapleader = "\<space>"
       autocmd filetype ruby nnoremap <buffer> <leader>m :!ruby %<cr>
       autocmd filetype python nnoremap <buffer> <leader>m :!python3 %<cr>
       autocmd filetype javascript nnoremap <buffer> <leader>m :!node %<cr>
+      autocmd filetype typescript nnoremap <buffer> <leader>m :!deno run --allow-read --allow-write --allow-net %<cr>
     augroup end
 
   " }}}
@@ -131,6 +130,9 @@ let mapleader = "\<space>"
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gr <Plug>(coc-references)
 
+    nnoremap <silent> <leader>p :CocList files<cr>
+    nnoremap <silent> <leader>o :CocList buffers<cr>
+
   " }}}
 
   " Defx {{{2
@@ -174,13 +176,6 @@ let mapleader = "\<space>"
     endfunction
     autocmd VimEnter * sil! au! FileExplorer *
     autocmd BufEnter * if s:isdir(expand('%')) | bd | exe 'Defx' | endif
-
-  " }}}
-
-  " FZF {{{2
-
-    nnoremap <silent> <leader>p :call fzf#run({'sink': 'e'})<cr>
-    nnoremap <silent> <leader>o :call fzf#run({'source': map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'), 'sink': 'e'})<cr>
 
   " }}}
 
@@ -258,7 +253,8 @@ let mapleader = "\<space>"
     let g:formatters_html=['prettier']
     let g:formatters_css=['prettier']
     let g:formatters_javascript=['prettier']
-    autocmd BufWrite *.go,*.rs,*.py,*.html,*.css,*.js :Autoformat
+    let g:formatters_typescript=['prettier']
+    autocmd BufWrite *.go,*.rs,*.py,*.html,*.css,*.js,*.ts :Autoformat
 
   " }}}
 
@@ -322,9 +318,12 @@ let mapleader = "\<space>"
     set t_Co=256
     syntax on
     set background=dark
-    " set termguicolors
+    if $TERM_PROGRAM == "Apple_Terminal"
+    else
+      set termguicolors
+    endif
     set guicursor=
-    color noctu
+    color gruvbox8
 
   " }}}
 

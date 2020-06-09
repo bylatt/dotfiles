@@ -26,6 +26,7 @@
 
 [pull]
   default = current
+	rebase = false
 
 [alias]
   aa = add --all

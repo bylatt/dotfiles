@@ -395,23 +395,24 @@ function lazyload {
 
 # }}}
 
-# FZF {{{
+# SK {{{
 
-  source $HOMEBREW/opt/fzf/shell/key-bindings.zsh
-  lazyload fzf -- "source $HOMEBREW/opt/fzf/shell/completion.zsh"
-  export FZF_DEFAULT_COMMAND='fd --type f'
-  export FZF_DEFAULT_OPTS='--color fg:242,bg:-1,hl:238,fg+:243,bg+:-1,hl+:166 --color info:248,prompt:243,spinner:242,pointer:242,marker:166 --layout=reverse'
+  source $HOMEBREW/opt/sk/share/zsh/site-functions/key-bindings.zsh
+  source $HOMEBREW/opt/sk/share/zsh/site-functions/completion.zsh
+  export SKIM_CTRL_T_OPTS="--preview 'bat --color always {}'"
+  export SKIM_DEFAULT_OPTIONS='--color=fg:242,bg:-1,hl:238,fg+:243,bg+:-1,hl+:166,info:248,prompt:243,spinner:242,pointer:242,marker:166 --layout=reverse'
+  export SKIM_DEFAULT_COMMAND="fd --type f || rg --files || find ."
 
 # }}}
 
 # Funcs {{{
 
 function wk() {
-  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/wisesight/ | fzf)
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/wisesight/ | sk)
 }
 
 function me() {
-  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | fzf)
+  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | sk)
 }
 
 function switch_aws_profile() {
