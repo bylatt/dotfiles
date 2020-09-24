@@ -69,6 +69,7 @@ alias tmux='tmux -f $HOME/.tmuxrc'
 alias cc='clear'
 alias ..='cd ..'
 alias ...='cd ../..'
+alias cccc='open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security'
 
 # }}}
 
@@ -240,7 +241,7 @@ promptinit
 colors
 
 # PROMPT='%F{blue}%42<\<<%d/%f !#$ %{$reset_color%}'
-PROMPT='%42<\<<%~ !# %{$reset_color%}'
+PROMPT='%42<\<<%~ (>"o")> %{$reset_color%}'
 RPROMPT='${vcs_info_msg_0_}'
 
 # }}}
@@ -422,4 +423,4 @@ function switch_aws_profile() {
 
 # }}}
 
-export PATH=$HOME/node/bin:$PATH
+export PATH=$HOME/.gonvm/bin:$PATH

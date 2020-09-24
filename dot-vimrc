@@ -30,6 +30,7 @@ call plug#begin($HOME.'/.vim/plug')
   Plug 'justinmk/vim-sneak'
   Plug 'chiel92/vim-autoformat'
   Plug 'andymass/vim-matchup'
+  Plug 'kristijanhusak/vim-simple-notifications'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'shougo/defx.nvim', {'do': ':UpdateRemotePlugins'}
   " Plug 'shougo/denite.nvim', {'do': ':UpdateRemotePlugins'}
