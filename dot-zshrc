@@ -365,37 +365,6 @@ typeset -gU cdpath fpath mailpath path
 
 # }}}
 
-# Lazy load {{{
-# https://github.com/qoomon/zsh-lazyload
-
-declare -gA _lazyload
-function lazyload {
-  if [[ $1 == ':' ]]
-  then
-    shift
-    local cmd=$funcstack[2]
-    unfunction $cmd
-    local load_cmd=${_lazyload[$cmd]}
-    eval $load_cmd
-    $cmd $@
-  else
-    local seperator='--'
-    local seperator_index=${@[(ie)--]}
-    local cmd_list=(${@:1:(($seperator_index - 1))}); 
-    local load_cmd=${@[(($seperator_index + 1))]};
-    local cmd
-    for cmd in $cmd_list
-    do
-      _lazyload[$cmd]=$load_cmd
-      function $cmd {
-        lazyload : $@
-      }
-    done
-  fi
-}
-
-# }}}
-
 # SK {{{
 
   source $HOMEBREW/opt/sk/share/zsh/site-functions/key-bindings.zsh
@@ -408,11 +377,7 @@ function lazyload {
 
 # Funcs {{{
 
-function wk() {
-  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/wisesight/ | sk)
-}
-
-function me() {
+function pro() {
   cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | sk)
 }
 
@@ -422,5 +387,3 @@ function switch_aws_profile() {
 }
 
 # }}}
-
-export PATH=$HOME/.gonvm/bin:$PATH

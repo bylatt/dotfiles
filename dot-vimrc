@@ -30,6 +30,7 @@ call plug#begin($HOME.'/.vim/plug')
   Plug 'justinmk/vim-sneak'
   Plug 'chiel92/vim-autoformat'
   Plug 'andymass/vim-matchup'
+  Plug 'srstevenson/vim-picker'
   Plug 'kristijanhusak/vim-simple-notifications'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'shougo/defx.nvim', {'do': ':UpdateRemotePlugins'}
@@ -75,7 +76,7 @@ let mapleader = "\<space>"
       autocmd filetype ruby nnoremap <buffer> <leader>m :!ruby %<cr>
       autocmd filetype python nnoremap <buffer> <leader>m :!python3 %<cr>
       autocmd filetype javascript nnoremap <buffer> <leader>m :!node %<cr>
-      autocmd filetype typescript nnoremap <buffer> <leader>m :!deno run --allow-read --allow-write --allow-net %<cr>
+      autocmd filetype typescript nnoremap <buffer> <leader>m :!ts-node %<cr>
     augroup end
 
   " }}}
@@ -131,8 +132,8 @@ let mapleader = "\<space>"
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gr <Plug>(coc-references)
 
-    nnoremap <silent> <leader>p :CocList files<cr>
-    nnoremap <silent> <leader>o :CocList buffers<cr>
+    " nnoremap <silent> <leader>p :CocList files<cr>
+    " nnoremap <silent> <leader>o :CocList buffers<cr>
 
   " }}}
 
@@ -259,6 +260,17 @@ let mapleader = "\<space>"
 
   " }}}
 
+  " Picker {{{2
+
+    let g:picker_custom_find_executable = 'fd'
+    let g:picker_custom_find_flags = '--type file'
+    let g:picker_selector_executable = 'sk'
+    let g:picker_selector_flags = ''
+    nmap <unique> <leader>p <Plug>(PickerEdit)
+    nmap <unique> <leader>o <Plug>(PickerBuffer)
+
+  " }}}
+
 " }}}
 
 " Environment {{{
@@ -362,7 +374,7 @@ let mapleader = "\<space>"
   set list
   set scrolloff=0
   set synmaxcol=1000
-  set nocursorline
+  set cursorline
   set nocursorcolumn
   set signcolumn=no
 
