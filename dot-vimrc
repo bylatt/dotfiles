@@ -13,29 +13,23 @@ if !filereadable(expand($HOME.'/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin($HOME.'/.vim/plug')
-  Plug 'tpope/vim-rsi'
-  Plug 'tpope/vim-eunuch'
-  Plug 'tpope/vim-repeat'
-  Plug 'tpope/vim-markdown'
-  Plug 'tpope/vim-surround'
   Plug 'tpope/vim-commentary'
+  Plug 'tpope/vim-fugitive'
+  Plug 'tpope/vim-markdown'
+  Plug 'tpope/vim-repeat'
+  Plug 'tpope/vim-surround'
   Plug 'terryma/vim-expand-region'
   Plug 'pangloss/vim-javascript'
   Plug 'maxmellon/vim-jsx-pretty'
+  Plug 'jparise/vim-graphql'
   Plug 'sgur/vim-editorconfig'
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'lifepillar/vim-gruvbox8'
-  Plug 'lifepillar/vim-solarized8'
-  Plug 'janko/vim-test'
-  Plug 'justinmk/vim-sneak'
-  Plug 'chiel92/vim-autoformat'
-  Plug 'andymass/vim-matchup'
+  Plug 'vim-test/vim-test'
   Plug 'srstevenson/vim-picker'
-  Plug 'kristijanhusak/vim-simple-notifications'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  Plug 'shougo/defx.nvim', {'do': ':UpdateRemotePlugins'}
-  " Plug 'shougo/denite.nvim', {'do': ':UpdateRemotePlugins'}
-  " Plug 'shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'phaazon/hop.nvim'
 call plug#end()
 
 filetype plugin indent on
@@ -91,6 +85,7 @@ let mapleader = "\<space>"
 " }}}
 
 " PluginSettings {{{
+
   " Test {{{2
 
     noremap <silent><leader>a :TestNearest<cr>
@@ -103,30 +98,30 @@ let mapleader = "\<space>"
 
     let g:coc_global_extensions=[
           \ 'coc-tsserver',
-          \ 'coc-python',
-          \ 'coc-rls',
-          \ 'coc-clangd',
+          \ 'coc-pyright',
+          \ 'coc-rust-analyzer',
           \ 'coc-go',
           \ 'coc-json',
+          \ 'coc-yaml',
           \ 'coc-css',
           \ 'coc-dictionary',
           \ 'coc-lists',
+          \ 'coc-prettier',
           \ ]
 
-    inoremap <silent><expr> <tab>
-          \ pumvisible() ? "\<c-n>" :
-          \ <sid>check_back_space() ? "\<tab>" :
-          \ coc#refresh()
-    inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<c-h>"
-
-    function! s:check_back_space() abort
+    function! s:CheckBackspace() abort
       let col = col('.') - 1
       return !col || getline('.')[col - 1]  =~# '\s'
     endfunction
 
+    inoremap <silent><expr> <tab>
+          \ pumvisible() ? "\<c-n>" :
+          \ <sid>CheckBackspace() ? "\<tab>" :
+          \ coc#refresh()
+    inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<c-h>"
+
     nmap <silent> [g <Plug>(coc-diagnostic-prev)
     nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
     nmap <silent> gd <Plug>(coc-definition)
     nmap <silent> gy <Plug>(coc-type-definition)
     nmap <silent> gi <Plug>(coc-implementation)
@@ -135,139 +130,42 @@ let mapleader = "\<space>"
     " nnoremap <silent> <leader>p :CocList files<cr>
     " nnoremap <silent> <leader>o :CocList buffers<cr>
 
-  " }}}
-
-  " Defx {{{2
-
-    autocmd filetype defx call s:defx_my_settings()
-
-    noremap <silent><leader>f :Defx<cr>
-
-    call defx#custom#option('_', {
-          \ 'winwidth': 45,
-          \ 'columns': 'mark:indent:filename',
-          \ 'split': 'vertical',
-          \ 'direction': 'topleft',
-          \ 'show_ignored_files': v:true,
-          \ 'buffer_name': '',
-          \ 'toggle': v:true,
-          \ 'resume': v:true,
-          \ 'root_marker': ':: ',
-          \ })
-
-    function! s:defx_my_settings() abort
-      setl nospell
-      setl signcolumn=no
-      setl nonumber
-      nnoremap <silent><buffer><expr> <cr> defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('drop')
-      nnoremap <silent><buffer><expr> c defx#do_action('copy')
-      nnoremap <silent><buffer><expr> p defx#do_action('paste')
-      nnoremap <silent><buffer><expr> m defx#do_action('rename')
-      nnoremap <silent><buffer><expr> d defx#do_action('remove')
-      nnoremap <silent><buffer><expr> a defx#do_action('new_multiple_files')
-      nnoremap <silent><buffer><expr> s defx#do_action('open', 'vsplit')
-      nnoremap <silent><buffer><expr> u defx#do_action('cd', ['..'])
-      nnoremap <silent><buffer><expr> . defx#do_action('toggle_ignored_files')
-      nnoremap <silent><buffer><expr> <space> defx#do_action('toggle_select')
-      nnoremap <silent><buffer><expr> * defx#do_action('toggle_select_all')
-      nnoremap <silent><buffer><expr> r defx#do_action('redraw')
+    function! s:CocOrganizeImport()
+      if &ft =~ 'go\|rust\|python'
+        :silent call CocAction('runCommand', 'editor.action.organizeImport')
+      endif
     endfunction
 
-    function! s:isdir(dir) abort
-      return !empty(a:dir) && (isdirectory(a:dir) || (!empty($SYSTEMDRIVE) && isdirectory('/'.tolower($SYSTEMDRIVE[0]).a:dir)))
+    function! s:CocFormat()
+      if &ft =~ 'javascript\|javascriptreact\|typescript\|typescriptreact\|html\|css\|markdown\|go\|rust\|python'
+        :silent call CocAction('format')
+      endif
     endfunction
-    autocmd VimEnter * sil! au! FileExplorer *
-    autocmd BufEnter * if s:isdir(expand('%')) | bd | exe 'Defx' | endif
 
-  " }}}
+    function! s:CocOnsave()
+      call <sid>CocOrganizeImport()
+      call <sid>CocFormat()
+    endfunction
 
-  " " Denite {{{2
-
-  "   call denite#custom#var('file/rec', 'command', ['fd', '--type', 'file', '--follow', '--hidden', '--exclude', '.git', '.'])
-  "   call denite#custom#source('grep', 'vars', {
-  "         \ 'command': ['rg'],
-  "         \ 'default_opts': ['--hidden', '--vimgrep', '--heading', '-S'],
-  "         \ 'recursive_opts': [],
-  "         \ 'pattern_opt': ['--regexp'],
-  "         \ 'separator': ['--'],
-  "         \ 'final_opts': [],
-  "         \ })
-  "   call denite#custom#var('buffer', 'date_format', '')
-
-  "   call denite#custom#option('_', {
-  "         \ 'split': 'floating',
-  "         \ 'start_filter': v:true,
-  "         \ 'auto_resize': v:false,
-  "         \ 'source_names': 'short',
-  "         \ 'prompt': '',
-  "         \ 'statusline': v:false,
-  "         \ 'highlight_matched_char': 'WildMenu',
-  "         \ 'highlight_matched_range': 'Visual',
-  "         \ 'highlight_window_background': 'Visual',
-  "         \ 'highlight_filter_background': 'StatusLine',
-  "         \ 'highlight_prompt': 'StatusLine',
-  "         \ 'winrow': v:true,
-  "         \ 'vertical_preview': v:true,
-  "         \ })
-
-  "   autocmd FileType denite-filter call s:denite_filter_my_settings()
-  "   function! s:denite_filter_my_settings() abort
-  "     imap <silent><buffer> <c-o> <Plug>(denite_filter_quit)
-  "     inoremap <silent><buffer><expr> <esc> denite#do_map('quit')
-  "     nnoremap <silent><buffer><expr> <esc> denite#do_map('quit')
-  "     inoremap <silent><buffer><expr> <cr> denite#do_map('do_action')
-  "   endfunction
-
-  "   autocmd FileType denite call s:denite_my_settings()
-  "   function! s:denite_my_settings() abort
-  "     nnoremap <silent><buffer><expr> <cr> denite#do_map('do_action')
-  "     nnoremap <silent><buffer><expr> q denite#do_map('quit')
-  "     nnoremap <silent><buffer><expr> <esc> denite#do_map('quit')
-  "     nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
-  "     nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
-  "     nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
-  "     nnoremap <silent><buffer><expr> <c-o> denite#do_map('open_filter_buffer')
-  "   endfunction
-
-  "   noremap <silent> <leader>p :Denite file/rec<cr>
-  "   noremap <silent> <leader>b :Denite buffer<cr>
-  "   noremap <silent> <leader>l :Denite line<cr>
-  "   noremap <silent> <leader>t :Denite filetype<cr>
-
-  " " }}}
-
-  " " Deoplete {{{2
-
-  "   let g:deoplete#enable_at_startup=1
-  "   function! s:check_back_space() abort
-  "     let col = col('.') - 1
-  "     return !col || getline('.')[col - 1]  =~ '\s'
-  "   endfunction
-  "   inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : <sid>check_back_space() ? "\<tab>" : deoplete#manual_complete()
-
-  " " }}}
-
-  " Autoformat {{{2
-
-    let g:formatters_go=['goimports', 'gofmt_2']
-    let g:formatters_rust=['rustfmt']
-    let g:formatters_python=['black']
-    let g:formatters_html=['prettier']
-    let g:formatters_css=['prettier']
-    let g:formatters_javascript=['prettier']
-    let g:formatters_typescript=['prettier']
-    autocmd BufWrite *.go,*.rs,*.py,*.html,*.css,*.js,*.ts :Autoformat
+    autocmd BufWritePre * call <sid>CocOnsave()
 
   " }}}
 
   " Picker {{{2
 
-    let g:picker_custom_find_executable = 'fd'
-    let g:picker_custom_find_flags = '--type file'
-    let g:picker_selector_executable = 'sk'
-    let g:picker_selector_flags = ''
+    let g:picker_custom_find_executable='fd'
+    let g:picker_custom_find_flags='-t f'
+    let g:picker_selector_executable='sk'
+    let g:picker_selector_flags=''
     nmap <unique> <leader>p <Plug>(PickerEdit)
     nmap <unique> <leader>o <Plug>(PickerBuffer)
+
+  " }}}
+
+  " Hop {{{2
+
+    lua require('hop').setup()
+    nmap s :HopChar2<cr>
 
   " }}}
 
@@ -331,33 +229,19 @@ let mapleader = "\<space>"
     set t_Co=256
     syntax on
     set background=dark
-    if $TERM_PROGRAM == "Apple_Terminal"
-    else
-      set termguicolors
-    endif
     set guicursor=
+    set termguicolors
     color gruvbox8
+
+    highlight Normal guibg=none ctermbg=none
+    highlight CursorLine term=none cterm=none
+    highlight CursorLineNr term=none cterm=none ctermfg=8
 
   " }}}
 
-  " " Extra whitespace: {{{2
-
-  "   highlight SpecialKey guibg=NONE ctermbg=NONE
-  "   highlight ExtraWhitespace ctermbg=1 guibg=red
-  "   match ExtraWhitespace /\s\+$/
-  "   augroup HighlightExtraWhitespace
-  "     autocmd!
-  "     autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-  "     autocmd * match ExtraWhitespace /\s\+\%#\@<!$/
-  "     autocmd * match ExtraWhitespace /\s\+$/
-  "     autocmd BufWinLeave * call clearmatches()
-  "   augroup end
-
-  " " }}}
-
   set linespace=0
-  set shortmess=atToOI
-  set shortmess+=c
+  set shortmess=atToOIc
+  set formatoptions-=cro
   set belloff+=ctrlg
   set viewoptions+=unix,slash
   set noshowmode
@@ -417,7 +301,7 @@ let mapleader = "\<space>"
           \ '!':  'Shell',
           \ 't':  'Terminal' }
 
-    function! ST_line_num()
+    function! STLineNum()
       let curline=line('.')
       let curcol=len(curline)
       let allcol=len(line('$'))
@@ -430,26 +314,26 @@ let mapleader = "\<space>"
       return linenum
     endfunction
 
-    function! ST_filetype()
+    function! STFiletype()
       if &filetype != ''
         return tolower(&filetype)
       else
         return ''
     endfunction
 
-    function! ST_filetype_with_symbol()
-      let ft=ST_filetype()
+    function! STFileTypeWithSymbol()
+      let ft=STFiletype()
       if len(ft) !=# 0
         return '  :: '.ft
       endif
       return ''
     endfunction
 
-    function! ST_mode()
+    function! STMode()
       return tolower(g:modes[mode()])
     endfunction
 
-    function! ST_filepath()
+    function! STFilepath()
       let filepath=expand('%:p')
       if len(filepath) !=# 0
         return filepath
@@ -457,22 +341,22 @@ let mapleader = "\<space>"
       return ''
     endfunction
 
-    function! ST_filepath_with_symbol()
-      let fp=ST_filepath()
+    function! STFilepathWithSymbol()
+      let fp=STFilepath()
       if len(fp) !=# 0
         return '  » '.fp
       endif
       return ''
     endfunction
 
-    function! ST_modified()
+    function! STModified()
       if &mod ==# 1
         return '  [modified] '
       endif
       return ''
     endfunction
 
-    set statusline=%{ST_line_num()}\%{ST_filepath_with_symbol()}\%{ST_modified()}%=%{ST_mode()}\%{ST_filetype_with_symbol()}
+    set statusline=%{STLineNum()}\%{STFilepathWithSymbol()}\%{STModified()}%=%{STMode()}\%{STFileTypeWithSymbol()}
 
   " }}}
 
@@ -486,7 +370,7 @@ let mapleader = "\<space>"
       autocmd filetype ruby setlocal foldmethod=syntax
       autocmd filetype make setlocal noexpandtab tabstop=4 softtabstop=4
       autocmd filetype python setlocal nosmartindent tabstop=4 softtabstop=4 shiftwidth=4
-      autocmd filetype javascript,javascript.jsx setlocal foldmethod=syntax
+      autocmd filetype javascript,javascriptreact,typescript,typescriptreact setlocal foldmethod=syntax
     augroup end
 
   " }}}
@@ -506,7 +390,6 @@ let mapleader = "\<space>"
     set smarttab
     set autoindent
     set smartindent
-    " set cinoptions=>4,l1,p0,)50,*50,t0
 
   " }}}
 
@@ -570,7 +453,7 @@ let mapleader = "\<space>"
     set omnifunc=syntaxcomplete#Complete
     set completefunc=syntaxcomplete#Complete
     " set completeopt=longest,menu,menuone,noinsert,noselect
-    set completeopt=menu,menuone,noinsert,noselect
+    set completeopt=menuone,noinsert,noselect
     " set complete=.,w,b,u,t,i
     set complete-=i
 

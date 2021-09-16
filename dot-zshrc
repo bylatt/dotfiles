@@ -2,7 +2,7 @@
 
 # Homebrew {{{
 
-export HOMEBREW=$(brew --prefix)
+export HOMEBREW=$(/opt/homebrew/bin/brew --prefix)
 
 # }}}
 
@@ -35,12 +35,6 @@ export HOMEBREW=$(brew --prefix)
 
     # }}}
 
-    # Java {{{3
-
-    export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
-
-    # }}}
-
   # }}}
 
 # }}}
@@ -61,6 +55,7 @@ alias vi='nvim'
 alias ls='exa'
 alias ll='exa -gla'
 alias tree='exa --tree'
+alias brew='arch -arm64 brew'
 alias cp='cp -ivR'
 alias mv='mv -iv'
 alias vim='nvim'
@@ -69,7 +64,6 @@ alias tmux='tmux -f $HOME/.tmuxrc'
 alias cc='clear'
 alias ..='cd ..'
 alias ...='cd ../..'
-alias cccc='open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security'
 
 # }}}
 
@@ -378,12 +372,7 @@ typeset -gU cdpath fpath mailpath path
 # Funcs {{{
 
 function pro() {
-  cd $(fd -t d -d 1 . $HOME/Workspace/src/github.com/clozed2u/ | sk)
-}
-
-function switch_aws_profile() {
-  rm -rf $HOME/.aws/credentials
-  cp $HOME/.aws/credentials.$1 $HOME/.aws/credentials
+  cd $(fd -t d -d 1 . $HOME/Project/ | sk)
 }
 
 # }}}

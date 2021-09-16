@@ -1,6 +1,6 @@
 [user]
   name = Lattapon Yodsuwan
-  email = clozed2u@gmail.com
+  email = lattapon@bylatt.co
   username = clozed2u
 
 [core]
@@ -50,11 +50,7 @@
   search = log --no-merges -i -E --pretty='%h (%ad) - [%an] %s %d' --date=format:'%b %d %Y' —grep
   cb = "!git switch `git branch -av | sk`"
 
-[url "git@github.com:"]
-	insteadOf = https://github.com/
-
-[filter "lfs"]
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
+; [url "git@github.com:"]
+; 	insteadOf = https://github.com/
+[init]
+	defaultBranch = main
