@@ -2,7 +2,10 @@
 
 # Homebrew {{{
 
+export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_NO_INSTALL_FROM_API=1
 export HOMEBREW=$(/opt/homebrew/bin/brew --prefix)
+export EZA_CONFIG_DIR=$HOME/.config/eza
 
 # }}}
 
@@ -13,27 +16,34 @@ export HOMEBREW=$(/opt/homebrew/bin/brew --prefix)
   export LANG=en_US.UTF-8
   export LC_ALL=en_US.UTF-8
   export LC_CTYPE=en_US.UTF-8
-  export TERM=xterm-256color
   export CLICOLOR=1
   export KEYTIMEOUT=1
   export VISUAL=nvim
   export EDITOR=nvim
   export PAGER=less
-  export GREP_OPTIONS='--color=auto'
+  export GREP_OPTIONS="--color=auto"
   export PYTHONSTARTUP=$HOME/.pythonrc
 
   # }}}
 
-  # Language {{{2
+  # Go {{{2
 
-    # Go {{{3
+  export GOPATH=$HOME/.go
+  export GOBIN=$GOPATH/bin
 
-    export GOROOT=$HOMEBREW/opt/go/libexec
-    export GOPATH=$HOME/Workspace
-    export GOBIN=$GOPATH/bin
-    export PATH=$GOBIN:$PATH
+  # }}}
 
-    # }}}
+  # Rust {{{2
+
+  export RUSTPATH=$HOME/.cargo
+  export RUSTBIN=$RUSTPATH/bin
+
+  # }}}
+
+  # Bun {{{2
+
+  export BUNPATH=$HOME/.bun
+  export BUNBIN=$BUNPATH/bin
 
   # }}}
 
@@ -43,7 +53,11 @@ export HOMEBREW=$(/opt/homebrew/bin/brew --prefix)
 
 path=(
   $HOMEBREW/{bin,sbin}
+  $HOME/.pub-cache/bin
   $HOME/.bin
+  $GOBIN
+  $RUSTBIN
+  $BUNBIN
   $path
 )
 
@@ -51,19 +65,16 @@ path=(
 
 # Alias {{{
 
-alias vi='nvim'
-alias ls='exa'
-alias ll='exa -gla'
-alias tree='exa --tree'
-alias brew='arch -arm64 brew'
-alias cp='cp -ivR'
-alias mv='mv -iv'
-alias vim='nvim'
-alias mkd='mkdir -pv'
-alias tmux='tmux -f $HOME/.tmuxrc'
-alias cc='clear'
-alias ..='cd ..'
-alias ...='cd ../..'
+
+alias c="printf '\33c\e[3J'"
+alias vi="nvim"
+alias vim="nvim"
+alias ls="eza"
+alias ll="eza -gla"
+alias brew="arch -arm64 brew"
+alias tree="eza --tree"
+alias cp="cp -ivR"
+alias mv="mv -iv"
 
 # }}}
 
@@ -103,11 +114,19 @@ setopt interactivecomments
 # Vim {{{
 
 bindkey -v
-bindkey '^p' up-line-or-search
-bindkey '^n' down-line-or-search
-bindkey '^r' history-incremental-search-backward
-bindkey -M viins '^a' beginning-of-line
-bindkey -M viins '^e' end-of-line
+bindkey "^p" up-line-or-search
+bindkey "^n" down-line-or-search
+bindkey "^r" history-incremental-search-backward
+bindkey -M viins "^a" beginning-of-line
+bindkey -M viins "^e" end-of-line
+
+function vi-yank-xclip () {
+  zle vi-yank
+  echo "$CUTBUFFER" | pbcopy -i
+}
+
+zle -N vi-yank-xclip
+bindkey -M vicmd 'y' vi-yank-xclip
 
 # }}}
 
@@ -116,20 +135,20 @@ bindkey -M viins '^e' end-of-line
 autoload -Uz vcs_info
 vcs_info
 
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*:*' get-revision true
-zstyle ':vcs_info:*:*' check-for-changes true
-zstyle ':vcs_info:*:*' stagedstr '%F{yellow}'
-zstyle ':vcs_info:*:*' unstagedstr '%F{red}'
-zstyle ':vcs_info:*:*' branchformats '%r'
-zstyle ':vcs_info:*:*' formats '%F{green}%m%c%u%b%f'
-zstyle ':vcs_info:*:*' actionformats '%F{green}%m%c%u%b%f'
-zstyle ':vcs_info:git*+set-message:*' hooks git-remote git-untracked git-stash
+zstyle ":vcs_info:*" enable git
+zstyle ":vcs_info:*:*" get-revision true
+zstyle ":vcs_info:*:*" check-for-changes true
+zstyle ":vcs_info:*:*" stagedstr "%F{yellow}"
+zstyle ":vcs_info:*:*" unstagedstr "%F{red}"
+zstyle ":vcs_info:*:*" branchformats "%r"
+zstyle ":vcs_info:*:*" formats "%F{green}%m%c%u%b%f"
+zstyle ":vcs_info:*:*" actionformats "%F{green}%m%c%u%b%f"
+zstyle ":vcs_info:git*+set-message:*" hooks git-remote git-untracked git-stash
 
-# Get name of remote that we're tracking
+# Get name of remote that we are tracking
 function +vi-git-remote() {
   local remote
-  remote=$(git remote | tr '\n' '/' | sed 's/.$//' 2>/dev/null)
+  remote=$(git remote | tr "\n" "/" | sed "s/.$//" 2>/dev/null)
 
   if [[ -n $remote ]]; then
     hook_com[branch]="${remote}/${hook_com[branch]}"
@@ -143,7 +162,7 @@ function +vi-git-untracked() {
   untracked=$(git ls-files --other --exclude-standard 2>/dev/null)
 
   if [[ -n $untracked ]]; then
-    hook_com[misc]='%F{red}'
+    hook_com[misc]="%F{red}"
   fi
 }
 
@@ -168,19 +187,14 @@ add-zsh-hook precmd vcs_info
 # Autocomplete {{{
 
 autoload -Uz compinit
+compinit
 
-if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' $HOME/.zcompdump) ]; then
-  compinit
-else
-  compinit -C
-fi
-
-zstyle ':completion::complete:*' use-cache on
-zstyle ':completion:*' cache-path ~/.cache/zsh
-zstyle ':completion:*' completer _expand _complete _ignored _approximate
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-zstyle ':completion:*' menu select
-zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
+zstyle ":completion::complete:*" use-cache on
+zstyle ":completion:*" cache-path ~/.cache/zsh
+zstyle ":completion:*" completer _expand _complete _ignored _approximate
+zstyle ":completion:*" matcher-list "m:{a-zA-Z}={A-Za-z}" "r:|[._-]=* r:|=*" "l:|=* r:|=*"
+zstyle ":completion:*" menu select
+zstyle ":completion:*:cd:*" tag-order local-directories directory-stack path-directories
 
 # }}}
 
@@ -199,7 +213,7 @@ setopt hist_find_no_dups
 setopt hist_reduce_blanks
 setopt hist_save_no_dups
 
-HISTCONTROL='erasedups:ignorespace'
+HISTCONTROL="erasedups:ignorespace"
 HISTFILE=~/.zsh_history
 HISTSIZE=100000
 SAVEHIST=100000
@@ -209,7 +223,7 @@ HISTFILESIZE=2000000
 
 # Title {{{
 
-DISABLE_AUTO_TITLE='true'
+DISABLE_AUTO_TITLE="true"
 
 function set-window-title() {
   # echo -ne "\e]0;${USER}:${PWD}\a"
@@ -230,126 +244,13 @@ add-zsh-hook preexec set-window-title
 
 # Prompt {{{
 
-autoload -Uz promptinit colors
+autoload -Uz promptinit
 promptinit
+autoload -Uz colors
 colors
 
-# PROMPT='%F{blue}%42<\<<%d/%f !#$ %{$reset_color%}'
-PROMPT='%42<\<<%~ (>"o")> %{$reset_color%}'
-RPROMPT='${vcs_info_msg_0_}'
-
-# }}}
-
-# Clipboard {{{
-# github.com/kutsan/zsh-system-clipboard
-
-typeset -A ZSH_SYSTEM_CLIPBOARD
-typeset -g ZSH_SYSTEM_CLIPBOARD[set]='pbcopy'
-typeset -g ZSH_SYSTEM_CLIPBOARD[get]='pbpaste'
-alias zsh-system-clipboard-set="${ZSH_SYSTEM_CLIPBOARD[set]}"
-alias zsh-system-clipboard-get="${ZSH_SYSTEM_CLIPBOARD[get]}"
-
-function zsh-system-clipboard-vicmd-vi-yank() {
-  zle vi-yank
-  if [[ "${KEYS}" == "y" ]]; then # A new line should be added to the end
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-else
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-fi
-}
-zle -N zsh-system-clipboard-vicmd-vi-yank
-
-function zsh-system-clipboard-vicmd-vi-yank-whole-line() {
-  zle vi-yank-whole-line
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-}
-zle -N zsh-system-clipboard-vicmd-vi-yank-whole-line
-
-function zsh-system-clipboard-vicmd-vi-put-after() {
-  local CLIPBOARD
-  CLIPBOARD=$(zsh-system-clipboard-get)
-  BUFFER="${BUFFER:0:$(( ${CURSOR} + 1 ))}${CLIPBOARD}${BUFFER:$(( ${CURSOR} + 1 ))}"
-  CURSOR=$(( $#LBUFFER + $#CLIPBOARD ))
-}
-zle -N zsh-system-clipboard-vicmd-vi-put-after
-
-function zsh-system-clipboard-vicmd-vi-put-before() {
-  local CLIPBOARD
-  CLIPBOARD=$(zsh-system-clipboard-get)
-  BUFFER="${BUFFER:0:$(( ${CURSOR} ))}${CLIPBOARD}${BUFFER:$(( ${CURSOR} ))}"
-  CURSOR=$(( $#LBUFFER + $#CLIPBOARD - 1 ))
-}
-zle -N zsh-system-clipboard-vicmd-vi-put-before
-
-function zsh-system-clipboard-vicmd-vi-delete() {
-  zle vi-delete
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-}
-zle -N zsh-system-clipboard-vicmd-vi-delete
-
-function zsh-system-clipboard-vicmd-vi-delete-char() {
-  zle vi-delete-char
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-}
-zle -N zsh-system-clipboard-vicmd-vi-delete-char
-
-function zsh-system-clipboard-vicmd-vi-change-eol() {
-  zle vi-change-eol
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-}
-zle -N zsh-system-clipboard-vicmd-vi-change-eol
-
-function zsh-system-clipboard-vicmd-vi-kill-eol() {
-  zle vi-kill-eol
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-}
-zle -N zsh-system-clipboard-vicmd-vi-kill-eol
-
-function zsh-system-clipboard-vicmd-vi-change-whole-line() {
-  zle vi-change-whole-line
-  printf '%s\n' "$CUTBUFFER" | zsh-system-clipboard-set
-}
-zle -N zsh-system-clipboard-vicmd-vi-change-whole-line
-
-function zsh-system-clipboard-vicmd-vi-change() {
-  zle vi-change
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-}
-zle -N zsh-system-clipboard-vicmd-vi-change
-
-function zsh-system-clipboard-vicmd-vi-substitue() {
-  zle vi-substitue
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-}
-zle -N zsh-system-clipboard-vicmd-vi-substitue
-
-function zsh-system-clipboard-vicmd-vi-delete-char() {
-  zle vi-delete-char
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-}
-zle -N zsh-system-clipboard-vicmd-vi-delete-char
-
-function zsh-system-clipboard-vicmd-vi-backward-delete-char() {
-  zle vi-backward-delete-char
-  printf '%s' "$CUTBUFFER" | zsh-system-clipboard-set
-}
-zle -N zsh-system-clipboard-vicmd-vi-backward-delete-char
-
-# Bind keys to widgets
-function () {
-  local binded_keys i parts key cmd keymap
-  for keymap in vicmd visual emacs; do
-    binded_keys=(${(f)"$(bindkey -M $keymap)"})
-    for (( i = 1; i < ${#binded_keys[@]}; ++i )); do
-      parts=("${(z)binded_keys[$i]}")
-      key="${parts[1]}"
-      cmd="${parts[2]}"
-      if (( $+functions[zsh-system-clipboard-$keymap-$cmd] )); then
-        eval bindkey -M $keymap $key zsh-system-clipboard-$keymap-$cmd
-      fi
-    done
-  done
-}
+PROMPT="#! %1d %%%{$reset_color%} "
+RPROMPT='$vcs_info_msg_0_'
 
 # }}}
 
@@ -359,20 +260,60 @@ typeset -gU cdpath fpath mailpath path
 
 # }}}
 
-# SK {{{
+# NVM {{{
 
-  source $HOMEBREW/opt/sk/share/zsh/site-functions/key-bindings.zsh
-  source $HOMEBREW/opt/sk/share/zsh/site-functions/completion.zsh
-  export SKIM_CTRL_T_OPTS="--preview 'bat --color always {}'"
-  export SKIM_DEFAULT_OPTIONS='--color=fg:242,bg:-1,hl:238,fg+:243,bg+:-1,hl+:166,info:248,prompt:243,spinner:242,pointer:242,marker:166 --layout=reverse'
-  export SKIM_DEFAULT_COMMAND="fd --type f || rg --files || find ."
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 # }}}
 
-# Funcs {{{
+# SK {{{
 
-function pro() {
-  cd $(fd -t d -d 1 . $HOME/Project/ | sk)
+# source <(fzf --zsh)
+export SKIM_DEFAULT_COMMAND='fd --type file --hidden --no-ignore'
+export SKIM_DEFAULT_OPTIONS="$SKIM_DEFAULT_OPTIONS \
+  --ansi \
+  --layout=reverse \
+"
+
+sk-history-widget() {
+  local selected
+  selected=$(fc -ln 0 | sk) || return
+  local ret=$?
+  eval 'LBUFFER="$LBUFFER$selected"'
+  zle reset-prompt
+  return $ret
 }
+zle     -N            sk-history-widget
+bindkey -M emacs '^R' sk-history-widget
+bindkey -M vicmd '^R' sk-history-widget
+bindkey -M viins '^R' sk-history-widget
+
+sk-project-widget() {
+  local selected
+  selected=$(fd --type dir --max-depth 2 --search-path $HOME/Projects | sk) || return
+  local ret=$?
+  eval 'cd $selected'
+  zle reset-prompt
+  return $ret
+}
+zle     -N            sk-project-widget
+bindkey -M emacs '^E' sk-project-widget
+bindkey -M vicmd '^E' sk-project-widget
+bindkey -M viins '^E' sk-project-widget
+
+sk-tmux-session-widget() {
+  local selected
+  selected=$(tmux list-session -F "#{session_name}" | sk) || return
+  local ret=$?
+  eval 'tmux attach -t $selected'
+  zle reset-prompt
+  return $ret
+}
+zle     -N            sk-tmux-session-widget
+bindkey -M emacs '^T' sk-tmux-session-widget
+bindkey -M vicmd '^T' sk-tmux-session-widget
+bindkey -M viins '^T' sk-tmux-session-widget
 
 # }}}

@@ -2,13 +2,10 @@
 
 # Upgrade $TERM
 set -g  default-terminal             "tmux-256color"
-set -ga terminal-overrides           ",xterm-256color:Tc"
+set -as terminal-overrides           ",xterm*:Tc"
 
-# Address vim mode switching delay (http://superuser.com/a/252717/65504)
 set -s  escape-time                  10
 
-# Required (again) since macOS Sierra
-# https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard/commit/c67238179ce456fa21b047c5ae22e9ac6a9310f6
 set -g  default-command              "reattach-to-user-namespace -l ${SHELL}"
 
 # Increase scrollback buffer size
@@ -23,14 +20,15 @@ set -g  display-time                 3000
 # Display pane numbers for half a second
 set -g  display-panes-time           500
 
-# Count windows from 1
+# Count from 1
 set -g  base-index                   1
+setw -g pane-base-index              1
 
 # Use Vim-like key bindings in copy and choice mode
 set -g  mode-keys                    vi
 
 # Use shell-like key bindings in the command prompt
-set -g  status-keys                  emacs
+set -g  status-keys                  vi
 
 # Enable mouse
 set -g  mouse                        on
@@ -38,30 +36,23 @@ set -g  mouse                        on
 # Appearance
 set -g  status-position              bottom
 set -g  status-justify               left
-set -g  status-left-length           50  # Default is 10
-set -g  status-right-length          50  # Default is 40
-set -g  mode-style                   fg=colour255,bg=colour241
-set -g  message-style                fg=colour255,bg=colour236
-set -g  status-style                 fg=colour255,bg=colour241
-set -g  status-left-style            fg=colour255,bg=colour237
-set -g  status-right-style           fg=colour255,bg=colour237
-set -g  status-left                  '  #S  '
-set -g  status-right                 '#{?client_prefix, tmux  ,}#{?window_zoomed_flag, Zoomed in  ,}  #H  '
+set -g  status-left-length           50
+set -g  status-right-length          50
+set -g  mode-style                   'fg=colour232,bg=colour253'
+set -g  message-style                'fg=colour232,bg=colour253'
+set -g  status-style                 'fg=colour232,bg=default'
+set -g  status-left-style            'fg=colour232,bg=default'
+set -g  status-right-style           'fg=colour232,bg=default'
+set -g  status-left                  ''
+set -g  status-right                 '#[fg=colour232,bg=colour253] #S #[default]'
 set -g  window-status-separator      ''
-set -g  window-status-format         '#[fg=colour255]  #I #W  '
-set -g  window-status-current-format '#[fg=colour255,bg=colour244,bold]  #W  #[default]#[fg=colour255]'
-set -g  pane-active-border-style     fg=colour241
-set -g  pane-border-style            fg=colour241
-set -g  pane-border-format           ' #{?pane_active,#[fg=colour166]●#[default],#{pane_index}} #{pane_current_command} '
+set -g  window-status-format         '#[fg=colour244,bg=default]  #I:#W  #[default]'
+set -g  window-status-current-format '#[default]#[fg=colour232,bg=colour253] #I:#W #[default]'
+set -g  pane-active-border-style     'fg=colour245'
+set -g  pane-border-style            'fg=colour253'
+set -g  pane-border-format           ' #{?pane_active,#[fg=defualt]#{pane_current_command}#[default],#{pane_index}} '
 set -g  pane-border-status           bottom
 set -g  visual-activity              on
-
-# Change prefix to C-q or C-Space
-# set -g  prefix                       C-q
-# set -g  prefix2                      C-Space
-
-# unbind-key  C-b
-# bind-key    C-Space                  send-prefix
 
 # Easier and faster switching between next/prev window
 bind-key    C-p                      previous-window
@@ -87,21 +78,9 @@ bind-key    k                        resize-pane -U 5
 # bind-key    C-k                      select-pane -U
 # bind-key    C-l                      select-pane -R
 
-# Enable seamless navigation between Vim and tmux
+# Enable seamless navigation between (Neo)Vim and Tmux
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
 
-# bind-key -n M-h                      if-shell "$is_vim" "send-keys M-h"  "select-pane -L"
-# bind-key -n M-j                      if-shell "$is_vim" "send-keys M-j"  "select-pane -D"
-# bind-key -n M-k                      if-shell "$is_vim" "send-keys M-k"  "select-pane -U"
-# bind-key -n M-l                      if-shell "$is_vim" "send-keys M-l"  "select-pane -R"
-
-# # Allow using alt in macOS without enabling “Use Option as Meta key”
-# bind-key -n ˙                        if-shell "$is_vim" "send-keys ˙"  "select-pane -L"
-# bind-key -n ∆                        if-shell "$is_vim" "send-keys ∆"  "select-pane -D"
-# bind-key -n ˚                        if-shell "$is_vim" "send-keys ˚"  "select-pane -U"
-# bind-key -n ¬                        if-shell "$is_vim" "send-keys ¬"  "select-pane -R"
-
-# In the better way
 bind-key -n 'C-h'                   if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
 bind-key -n 'C-j'                   if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
 bind-key -n 'C-k'                   if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
@@ -118,7 +97,7 @@ bind-key    <                        swap-window -t -1
 bind-key    >                        swap-window -t +1
 
 # Reload Tmux configuration (see `man tmux`)
-bind-key    r                        source-file ~/.tmuxrc \; display-message "Tmux configuration reloaded"
+bind-key    r                        source-file ~/.config/tmux/tmux.conf \; display-message "Tmux configuration reloaded"
 
 # Use Space to toggle between block/line mode instead of default v
 bind-key   -Tcopy-mode-vi Space      send-keys -X rectangle-toggle
@@ -127,9 +106,5 @@ bind-key   -Tcopy-mode-vi Space      send-keys -X rectangle-toggle
 unbind-key -Tcopy-mode-vi v
 bind-key   -Tcopy-mode-vi v          send-keys -X begin-selection
 
-# To copy a mouse selection to macOS's system clipboard, use one of the following:
-# 1. In Terminal.app, press fn and drag the mouse, then use Cmd-C as usual (works also in Vim).
-# 2. In iTerm2.app, press Option and drag the mouse, then use Cmd-C as usual (works also in Vim).
-# 3. In any terminal, start dragging with the mouse, then, while keeping the mouse button down, press y.
-# See also: https://github.com/tmux/tmux/wiki/FAQ
+# Copy
 bind-key   -Tcopy-mode-vi y          send -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"

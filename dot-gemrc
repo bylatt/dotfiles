@@ -8,5 +8,4 @@ verbose: true
 update_sources: true
 sources:
 - http://rubygems.org/
-backtrace: true
 bulk_threshold: 1000

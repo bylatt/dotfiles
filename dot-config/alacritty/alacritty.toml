@@ -1,0 +1,32 @@
+[colors.cursor]
+text = '#1a1b26'
+cursor = '#ffa500'
+
+[font]
+size = 14
+
+[font.bold]
+family = "Inconsolata LGC Nerd Font Mono"
+style = "Bold"
+
+[font.bold_italic]
+family = "Inconsolata LGC Nerd Font Mono"
+style = "Bold Italic"
+
+[font.italic]
+family = "Inconsolata LGC Nerd Font Mono"
+style = "Italic"
+
+[font.normal]
+family = "Inconsolata LGC Nerd Font Mono"
+style = "Regular"
+
+[window]
+decorations = "full"
+opacity = 0.95
+blur = true
+startup_mode = "Maximized"
+
+[window.padding]
+x = 8
+y = 8

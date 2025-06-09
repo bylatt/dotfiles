@@ -1,0 +1,70 @@
+#!/bin/bash
+
+if ! command -v git &> /dev/null; then
+  echo "git could not be found"
+  echo "please install git"
+  echo "> brew install git"
+  exit 1
+fi
+
+if ! command -v rg &> /dev/null; then
+  echo "rg could not be found"
+  echo "please install rg"
+  echo "> brew install rg"
+  exit 1
+fi
+
+if ! command -v get-next-version &> /dev/null; then
+  echo "get-next-version could not be found"
+  echo "please install get-next-version"
+  echo "> go install github.com/thenativeweb/get-next-version@latest"
+  exit 1
+fi
+
+if ! git rev-parse --git-dir &> /dev/null; then
+  echo "not inside git repo"
+  exit 1
+fi
+
+if ! git switch main &> /dev/null; then
+  echo "failed to switch to main branch"
+  exit 1
+fi
+
+if ! git pull origin main &> /dev/null; then
+  echo "failed to pull latest main"
+  exit 1
+fi
+
+if ! git pull origin main --tags &> /dev/null; then
+  echo "failed to fetch tags"
+  exit 1
+fi
+
+if ! git fetch --prune &> /dev/null; then
+  echo "failed to fetch"
+  exit 1
+fi
+
+next_version=$(get-next-version)
+latest_version_from_branch=$(git branch -a | rg $next_version | rg 'remotes\/origin\/\d+.\d+.\d+-rc.\d+' | rg -o '\d+.\d+.\d+-rc.\d+' | sort -V | tail -n 1 | cut -d '-' -f 1)
+latest_rc_from_branch=$(git branch -a | rg $next_version | rg 'remotes\/origin\/\d+.\d+.\d+-rc.\d+' | rg -o '\d+.\d+.\d+-rc.\d+' | sort -V | tail -n 1 | rev | cut -d '.' -f 1 | rev)
+
+if [ "$next_version" = "$latest_version_from_branch" ]; then
+  rc=$((latest_rc_from_branch + 1))
+  new_rc_branch=$(echo -n $next_version)-rc.$(echo -n $rc)
+else
+  new_rc_branch=$(echo -n $next_version)-rc.1
+fi
+
+if ! git switch -c $new_rc_branch &> /dev/null; then
+  echo "failed to switch to new rc branch ($new_rc_branch)"
+  exit 1
+fi
+
+if ! git push origin $new_rc_branch &> /dev/null; then
+  echo "failed to push new rc branch ($new_rc_branch) to remote"
+  exit 1
+fi
+
+echo "new rc branch ($new_rc_branch) created"
