@@ -1,4 +1,0 @@
-lua require('config.options')
-lua require('config.keymaps')
-lua require('config.netrw')
-lua require('config.lazy')
