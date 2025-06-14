@@ -15,8 +15,10 @@ function connect_the_dots() {
 
 unamestr=$(uname)
 if [[ "$unamestr" == 'Linux' ]]; then
+  echo "Linux detected"
 elif [[ "$unamestr" == 'Darwin' ]]; then
-  if [[ ! which brew ]] >/dev/null 2>&1; then
+  echo "MacOS detected"
+  if [ ! which brew ] >/dev/null 2>&1; then
     install_homebrew
   fi
 fi

@@ -54,12 +54,6 @@ vim.opt.laststatus = 3
 vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case" -- high performance grep
 vim.g.markdown_recommended_style = 0 -- allow 2 space on markdown file
 
--- [[ Ghoss ]]
-if vim.fn.getenv("TERM_PROGRAM") == "ghostty" then
-	vim.opt.title = true
-	vim.opt.titlestring = "%{fnamemodify(getcwd(), ':t')}"
-end
-
 -- [[ Navigation Keymap ]]
 vim.keymap.set("n", "j", "gj", { noremap = true, silent = true })
 vim.keymap.set("n", "k", "gk", { noremap = true, silent = true })
