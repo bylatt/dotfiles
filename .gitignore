@@ -13,3 +13,4 @@ dot-config/*
 !dot-config/kitty
 !dot-config/nvim
 !dot-config/tmux
+!dot-config/fontconfig
