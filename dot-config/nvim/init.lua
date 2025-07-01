@@ -214,9 +214,7 @@ if not vim.g.vscode then
 									procMacro = {
 										enable = true,
 									},
-									checkOnSave = {
-										command = "cargo-clippy",
-									},
+									checkOnSave = true,
 								},
 							},
 						},
@@ -390,7 +388,7 @@ if not vim.g.vscode then
 				{ "<leader>o", "<cmd>FzfLua buffers<cr>", noremap = true, silent = false, desc = "Find buffers" },
 				{ "<leader>/", "<cmd>FzfLua live_grep_native<cr>", noremap = true, silent = false, desc = "Live grep" },
 			},
-			config = { "skim" },
+			opts = { "skim" },
 		},
 		{
 			"vim-test/vim-test",
