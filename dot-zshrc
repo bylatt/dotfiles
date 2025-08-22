@@ -260,60 +260,49 @@ typeset -gU cdpath fpath mailpath path
 
 # }}}
 
-# NVM {{{
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
-
-# }}}
-
-# SK {{{
+# FZF {{{
 
 # source <(fzf --zsh)
-export SKIM_DEFAULT_COMMAND='fd --type file --hidden --no-ignore'
-export SKIM_DEFAULT_OPTIONS="$SKIM_DEFAULT_OPTIONS \
-  --ansi \
-  --layout=reverse \
-"
+export FZF_DEFAULT_COMMAND='fd --type file --hidden --no-ignore'
+export FZF_DEFAULT_OPTS="--ansi --layout=reverse"
 
-sk-history-widget() {
+fzf-history-widget() {
   local selected
-  selected=$(fc -ln 0 | sk) || return
+  selected=$(fc -ln 0 | fzf) || return
   local ret=$?
   eval 'LBUFFER="$LBUFFER$selected"'
   zle reset-prompt
   return $ret
 }
-zle     -N            sk-history-widget
-bindkey -M emacs '^R' sk-history-widget
-bindkey -M vicmd '^R' sk-history-widget
-bindkey -M viins '^R' sk-history-widget
+zle     -N            fzf-history-widget
+bindkey -M emacs '^R' fzf-history-widget
+bindkey -M vicmd '^R' fzf-history-widget
+bindkey -M viins '^R' fzf-history-widget
 
-sk-project-widget() {
+fzf-project-widget() {
   local selected
-  selected=$(fd --type dir --max-depth 2 --search-path $HOME/Projects | sk) || return
+  selected=$(fd --type dir --max-depth 2 --search-path $HOME/Projects | fzf) || return
   local ret=$?
   eval 'cd $selected'
   zle reset-prompt
   return $ret
 }
-zle     -N            sk-project-widget
-bindkey -M emacs '^E' sk-project-widget
-bindkey -M vicmd '^E' sk-project-widget
-bindkey -M viins '^E' sk-project-widget
+zle     -N            fzf-project-widget
+bindkey -M emacs '^E' fzf-project-widget
+bindkey -M vicmd '^E' fzf-project-widget
+bindkey -M viins '^E' fzf-project-widget
 
-sk-tmux-session-widget() {
+fzf-tmux-session-widget() {
   local selected
-  selected=$(tmux list-session -F "#{session_name}" | sk) || return
+  selected=$(tmux list-session -F "#{session_name}" | fzf) || return
   local ret=$?
   eval 'tmux attach -t $selected'
   zle reset-prompt
   return $ret
 }
-zle     -N            sk-tmux-session-widget
-bindkey -M emacs '^T' sk-tmux-session-widget
-bindkey -M vicmd '^T' sk-tmux-session-widget
-bindkey -M viins '^T' sk-tmux-session-widget
+zle     -N            fzf-tmux-session-widget
+bindkey -M emacs '^T' fzf-tmux-session-widget
+bindkey -M vicmd '^T' fzf-tmux-session-widget
+bindkey -M viins '^T' fzf-tmux-session-widget
 
 # }}}

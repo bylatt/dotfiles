@@ -76,8 +76,48 @@ if not vim.g.vscode then
 		vim.api.nvim_set_hl(0, k, v)
 	end
 
-	-- [[ Automatic commands ]]
-	local generalSettingsGroup = vim.api.nvim_create_augroup("General settings", { clear = true })
+	local function underline_to_undercurl()
+		local groups = vim.fn.getcompletion("", "highlight")
+		for _, name in ipairs(groups) do
+			local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+			if ok and hl and hl.underline then
+				local sp = hl.sp or hl.fg
+				local new = vim.tbl_extend("force", hl, {
+					underline = false,
+					undercurl = true,
+					sp = sp,
+				})
+				vim.api.nvim_set_hl(0, name, new)
+			end
+		end
+
+		for _, g in ipairs({
+			"DiagnosticUnderlineError",
+			"DiagnosticUnderlineWarn",
+			"DiagnosticUnderlineInfo",
+			"DiagnosticUnderlineHint",
+			"SpellBad",
+			"SpellCap",
+			"SpellLocal",
+			"SpellRare",
+		}) do
+			local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = g, link = false })
+			if ok and hl then
+				vim.api.nvim_set_hl(0, g, {
+					undercurl = true,
+					underline = false,
+					sp = hl.sp or hl.fg,
+				})
+			end
+		end
+	end
+
+	vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+		group = vim.api.nvim_create_augroup("UnderlineToUndercurl", { clear = true }),
+		callback = underline_to_undercurl,
+	})
+
+	-- [[ Adjust cursor and format options ]]
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = { "*" },
 		callback = function()
@@ -85,8 +125,53 @@ if not vim.g.vscode then
 			vim.opt.cursorcolumn = false
 			vim.opt_local.formatoptions:remove({ "c", "r", "o" })
 		end,
-		group = generalSettingsGroup,
+		group = vim.api.nvim_create_augroup("AdjustCursorLineAndCursorColumnAndFormatOptions", { clear = true }),
 	})
+
+	-- [[ Configure diagnostic behavior ]]
+	local severity_map = {
+		[vim.diagnostic.severity.ERROR] = "E",
+		[vim.diagnostic.severity.WARN] = "W",
+		[vim.diagnostic.severity.INFO] = "I",
+		[vim.diagnostic.severity.HINT] = "H",
+	}
+	vim.api.nvim_create_autocmd("CursorHold", {
+		callback = function()
+			local bufnr = vim.api.nvim_get_current_buf()
+			local line_num = vim.api.nvim_win_get_cursor(0)[1] - 1
+			local line_diagnostics = vim.diagnostic.get(bufnr, { lnum = line_num })
+			if vim.tbl_isempty(line_diagnostics) then
+				vim.api.nvim_echo({ { "" } }, false, {})
+				return
+			end
+			local diagnostic_message = ""
+			for i, diagnostic in ipairs(line_diagnostics) do
+				local truncated_diagnostic = string.match(diagnostic.message, "([^\n]*)")
+				diagnostic_message = diagnostic_message
+					.. string.format("[%s] %s", severity_map[diagnostic.severity], truncated_diagnostic or "")
+				if i ~= #line_diagnostics then
+					diagnostic_message = diagnostic_message .. " | "
+				end
+			end
+			vim.api.nvim_echo({ { diagnostic_message, "Normal" } }, false, {})
+		end,
+		group = vim.api.nvim_create_augroup("PrintDiagnostics", { clear = true }),
+	})
+	vim.diagnostic.config({
+		underline = true,
+		virtual_text = false,
+		signs = false,
+		virtual_lines = false,
+		float = false,
+	})
+	local function jump_next()
+		vim.diagnostic.jump({ count = 1, wrap = true, float = false })
+	end
+	local function jump_prev()
+		vim.diagnostic.jump({ count = -1, wrap = true, float = false })
+	end
+	vim.keymap.set("n", "g]", jump_next, { desc = "Next diagnostic" })
+	vim.keymap.set("n", "g[", jump_prev, { desc = "Prev diagnostic" })
 
 	-- [[ Configure Plugins ]]
 	local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -103,20 +188,6 @@ if not vim.g.vscode then
 	vim.opt.rtp:prepend(lazypath)
 
 	require("lazy").setup({
-		-- {
-		-- 	"deparr/tairiki.nvim",
-		-- 	branch = "v2",
-		-- 	lazy = false,
-		-- 	priority = 1000,
-		-- 	config = function()
-		-- 		local theme = require("tairiki")
-		-- 		theme.setup({
-		-- 			style = "dark",
-		-- 			transparent = true,
-		-- 		})
-		-- 		theme.load()
-		-- 	end,
-		-- },
 		{
 			"numtostr/comment.nvim",
 			config = true,
@@ -166,8 +237,8 @@ if not vim.g.vscode then
 						gr = "lua vim.lsp.buf.rename()",
 						ga = "lua vim.lsp.buf.code_action()",
 						ge = "lua vim.diagnostic.open_float()",
-						["g["] = "lua vim.diagnostic.goto_prev()",
-						["g]"] = "lua vim.diagnostic.goto_next()",
+						["g["] = "lua vim.diagnostic.jump({ count = -1, wrap = true, float = false })",
+						["g]"] = "lua vim.diagnostic.jump({ count = 1, wrap = true, float = false })",
 					},
 					on_attach = function(client, bufnr)
 						-- require("lsp-setup.utils").format_on_save(client)
@@ -176,7 +247,6 @@ if not vim.g.vscode then
 					servers = {
 						bashls = {},
 						vtsls = {},
-						quick_lint_js = {},
 						tailwindcss = {},
 						emmet_language_server = {},
 						terraformls = {},
@@ -290,11 +360,6 @@ if not vim.g.vscode then
 				},
 			},
 		},
-
-		{
-			"karb94/neoscroll.nvim",
-			opts = {},
-		},
 		{
 			"nvim-treesitter/nvim-treesitter",
 			dependencies = {
@@ -366,8 +431,22 @@ if not vim.g.vscode then
 			opts = {
 				keymap = { preset = "enter" },
 				appearance = {
-					use_nvim_cmp_as_default = true,
-					nerd_font_variant = "mono",
+					nerd_font_variant = "normal",
+				},
+				completion = {
+					menu = {
+						draw = {
+							columns = {
+								{ "label", "label_description", gap = 1 },
+								{ "kind" },
+							},
+						},
+					},
+					documentation = {
+						auto_show = true,
+						auto_show_delay_ms = 500,
+					},
+					ghost_text = { enabled = true },
 				},
 				sources = {
 					default = { "lsp", "path", "snippets", "buffer" },
@@ -381,14 +460,33 @@ if not vim.g.vscode then
 		},
 		{
 			"ibhagwan/fzf-lua",
-			dependencies = { "nvim-tree/nvim-web-devicons" },
 			cmd = "FzfLua",
 			keys = {
 				{ "<leader>p", "<cmd>FzfLua files<cr>", noremap = true, silent = false, desc = "Find files" },
 				{ "<leader>o", "<cmd>FzfLua buffers<cr>", noremap = true, silent = false, desc = "Find buffers" },
 				{ "<leader>/", "<cmd>FzfLua live_grep_native<cr>", noremap = true, silent = false, desc = "Live grep" },
 			},
-			opts = { "skim" },
+			opts = {
+				fzf_colors = true,
+				files = {
+					file_icons = false,
+					color_icons = false,
+					cmd = "fd -t f",
+				},
+				buffers = {
+					file_icons = false,
+					color_icons = false,
+				},
+				live_grep = {
+					file_icons = false,
+					color_icons = false,
+					cmd = "rg --hidden --column --line-number --no-heading --color=always --smart-case --",
+				},
+				git_files = {
+					file_icons = false,
+					color_icons = false,
+				},
+			},
 		},
 		{
 			"vim-test/vim-test",
@@ -409,5 +507,33 @@ if not vim.g.vscode then
 			colorscheme = { "default" },
 		},
 		checker = { enabled = false },
+		ui = {
+			icons = {
+				cmd = "",
+				config = "",
+				debug = "● ",
+				event = "",
+				favorite = "",
+				ft = "",
+				init = "",
+				import = "",
+				keys = "",
+				lazy = "",
+				loaded = "●",
+				not_loaded = "○",
+				plugin = "",
+				runtime = "",
+				require = "",
+				source = "",
+				start = "",
+				task = "✔ ",
+				list = {
+					"●",
+					"➜",
+					"★",
+					"‒",
+				},
+			},
+		},
 	})
 end
