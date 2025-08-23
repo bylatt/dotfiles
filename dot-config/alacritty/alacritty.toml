@@ -6,19 +6,19 @@ cursor = '#de935f'
 size = 14
 
 [font.bold]
-family = "Inconsolata LGC"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "Inconsolata LGC"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "Inconsolata LGC"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Italic"
 
 [font.normal]
-family = "Inconsolata LGC"
+family = "JetBrainsMono Nerd Font Mono"
 style = "Regular"
 
 [window]
