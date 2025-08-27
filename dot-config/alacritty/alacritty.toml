@@ -6,19 +6,19 @@ cursor = '#de935f'
 size = 14
 
 [font.bold]
-family = "JetBrainsMono Nerd Font Mono"
+family = "Space Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "JetBrainsMono Nerd Font Mono"
+family = "Space Mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "JetBrainsMono Nerd Font Mono"
+family = "Space Mono"
 style = "Italic"
 
 [font.normal]
-family = "JetBrainsMono Nerd Font Mono"
+family = "Space Mono"
 style = "Regular"
 
 [window]

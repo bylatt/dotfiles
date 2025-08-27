@@ -426,22 +426,22 @@ if not vim.g.vscode then
 		},
 		{
 			"saghen/blink.cmp",
-			dependencies = { "rafamadriz/friendly-snippets", "nvim-tree/nvim-web-devicons" },
+			dependencies = { "rafamadriz/friendly-snippets" },
 			version = "*",
 			opts = {
 				keymap = { preset = "enter" },
 				appearance = {
-					nerd_font_variant = "mono",
+					nerd_font_variant = "normal",
 				},
 				completion = {
-					-- menu = {
-					-- 	draw = {
-					-- 		columns = {
-					-- 			{ "label", "label_description", gap = 1 },
-					-- 			{ "kind" },
-					-- 		},
-					-- 	},
-					-- },
+					menu = {
+						draw = {
+							columns = {
+								{ "label", "label_description", gap = 1 },
+								{ "kind" },
+							},
+						},
+					},
 					documentation = {
 						auto_show = true,
 						auto_show_delay_ms = 500,
@@ -461,9 +461,6 @@ if not vim.g.vscode then
 		{
 			"ibhagwan/fzf-lua",
 			cmd = "FzfLua",
-			dependencies = {
-				"nvim-tree/nvim-web-devicons",
-			},
 			keys = {
 				{ "<leader>p", "<cmd>FzfLua files<cr>", noremap = true, silent = false, desc = "Find files" },
 				{ "<leader>o", "<cmd>FzfLua buffers<cr>", noremap = true, silent = false, desc = "Find buffers" },
@@ -471,26 +468,26 @@ if not vim.g.vscode then
 			},
 			opts = {
 				default = {
-					file_icons = true,
+					file_icons = false,
 				},
 				fzf_colors = true,
 				files = {
-					file_icons = true,
-					color_icons = true,
+					file_icons = false,
+					color_icons = false,
 					cmd = "fd -t f",
 				},
 				buffers = {
-					file_icons = true,
-					color_icons = true,
+					file_icons = false,
+					color_icons = false,
 				},
 				live_grep = {
-					file_icons = true,
-					color_icons = true,
+					file_icons = false,
+					color_icons = false,
 					cmd = "rg --hidden --column --line-number --no-heading --color=always --smart-case --",
 				},
 				git_files = {
-					file_icons = true,
-					color_icons = true,
+					file_icons = false,
+					color_icons = false,
 				},
 			},
 		},
