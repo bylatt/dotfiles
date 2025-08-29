@@ -2,8 +2,8 @@
 *.7z
 *.jar
 *.rar
-# *.zip
-# *.gz
+*.zip
+*.gz
 *.bzip
 *.bz2
 *.xz
@@ -188,3 +188,6 @@ bower_components
 
 # Composer
 vendor
+
+# Git
+.git

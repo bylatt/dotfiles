@@ -262,9 +262,9 @@ typeset -gU cdpath fpath mailpath path
 
 # FZF {{{
 
-# source <(fzf --zsh)
+source <(fzf --zsh)
 export FZF_DEFAULT_COMMAND='fd --type file --hidden --no-ignore'
-export FZF_DEFAULT_OPTS="--ansi --layout=reverse"
+export FZF_DEFAULT_OPTS="--color=hl:#cc6666,hl+:#cc6666,prompt:#cc6666,pointer:#cc6666,marker:#cc6666,spinner:#cc6666,info:#cc6666  --layout=reverse"
 
 fzf-history-widget() {
   local selected

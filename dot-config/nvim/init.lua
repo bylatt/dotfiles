@@ -43,8 +43,8 @@ vim.opt.joinspaces = false
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.timeout = true
-vim.opt.updatetime = 200
-vim.opt.timeoutlen = 200
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 250
 vim.opt.ttyfast = true
 vim.opt.foldenable = true
 vim.opt.foldmethod = "indent"
@@ -76,46 +76,46 @@ if not vim.g.vscode then
 		vim.api.nvim_set_hl(0, k, v)
 	end
 
-	local function underline_to_undercurl()
-		local groups = vim.fn.getcompletion("", "highlight")
-		for _, name in ipairs(groups) do
-			local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
-			if ok and hl and hl.underline then
-				local sp = hl.sp or hl.fg
-				local new = vim.tbl_extend("force", hl, {
-					underline = false,
-					undercurl = true,
-					sp = sp,
-				})
-				vim.api.nvim_set_hl(0, name, new)
-			end
-		end
-
-		for _, g in ipairs({
-			"DiagnosticUnderlineError",
-			"DiagnosticUnderlineWarn",
-			"DiagnosticUnderlineInfo",
-			"DiagnosticUnderlineHint",
-			"SpellBad",
-			"SpellCap",
-			"SpellLocal",
-			"SpellRare",
-		}) do
-			local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = g, link = false })
-			if ok and hl then
-				vim.api.nvim_set_hl(0, g, {
-					undercurl = true,
-					underline = false,
-					sp = hl.sp or hl.fg,
-				})
-			end
-		end
-	end
-
-	vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
-		group = vim.api.nvim_create_augroup("UnderlineToUndercurl", { clear = true }),
-		callback = underline_to_undercurl,
-	})
+	-- local function underline_to_undercurl()
+	-- 	local groups = vim.fn.getcompletion("", "highlight")
+	-- 	for _, name in ipairs(groups) do
+	-- 		local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+	-- 		if ok and hl and hl.underline then
+	-- 			local sp = hl.sp or hl.fg
+	-- 			local new = vim.tbl_extend("force", hl, {
+	-- 				underline = false,
+	-- 				undercurl = true,
+	-- 				sp = sp,
+	-- 			})
+	-- 			vim.api.nvim_set_hl(0, name, new)
+	-- 		end
+	-- 	end
+	--
+	-- 	for _, g in ipairs({
+	-- 		"DiagnosticUnderlineError",
+	-- 		"DiagnosticUnderlineWarn",
+	-- 		"DiagnosticUnderlineInfo",
+	-- 		"DiagnosticUnderlineHint",
+	-- 		"SpellBad",
+	-- 		"SpellCap",
+	-- 		"SpellLocal",
+	-- 		"SpellRare",
+	-- 	}) do
+	-- 		local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = g, link = false })
+	-- 		if ok and hl then
+	-- 			vim.api.nvim_set_hl(0, g, {
+	-- 				undercurl = true,
+	-- 				underline = false,
+	-- 				sp = hl.sp or hl.fg,
+	-- 			})
+	-- 		end
+	-- 	end
+	-- end
+	--
+	-- vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+	-- 	group = vim.api.nvim_create_augroup("UnderlineToUndercurl", { clear = true }),
+	-- 	callback = underline_to_undercurl,
+	-- })
 
 	-- [[ Adjust cursor and format options ]]
 	vim.api.nvim_create_autocmd("FileType", {
@@ -188,6 +188,15 @@ if not vim.g.vscode then
 	vim.opt.rtp:prepend(lazypath)
 
 	require("lazy").setup({
+		{
+			"deparr/tairiki.nvim",
+			config = function()
+				require("tairiki").setup({
+					transparent = true,
+				})
+				vim.cmd.colorscheme("tairiki")
+			end,
+		},
 		{
 			"numtostr/comment.nvim",
 			config = true,
