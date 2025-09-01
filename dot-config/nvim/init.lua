@@ -68,54 +68,49 @@ vim.keymap.set("n", "<c-l>", "<c-w>l", { noremap = true, silent = true })
 if not vim.g.vscode then
 	-- [[ Color ]]
 	vim.opt.background = "dark"
-	local highlights = {
-		Normal = { bg = nil },
-		FloatBorder = { bg = nil },
-	}
-	for k, v in pairs(highlights) do
-		vim.api.nvim_set_hl(0, k, v)
+	vim.cmd.colorscheme("default")
+	vim.api.nvim_set_hl(0, "Normal", { bg = nil })
+
+	local function underline_to_undercurl()
+		local groups = vim.fn.getcompletion("", "highlight")
+		for _, name in ipairs(groups) do
+			local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+			if ok and hl and hl.underline then
+				local sp = hl.sp or hl.fg
+				local new = vim.tbl_extend("force", hl, {
+					underline = false,
+					undercurl = true,
+					sp = sp,
+				})
+				vim.api.nvim_set_hl(0, name, new)
+			end
+		end
+
+		for _, g in ipairs({
+			"DiagnosticUnderlineError",
+			"DiagnosticUnderlineWarn",
+			"DiagnosticUnderlineInfo",
+			"DiagnosticUnderlineHint",
+			"SpellBad",
+			"SpellCap",
+			"SpellLocal",
+			"SpellRare",
+		}) do
+			local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = g, link = false })
+			if ok and hl then
+				vim.api.nvim_set_hl(0, g, {
+					undercurl = true,
+					underline = false,
+					sp = hl.sp or hl.fg,
+				})
+			end
+		end
 	end
 
-	-- local function underline_to_undercurl()
-	-- 	local groups = vim.fn.getcompletion("", "highlight")
-	-- 	for _, name in ipairs(groups) do
-	-- 		local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
-	-- 		if ok and hl and hl.underline then
-	-- 			local sp = hl.sp or hl.fg
-	-- 			local new = vim.tbl_extend("force", hl, {
-	-- 				underline = false,
-	-- 				undercurl = true,
-	-- 				sp = sp,
-	-- 			})
-	-- 			vim.api.nvim_set_hl(0, name, new)
-	-- 		end
-	-- 	end
-	--
-	-- 	for _, g in ipairs({
-	-- 		"DiagnosticUnderlineError",
-	-- 		"DiagnosticUnderlineWarn",
-	-- 		"DiagnosticUnderlineInfo",
-	-- 		"DiagnosticUnderlineHint",
-	-- 		"SpellBad",
-	-- 		"SpellCap",
-	-- 		"SpellLocal",
-	-- 		"SpellRare",
-	-- 	}) do
-	-- 		local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = g, link = false })
-	-- 		if ok and hl then
-	-- 			vim.api.nvim_set_hl(0, g, {
-	-- 				undercurl = true,
-	-- 				underline = false,
-	-- 				sp = hl.sp or hl.fg,
-	-- 			})
-	-- 		end
-	-- 	end
-	-- end
-	--
-	-- vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
-	-- 	group = vim.api.nvim_create_augroup("UnderlineToUndercurl", { clear = true }),
-	-- 	callback = underline_to_undercurl,
-	-- })
+	vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+		group = vim.api.nvim_create_augroup("UnderlineToUndercurl", { clear = true }),
+		callback = underline_to_undercurl,
+	})
 
 	-- [[ Adjust cursor and format options ]]
 	vim.api.nvim_create_autocmd("FileType", {
@@ -188,15 +183,6 @@ if not vim.g.vscode then
 	vim.opt.rtp:prepend(lazypath)
 
 	require("lazy").setup({
-		{
-			"deparr/tairiki.nvim",
-			config = function()
-				require("tairiki").setup({
-					transparent = true,
-				})
-				vim.cmd.colorscheme("tairiki")
-			end,
-		},
 		{
 			"numtostr/comment.nvim",
 			config = true,
@@ -403,7 +389,7 @@ if not vim.g.vscode then
 						},
 						auto_install = true,
 						highlight = {
-							enable = true,
+							enable = false,
 							additional_vim_regex_highlighting = false,
 						},
 						indent = { enable = true },
@@ -476,10 +462,10 @@ if not vim.g.vscode then
 				{ "<leader>/", "<cmd>FzfLua live_grep_native<cr>", noremap = true, silent = false, desc = "Live grep" },
 			},
 			opts = {
+				fzf_colors = true,
 				default = {
 					file_icons = false,
 				},
-				fzf_colors = true,
 				files = {
 					file_icons = false,
 					color_icons = false,
