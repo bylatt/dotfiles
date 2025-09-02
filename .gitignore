@@ -1,6 +1,5 @@
 .DS_Store
 .vim/*
-lazy-lock.json
 !.vim/lua
 !.vim/init.lua
 dot-config/*
@@ -13,5 +12,7 @@ dot-config/*
 !dot-config/helix
 !dot-config/kitty
 !dot-config/nvim
+!dot-config/nvim/**
+dot-config/nvim/lazy-lock.json
 !dot-config/tmux
 !dot-config/fontconfig
