@@ -1,7 +1,4 @@
 .DS_Store
-.vim/*
-!.vim/lua
-!.vim/init.lua
 dot-config/*
 !dot-config/git
 !dot-config/eza
@@ -11,8 +8,8 @@ dot-config/*
 !dot-config/gitui
 !dot-config/helix
 !dot-config/kitty
-!dot-config/nvim
-!dot-config/nvim/**
+dot-config/nvim
+!dot-config/nvim/init.lua
 dot-config/nvim/lazy-lock.json
 !dot-config/tmux
 !dot-config/fontconfig
