@@ -319,6 +319,8 @@ if not vim.g.vscode then
 			opts = {
 				formatters_by_ft = {
 					bash = { "shfmt" },
+					c = { "clang-format" },
+					cpp = { "clang-format" },
 					go = { "goimports", "gofumpt" },
 					javascript = { "biome" },
 					javascriptreact = { "biome", "rustywind" },
