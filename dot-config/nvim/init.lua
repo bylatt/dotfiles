@@ -259,7 +259,7 @@ if not vim.g.vscode then
 							},
 						},
 						clangd = {},
-						pyright = {},
+						ty = {},
 						ruff = {},
 						rust_analyzer = {
 							settings = {
