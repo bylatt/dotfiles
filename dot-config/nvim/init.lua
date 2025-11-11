@@ -50,6 +50,7 @@ vim.opt.foldenable = true
 vim.opt.foldmethod = "indent"
 vim.opt.foldlevel = 1000
 vim.opt.laststatus = 3
+vim.opt.swapfile = false
 
 vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case" -- high performance grep
 vim.g.markdown_recommended_style = 0 -- allow 2 space on markdown file
@@ -167,6 +168,21 @@ if not vim.g.vscode then
 	end
 	vim.keymap.set("n", "g]", jump_next, { desc = "Next diagnostic" })
 	vim.keymap.set("n", "g[", jump_prev, { desc = "Prev diagnostic" })
+
+	-- Restore <CR> to its default, jump-to-location behavior
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = { "qf" },
+		callback = function()
+			vim.keymap.set(
+				"n",
+				"<cr>",
+				"<cr>:cclose<cr>",
+				{ buffer = true, silent = true, desc = "Quickfix: Jump to location" }
+			)
+			-- Alternatively, you can explicitly call the command to jump to the cursor line:
+			-- vim.keymap.set("n", "<cr>", "<cmd>cc<cr>", { buffer = true, silent = true, desc = "Quickfix: Jump to location" })
+		end,
+	})
 
 	-- [[ Configure Plugins ]]
 	local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -447,7 +463,7 @@ if not vim.g.vscode then
 					ghost_text = { enabled = true },
 				},
 				sources = {
-					default = { "lsp", "path", "snippets", "buffer" },
+					default = { "lsp", "buffer", "path", "snippets" },
 				},
 				cmdline = {
 					enabled = false,
