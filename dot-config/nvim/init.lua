@@ -169,7 +169,7 @@ if not vim.g.vscode then
 	vim.keymap.set("n", "g]", jump_next, { desc = "Next diagnostic" })
 	vim.keymap.set("n", "g[", jump_prev, { desc = "Prev diagnostic" })
 
-	-- Restore <CR> to its default, jump-to-location behavior
+	-- Restore <CR> to jump-to-location behavior on quickfix list
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = { "qf" },
 		callback = function()
@@ -179,8 +179,16 @@ if not vim.g.vscode then
 				"<cr>:cclose<cr>",
 				{ buffer = true, silent = true, desc = "Quickfix: Jump to location" }
 			)
-			-- Alternatively, you can explicitly call the command to jump to the cursor line:
-			-- vim.keymap.set("n", "<cr>", "<cmd>cc<cr>", { buffer = true, silent = true, desc = "Quickfix: Jump to location" })
+		end,
+	})
+
+	-- Highlight yank text
+	vim.api.nvim_create_autocmd("TextYankPost", {
+		group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
+		pattern = "*",
+		desc = "hightlight yank selection",
+		callback = function()
+			vim.highlight.on_yank({ timeout = 250, visual = true })
 		end,
 	})
 

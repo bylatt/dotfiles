@@ -212,11 +212,9 @@ setopt hist_find_no_dups
 setopt hist_reduce_blanks
 setopt hist_save_no_dups
 
-HISTCONTROL="erasedups:ignorespace"
 HISTFILE=~/.zsh_history
-HISTSIZE=100000
-SAVEHIST=100000
-HISTFILESIZE=2000000
+HISTSIZE=5000
+SAVEHIST=5000
 
 # }}}
 

@@ -1,5 +1,5 @@
-background-blur-radius = 40
-background-opacity = 0.95
+background-blur-radius = 69
+background-opacity = 0.96
 clipboard-read = "allow"
 clipboard-write = "allow"
 cursor-style = "block"
