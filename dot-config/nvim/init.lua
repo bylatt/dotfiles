@@ -270,18 +270,7 @@ if not vim.g.vscode then
 						emmet_language_server = {},
 						terraformls = {},
 						marksman = {},
-						gopls = {
-							settings = {
-								gopls = {
-									analyses = {
-										unusedparams = true,
-										unreachable = true,
-									},
-									staticcheck = true,
-									gofumpt = true,
-								},
-							},
-						},
+						gopls = {},
 						clangd = {},
 						ty = {},
 						ruff = {},
@@ -295,7 +284,6 @@ if not vim.g.vscode then
 										prefix = "self",
 									},
 									cargo = {
-										loadOutDirsFromCheck = true,
 										buildScripts = {
 											enable = true,
 										},
@@ -346,7 +334,7 @@ if not vim.g.vscode then
 					bash = { "shfmt" },
 					c = { "clang-format" },
 					cpp = { "clang-format" },
-					go = { "goimports", "gofumpt" },
+					go = { "goimports", "gofmt" },
 					html = { "prettier" },
 					javascript = { "biome" },
 					javascriptreact = { "biome", "rustywind" },
@@ -354,7 +342,6 @@ if not vim.g.vscode then
 					lua = { "stylua" },
 					markdown = { "prettier" },
 					python = { "ruff_fix", "ruff_format" },
-					ruby = { "rubyfmt" },
 					rust = { "rustfmt" },
 					sh = { "shfmt" },
 					sql = { "sleek" },
