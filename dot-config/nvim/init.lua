@@ -240,8 +240,8 @@ if not vim.g.vscode then
 			"junnplus/lsp-setup.nvim",
 			dependencies = {
 				"neovim/nvim-lspconfig",
-				"williamboman/mason.nvim",
-				"williamboman/mason-lspconfig.nvim",
+				"mason-org/mason.nvim",
+				"mason-org/mason-lspconfig.nvim",
 			},
 			config = function()
 				require("mason").setup()
@@ -314,16 +314,6 @@ if not vim.g.vscode then
 			end,
 		},
 		{
-			"olexsmir/gopher.nvim",
-			ft = "go",
-			dependencies = {
-				"nvim-lua/plenary.nvim",
-				"nvim-treesitter/nvim-treesitter",
-				"mfussenegger/nvim-dap",
-			},
-			config = true,
-		},
-		{
 			"stevearc/conform.nvim",
 			event = "BufWritePre",
 			cmd = "ConformInfo",
@@ -371,66 +361,55 @@ if not vim.g.vscode then
 		},
 		{
 			"nvim-treesitter/nvim-treesitter",
-			dependencies = {
-				"nvim-treesitter/nvim-treesitter-textobjects",
-			},
+			lazy = false,
+			branch = "main",
 			build = ":TSUpdate",
 			config = function()
-				vim.defer_fn(function()
-					require("nvim-treesitter.configs").setup({
-						ensure_installed = {
-							"bash",
-							"c",
-							"c_sharp",
-							"cpp",
-							"css",
-							"go",
-							"html",
-							"javascript",
-							"json",
-							"jsonc",
-							"lua",
-							"markdown",
-							"python",
-							"rust",
-							"sql",
-							"templ",
-							"toml",
-							"tsx",
-							"typescript",
-							"vimdoc",
-							"yaml",
-						},
-						auto_install = true,
-						highlight = {
-							enable = false,
-							additional_vim_regex_highlighting = false,
-						},
-						indent = { enable = true },
-						textobjects = {
-							select = {
-								enable = true,
-								lookahead = true,
-								keymaps = {
-									["aa"] = "@parameter.outer",
-									["ia"] = "@parameter.inner",
-									["ab"] = "@block.outer",
-									["ib"] = "@block.inner",
-									["ac"] = "@class.outer",
-									["ic"] = "@class.inner",
-									["af"] = "@function.outer",
-									["if"] = "@function.inner",
-									["al"] = "@loop.outer",
-									["il"] = "@loop.inner",
-									["am"] = "@call.outer",
-									["im"] = "@call.inner",
-									["as"] = "@statement.outer",
-									["is"] = "@statement.inner",
-								},
-							},
-						},
-					})
-				end, 0)
+				local ts = require("nvim-treesitter")
+				-- ts.install({
+				-- 	"bash",
+				-- 	"c",
+				-- 	"c_sharp",
+				-- 	"cpp",
+				-- 	"css",
+				-- 	"go",
+				-- 	"html",
+				-- 	"javascript",
+				-- 	"json",
+				-- 	"jsonc",
+				-- 	"lua",
+				-- 	"markdown",
+				-- 	"python",
+				-- 	"rust",
+				-- 	"sql",
+				-- 	"templ",
+				-- 	"toml",
+				-- 	"tsx",
+				-- 	"typescript",
+				-- 	"vimdoc",
+				-- 	"yaml",
+				-- })
+
+				local group = vim.api.nvim_create_augroup("TreesitterSetup", { clear = true })
+				local ignore_filetypes = {
+					"checkhealth",
+					"lazy",
+					"mason",
+				}
+				vim.api.nvim_create_autocmd("FileType", {
+					group = group,
+					desc = "Enable treesitter highlighting and indentation",
+					callback = function(event)
+						if vim.tbl_contains(ignore_filetypes, event.match) then
+							return
+						end
+						local lang = vim.treesitter.language.get_lang(event.match) or event.match
+						local buf = event.buf
+						pcall(vim.treesitter.start, buf, lang)
+						vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+						ts.install({ lang })
+					end,
+				})
 			end,
 		},
 		{
