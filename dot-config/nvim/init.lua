@@ -166,8 +166,8 @@ if not vim.g.vscode then
 	local function jump_prev()
 		vim.diagnostic.jump({ count = -1, wrap = true, float = false })
 	end
-	vim.keymap.set("n", "g]", jump_next, { desc = "Next diagnostic" })
-	vim.keymap.set("n", "g[", jump_prev, { desc = "Prev diagnostic" })
+	vim.keymap.set("n", "]d", jump_next, { desc = "Next diagnostic" })
+	vim.keymap.set("n", "[d", jump_prev, { desc = "Prev diagnostic" })
 
 	-- Restore <CR> to jump-to-location behavior on quickfix list
 	vim.api.nvim_create_autocmd("FileType", {
@@ -256,8 +256,8 @@ if not vim.g.vscode then
 						gr = "lua vim.lsp.buf.rename()",
 						ga = "lua vim.lsp.buf.code_action()",
 						ge = "lua vim.diagnostic.open_float()",
-						["g["] = "lua vim.diagnostic.jump({ count = -1, wrap = true, float = false })",
-						["g]"] = "lua vim.diagnostic.jump({ count = 1, wrap = true, float = false })",
+						["[d"] = "lua vim.diagnostic.jump({ count = -1, wrap = true, float = false })",
+						["]d"] = "lua vim.diagnostic.jump({ count = 1, wrap = true, float = false })",
 					},
 					on_attach = function(client, bufnr)
 						-- require("lsp-setup.utils").format_on_save(client)
@@ -366,30 +366,6 @@ if not vim.g.vscode then
 			build = ":TSUpdate",
 			config = function()
 				local ts = require("nvim-treesitter")
-				-- ts.install({
-				-- 	"bash",
-				-- 	"c",
-				-- 	"c_sharp",
-				-- 	"cpp",
-				-- 	"css",
-				-- 	"go",
-				-- 	"html",
-				-- 	"javascript",
-				-- 	"json",
-				-- 	"jsonc",
-				-- 	"lua",
-				-- 	"markdown",
-				-- 	"python",
-				-- 	"rust",
-				-- 	"sql",
-				-- 	"templ",
-				-- 	"toml",
-				-- 	"tsx",
-				-- 	"typescript",
-				-- 	"vimdoc",
-				-- 	"yaml",
-				-- })
-
 				local group = vim.api.nvim_create_augroup("TreesitterSetup", { clear = true })
 				local ignore_filetypes = {
 					"checkhealth",
@@ -411,6 +387,70 @@ if not vim.g.vscode then
 					end,
 				})
 			end,
+		},
+		{
+			"nvim-treesitter/nvim-treesitter-context",
+			event = "BufRead",
+			dependencies = {
+				"nvim-treesitter/nvim-treesitter",
+				event = "BufRead",
+			},
+			opts = {
+				multiwindow = true,
+			},
+		},
+		{
+			"nvim-treesitter/nvim-treesitter-textobjects",
+			branch = "main",
+			keys = {
+				{
+					"af",
+					function()
+						require("nvim-treesitter-textobjects.select").select_textobject(
+							"@function.outer",
+							"textobjects"
+						)
+					end,
+					desc = "Select outer function",
+					mode = { "x", "o" },
+				},
+				{
+					"if",
+					function()
+						require("nvim-treesitter-textobjects.select").select_textobject(
+							"@function.inner",
+							"textobjects"
+						)
+					end,
+					desc = "Select inner function",
+					mode = { "x", "o" },
+				},
+				{
+					"ac",
+					function()
+						require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects")
+					end,
+					desc = "Select outer class",
+					mode = { "x", "o" },
+				},
+				{
+					"ic",
+					function()
+						require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
+					end,
+					desc = "Select inner class",
+					mode = { "x", "o" },
+				},
+				{
+					"as",
+					function()
+						require("nvim-treesitter-textobjects.select").select_textobject("@local.scope", "locals")
+					end,
+					desc = "Select local scope",
+					mode = { "x", "o" },
+				},
+			},
+			opts = { multiwindow = true },
 		},
 		{
 			"saghen/blink.cmp",
