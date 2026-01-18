@@ -480,7 +480,7 @@ if not vim.g.vscode then
 					default = { "lsp", "buffer", "path", "snippets" },
 				},
 				cmdline = {
-					enabled = false,
+					enabled = true,
 				},
 				signature = { enabled = true },
 			},
