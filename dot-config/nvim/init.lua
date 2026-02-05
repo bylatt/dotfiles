@@ -268,7 +268,6 @@ if not vim.g.vscode then
 						tsgo = {},
 						tailwindcss = {},
 						emmet_language_server = {},
-						terraformls = {},
 						marksman = {},
 						oxlint = {},
 						gopls = {},
@@ -318,7 +317,6 @@ if not vim.g.vscode then
 			"stevearc/conform.nvim",
 			event = "BufWritePre",
 			cmd = "ConformInfo",
-			version = "*",
 			opts = {
 				formatters_by_ft = {
 					["*"] = { "trim_whitespace" },
