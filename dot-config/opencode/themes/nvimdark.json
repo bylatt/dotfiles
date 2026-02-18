@@ -1,0 +1,229 @@
+{
+  "$schema": "https://opencode.ai/theme.json",
+  "defs": {
+    "nvimBg0": "#07080D",
+    "nvimBg1": "#14161B",
+    "nvimBg2": "#2c2e33",
+    "nvimBg3": "#4f5258",
+
+    "nvimFg0": "#EEF1F8",
+    "nvimFg1": "#C4C6CD",
+    "nvimFg2": "#9b9ea4",
+
+    "nvimBlue": "#A6DBFF",
+    "nvimCyan": "#8cf8f7",
+    "nvimGreen": "#b4f6c0",
+    "nvimMagenta": "#FFCAFF",
+    "nvimRed": "#FFC0B9",
+    "nvimYellow": "#FCE094",
+
+    "nvimBlueDark": "#004c63",
+    "nvimCyanDark": "#007373",
+    "nvimGreenDark": "#005523",
+    "nvimMagentaDark": "#470045",
+    "nvimRedDark": "#590008",
+    "nvimYellowDark": "#6b5300"
+  },
+  "theme": {
+    "primary": {
+      "dark": "nvimBlue",
+      "light": "nvimBlueDark"
+    },
+    "secondary": {
+      "dark": "nvimCyan",
+      "light": "nvimCyanDark"
+    },
+    "accent": {
+      "dark": "nvimMagenta",
+      "light": "nvimMagentaDark"
+    },
+    "error": {
+      "dark": "nvimRed",
+      "light": "nvimRedDark"
+    },
+    "warning": {
+      "dark": "nvimYellow",
+      "light": "nvimYellowDark"
+    },
+    "success": {
+      "dark": "nvimGreen",
+      "light": "nvimGreenDark"
+    },
+    "info": {
+      "dark": "nvimCyan",
+      "light": "nvimBlueDark"
+    },
+    "text": {
+      "dark": "nvimFg0",
+      "light": "nvimBg0"
+    },
+    "textMuted": {
+      "dark": "nvimFg2",
+      "light": "nvimBg2"
+    },
+    "background": {
+      "dark": "none",
+      "light": "none"
+    },
+    "backgroundPanel": {
+      "dark": "nvimBg1",
+      "light": "nvimFg1"
+    },
+    "backgroundElement": {
+      "dark": "nvimBg2",
+      "light": "nvimFg2"
+    },
+    "border": {
+      "dark": "nvimBg3",
+      "light": "nvimBg2"
+    },
+    "borderActive": {
+      "dark": "nvimBlueDark",
+      "light": "nvimBlue"
+    },
+    "borderSubtle": {
+      "dark": "nvimBg2",
+      "light": "nvimBg3"
+    },
+    "diffAdded": {
+      "dark": "nvimGreen",
+      "light": "nvimGreenDark"
+    },
+    "diffRemoved": {
+      "dark": "nvimRed",
+      "light": "nvimRedDark"
+    },
+    "diffContext": {
+      "dark": "nvimFg2",
+      "light": "nvimBg2"
+    },
+    "diffHunkHeader": {
+      "dark": "nvimBlue",
+      "light": "nvimBlueDark"
+    },
+    "diffHighlightAdded": {
+      "dark": "nvimGreen",
+      "light": "nvimGreenDark"
+    },
+    "diffHighlightRemoved": {
+      "dark": "nvimRed",
+      "light": "nvimRedDark"
+    },
+    "diffAddedBg": {
+      "dark": "nvimBg1",
+      "light": "nvimFg1"
+    },
+    "diffRemovedBg": {
+      "dark": "nvimBg1",
+      "light": "nvimFg1"
+    },
+    "diffContextBg": {
+      "dark": "nvimBg1",
+      "light": "nvimFg1"
+    },
+    "diffLineNumber": {
+      "dark": "nvimFg2",
+      "light": "nvimBg2"
+    },
+    "diffAddedLineNumberBg": {
+      "dark": "nvimBg1",
+      "light": "nvimFg1"
+    },
+    "diffRemovedLineNumberBg": {
+      "dark": "nvimBg1",
+      "light": "nvimFg1"
+    },
+    "markdownText": {
+      "dark": "nvimFg0",
+      "light": "nvimBg0"
+    },
+    "markdownHeading": {
+      "dark": "nvimBlue",
+      "light": "nvimBlueDark"
+    },
+    "markdownLink": {
+      "dark": "nvimCyan",
+      "light": "nvimCyanDark"
+    },
+    "markdownLinkText": {
+      "dark": "nvimBlue",
+      "light": "nvimBlueDark"
+    },
+    "markdownCode": {
+      "dark": "nvimGreen",
+      "light": "nvimGreenDark"
+    },
+    "markdownBlockQuote": {
+      "dark": "nvimFg2",
+      "light": "nvimBg2"
+    },
+    "markdownEmph": {
+      "dark": "nvimMagenta",
+      "light": "nvimMagentaDark"
+    },
+    "markdownStrong": {
+      "dark": "nvimYellow",
+      "light": "nvimYellowDark"
+    },
+    "markdownHorizontalRule": {
+      "dark": "nvimBg3",
+      "light": "nvimBg2"
+    },
+    "markdownListItem": {
+      "dark": "nvimBlue",
+      "light": "nvimBlueDark"
+    },
+    "markdownListEnumeration": {
+      "dark": "nvimCyan",
+      "light": "nvimCyanDark"
+    },
+    "markdownImage": {
+      "dark": "nvimMagenta",
+      "light": "nvimMagentaDark"
+    },
+    "markdownImageText": {
+      "dark": "nvimBlue",
+      "light": "nvimBlueDark"
+    },
+    "markdownCodeBlock": {
+      "dark": "nvimFg0",
+      "light": "nvimBg0"
+    },
+    "syntaxComment": {
+      "dark": "nvimFg2",
+      "light": "nvimBg2"
+    },
+    "syntaxKeyword": {
+      "dark": "nvimMagenta",
+      "light": "nvimMagentaDark"
+    },
+    "syntaxFunction": {
+      "dark": "nvimBlue",
+      "light": "nvimBlueDark"
+    },
+    "syntaxVariable": {
+      "dark": "nvimCyan",
+      "light": "nvimCyanDark"
+    },
+    "syntaxString": {
+      "dark": "nvimGreen",
+      "light": "nvimGreenDark"
+    },
+    "syntaxNumber": {
+      "dark": "nvimYellow",
+      "light": "nvimYellowDark"
+    },
+    "syntaxType": {
+      "dark": "nvimBlue",
+      "light": "nvimBlueDark"
+    },
+    "syntaxOperator": {
+      "dark": "nvimMagenta",
+      "light": "nvimMagentaDark"
+    },
+    "syntaxPunctuation": {
+      "dark": "nvimFg1",
+      "light": "nvimBg1"
+    }
+  }
+}

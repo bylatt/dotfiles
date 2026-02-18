@@ -1,4 +1,6 @@
 .DS_Store
+bun.lock
+node_modules
 dot-config/*
 !dot-config/git
 !dot-config/eza
@@ -13,3 +15,4 @@ dot-config/nvim
 dot-config/nvim/lazy-lock.json
 !dot-config/tmux
 !dot-config/fontconfig
+!dot-config/opencode
