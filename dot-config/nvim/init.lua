@@ -360,6 +360,24 @@ if not vim.g.vscode then
 			},
 		},
 		{
+			"nvim-neo-tree/neo-tree.nvim",
+			branch = "v3.x",
+			dependencies = {
+				"nvim-lua/plenary.nvim",
+				"muniftanjim/nui.nvim",
+			},
+			keys = {
+				{
+					"<leader>f",
+					"<cmd>Neotree float reveal toggle<cr>",
+					noremap = true,
+					silent = false,
+					desc = "Explore files",
+				},
+			},
+			lazy = false,
+		},
+		{
 			"nvim-treesitter/nvim-treesitter",
 			lazy = false,
 			branch = "main",

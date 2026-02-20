@@ -4,6 +4,7 @@ node_modules
 
 bun.lock
 lazy-lock.json
+package.json
 
 dot-config/*
 !dot-config/git
