@@ -472,6 +472,7 @@ require("lazy").setup({
 	},
 	{
 		"ibhagwan/fzf-lua",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
 		cmd = "FzfLua",
 		keys = {
 			{ "<leader>p", "<cmd>FzfLua files<cr>", noremap = true, silent = false, desc = "Find files" },
