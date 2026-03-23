@@ -472,7 +472,6 @@ require("lazy").setup({
 	},
 	{
 		"ibhagwan/fzf-lua",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
 		cmd = "FzfLua",
 		keys = {
 			{ "<leader>p", "<cmd>FzfLua files<cr>", noremap = true, silent = false, desc = "Find files" },
@@ -482,25 +481,42 @@ require("lazy").setup({
 		opts = {
 			fzf_colors = true,
 			default = {
-				file_icons = true,
+				file_icons = false,
 			},
 			files = {
-				file_icons = true,
-				color_icons = true,
+				file_icons = false,
+				color_icons = false,
 				cmd = "fd -t f",
+				preview = false,
 			},
 			buffers = {
-				file_icons = true,
-				color_icons = true,
+				file_icons = false,
+				color_icons = false,
 			},
 			live_grep = {
-				file_icons = true,
-				color_icons = true,
+				file_icons = false,
+				color_icons = false,
 				cmd = "rg --hidden --column --line-number --no-heading --color=always --smart-case --",
 			},
 			git_files = {
-				file_icons = true,
-				color_icons = true,
+				file_icons = false,
+				color_icons = false,
+			},
+			hls = {
+				normal = "NormalFloat",
+				-- preview_normal = "NormalFloat",
+				-- border = "FloatBorder",
+				-- prompt = "FloatBorder",
+			},
+			winopts = {
+				preview = {
+					hidden = true,
+				},
+				backdrop = 100,
+				width = 0.5,
+				height = 0.8,
+				row = 0.5,
+				col = 0.5,
 			},
 		},
 	},

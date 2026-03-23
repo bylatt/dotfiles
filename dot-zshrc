@@ -200,9 +200,9 @@ zstyle ":completion:*:cd:*" tag-order local-directories directory-stack path-dir
 # History {{{
 
 setopt append_history
-setopt inc_append_history
-setopt extended_history
-setopt share_history
+unsetopt inc_append_history
+unsetopt extended_history
+unsetopt share_history
 setopt hist_expire_dups_first
 setopt hist_ignore_all_dups
 setopt hist_ignore_dups
