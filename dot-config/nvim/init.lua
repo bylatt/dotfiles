@@ -135,12 +135,13 @@ vim.api.nvim_create_autocmd("CursorHold", {
 		end
 		local diagnostic_message = ""
 		for i, diagnostic in ipairs(line_diagnostics) do
-			local truncated_diagnostic = string.match(diagnostic.message, "([^\n]*)")
-			diagnostic_message = diagnostic_message
-				.. string.format("[%s] %s", severity_map[diagnostic.severity], truncated_diagnostic or "")
-			if i ~= #line_diagnostics then
-				diagnostic_message = diagnostic_message .. " | "
-			end
+			diagnostic_message = string.match(diagnostic.message, "([^\n]*)")
+			-- local truncated_diagnostic = string.match(diagnostic.message, "([^\n]*)")
+			-- diagnostic_message = diagnostic_message
+			-- 	.. string.format("[%s] %s", severity_map[diagnostic.severity], truncated_diagnostic or "")
+			-- if i ~= #line_diagnostics then
+			-- 	diagnostic_message = diagnostic_message .. " | "
+			-- end
 		end
 		vim.api.nvim_echo({ { diagnostic_message, "Normal" } }, false, {})
 	end,
@@ -361,6 +362,7 @@ require("lazy").setup({
 				"checkhealth",
 				"lazy",
 				"mason",
+				"conf",
 			}
 			vim.api.nvim_create_autocmd("FileType", {
 				group = group,
@@ -450,7 +452,7 @@ require("lazy").setup({
 					draw = {
 						columns = {
 							{ "label", "label_description", gap = 1 },
-							{ "kind_icon", "kind" },
+							{ "kind" },
 						},
 					},
 				},
@@ -539,4 +541,30 @@ require("lazy").setup({
 		colorscheme = { "default" },
 	},
 	checker = { enabled = false },
+	ui = {
+		icons = {
+			cmd = "",
+			config = "",
+			event = "",
+			ft = "",
+			init = "",
+			import = "",
+			keys = "",
+			lazy = "",
+			loaded = "●",
+			not_loaded = "○",
+			plugin = "",
+			runtime = "",
+			require = "",
+			source = "",
+			start = "",
+			task = "",
+			list = {
+				"●",
+				"➜",
+				"★",
+				"‒",
+			},
+		},
+	},
 })
