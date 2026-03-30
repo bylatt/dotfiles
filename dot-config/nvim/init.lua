@@ -481,6 +481,7 @@ require("lazy").setup({
 			{ "<leader>/", "<cmd>FzfLua live_grep_native<cr>", noremap = true, silent = false, desc = "Live grep" },
 		},
 		opts = {
+			fzf_bin = "sk",
 			fzf_colors = true,
 			default = {
 				file_icons = false,
