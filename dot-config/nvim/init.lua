@@ -363,6 +363,7 @@ require("lazy").setup({
 				"lazy",
 				"mason",
 				"conf",
+				"env",
 			}
 			vim.api.nvim_create_autocmd("FileType", {
 				group = group,
