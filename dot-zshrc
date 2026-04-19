@@ -5,7 +5,6 @@
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_NO_INSTALL_FROM_API=1
 export HOMEBREW=$(/opt/homebrew/bin/brew --prefix)
-export EZA_CONFIG_DIR=$HOME/.config/eza
 
 # }}}
 
@@ -40,24 +39,15 @@ export EZA_CONFIG_DIR=$HOME/.config/eza
 
   # }}}
 
-  # Bun {{{2
-
-  export BUNPATH=$HOME/.bun
-  export BUNBIN=$BUNPATH/bin
-
-  # }}}
-
 # }}}
 
 # Path {{{
 
 path=(
   $HOMEBREW/{bin,sbin}
-  $HOME/.pub-cache/bin
   $HOME/.bin
   $GOBIN
   $RUSTBIN
-  $BUNBIN
   $path
 )
 
