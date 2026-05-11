@@ -63,6 +63,7 @@ alias ls="ls"
 alias ll="ls -glah"
 alias cp="cp -ivR"
 alias mv="mv -iv"
+alias cc="rtk claude --dangerously-skip-permissions"
 
 # }}}
 
