@@ -6,45 +6,31 @@ vim.opt.guicursor = ""
 vim.opt.shortmess = "atToOIc"
 vim.opt.clipboard = { "unnamed", "unnamedplus" }
 vim.opt.termguicolors = true
-vim.opt.linespace = 0
-vim.opt.showcmd = true
-vim.opt.cmdheight = 1
 vim.opt.showtabline = 0
-vim.opt.hidden = false
 vim.opt.number = true
-vim.opt.relativenumber = false
 vim.opt.matchtime = 0
 vim.opt.wrap = false
 vim.opt.listchars = { tab = "  ", eol = " ", lead = " ", trail = "·", nbsp = ".", extends = "#" }
 vim.opt.list = true
 vim.opt.scrolloff = 20
-vim.opt.cursorline = false
-vim.opt.cursorcolumn = false
 vim.opt.signcolumn = "no"
-vim.opt.backspace = { "indent", "eol", "start" }
 vim.opt.tabstop = 2
 vim.opt.softtabstop = -1
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.smarttab = true
-vim.opt.autoindent = true
 vim.opt.smartindent = true
-vim.opt.wildmenu = true
 vim.opt.wildmode = { "longest", "list", "full" }
 vim.opt.wildignorecase = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.infercase = true
-vim.opt.incsearch = true
 vim.opt.hlsearch = true
 vim.opt.joinspaces = false
 vim.opt.splitbelow = true
 vim.opt.splitright = true
-vim.opt.timeout = true
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 250
-vim.opt.ttyfast = true
-vim.opt.foldenable = true
 vim.opt.foldmethod = "indent"
 vim.opt.foldlevel = 1000
 vim.opt.laststatus = 3
@@ -58,12 +44,10 @@ vim.keymap.set("n", "k", "gk", { noremap = true, silent = true })
 vim.keymap.set("n", "<c-j>", "<c-w>j", { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, ";", ":", { noremap = true, silent = false })
 vim.keymap.set("n", "<cr>", ":nohls<cr>", { noremap = true, silent = true })
-vim.keymap.set("n", "<c-j>", "<c-w>j", { noremap = true, silent = true })
 vim.keymap.set("n", "<c-k>", "<c-w>k", { noremap = true, silent = true })
 vim.keymap.set("n", "<c-h>", "<c-w>h", { noremap = true, silent = true })
 vim.keymap.set("n", "<c-l>", "<c-w>l", { noremap = true, silent = true })
 
-vim.opt.background = "dark"
 vim.cmd.colorscheme("default")
 vim.api.nvim_set_hl(0, "Normal", { bg = nil })
 
@@ -111,8 +95,6 @@ vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "*" },
 	callback = function()
-		vim.opt.cursorline = false
-		vim.opt.cursorcolumn = false
 		vim.opt_local.formatoptions:remove({ "c", "r", "o" })
 	end,
 	group = vim.api.nvim_create_augroup("AdjustCursorLineAndCursorColumnAndFormatOptions", { clear = true }),
@@ -209,7 +191,6 @@ require("lazy").setup({
 	},
 	{
 		"mikesmithgh/borderline.nvim",
-		enabled = true,
 		lazy = true,
 		event = "VeryLazy",
 		config = function()
@@ -250,9 +231,7 @@ require("lazy").setup({
 					["[d"] = "lua vim.diagnostic.jump({ count = -1, wrap = true, float = false })",
 					["]d"] = "lua vim.diagnostic.jump({ count = 1, wrap = true, float = false })",
 				},
-				on_attach = function(client, bufnr)
-					-- require("lsp-setup.utils").format_on_save(client)
-				end,
+
 				capabilities = vim.lsp.protocol.make_client_capabilities(),
 				servers = {
 					bashls = {},
@@ -351,46 +330,13 @@ require("lazy").setup({
 		},
 	},
 	{
-		"nvim-treesitter/nvim-treesitter",
+		"arborist-ts/arborist.nvim",
 		lazy = false,
-		branch = "main",
-		build = ":TSUpdate",
 		config = function()
-			local ts = require("nvim-treesitter")
-			local group = vim.api.nvim_create_augroup("TreesitterSetup", { clear = true })
-			local ignore_filetypes = {
-				"checkhealth",
-				"lazy",
-				"mason",
-				"conf",
-				"env",
-			}
-			vim.api.nvim_create_autocmd("FileType", {
-				group = group,
-				desc = "Enable treesitter highlighting and indentation",
-				callback = function(event)
-					if vim.tbl_contains(ignore_filetypes, event.match) then
-						return
-					end
-					local lang = vim.treesitter.language.get_lang(event.match) or event.match
-					local buf = event.buf
-					pcall(vim.treesitter.start, buf, lang)
-					vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-					ts.install({ lang })
-				end,
+			require("arborist").setup({
+				ignore = { "checkhealth", "lazy", "mason", "conf", "env" },
 			})
 		end,
-	},
-	{
-		"nvim-treesitter/nvim-treesitter-context",
-		event = "BufRead",
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter",
-			event = "BufRead",
-		},
-		opts = {
-			multiwindow = true,
-		},
 	},
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
@@ -539,10 +485,8 @@ require("lazy").setup({
 		enabled = false,
 	},
 	install = {
-		missing = true,
 		colorscheme = { "default" },
 	},
-	checker = { enabled = false },
 	ui = {
 		icons = {
 			cmd = "",
