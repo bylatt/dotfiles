@@ -1,10 +1,9 @@
-
 clipboard-read = "allow"
 clipboard-write = "allow"
 cursor-style = "block"
 cursor-style-blink = false
 custom-shader = shaders/cursor_blaze.glsl
-font-family = "Space Mono"
+font-family = "SF Mono"
 font-size = 14
 macos-titlebar-style = "tabs"
 quit-after-last-window-closed = true

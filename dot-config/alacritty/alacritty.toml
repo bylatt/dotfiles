@@ -78,25 +78,25 @@ color = "#4f5258"
 size = 14
 
 [font.bold]
-family = "Space Mono"
+family = "SF Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "Space Mono"
+family = "SF Mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "Space Mono"
+family = "SF Mono"
 style = "Italic"
 
 [font.normal]
-family = "Space Mono"
+family = "SF Mono"
 style = "Regular"
 
 [window]
 decorations = "full"
-opacity = 0.9
-blur = true
+opacity = 1
+blur = false
 startup_mode = "Maximized"
 
 [window.padding]

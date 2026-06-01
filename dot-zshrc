@@ -35,7 +35,7 @@ export HOMEBREW=$(/opt/homebrew/bin/brew --prefix)
   # Rust {{{2
 
   export RUSTPATH=$HOME/.cargo
-  export RUSTBIN=$RUSTPATH/bin
+  export RUSTBIN=$(/opt/homebrew/bin/brew --prefix rustup)/bin
 
   # }}}
 
