@@ -1,4 +1,4 @@
-# vim: set sw=2 ts=2 sts=0 et fdm=marker :nospell:
+# vim: se sw=2 ts=2 sts=0 et fdm=marker :nospell:
 
 # Homebrew {{{
 
@@ -46,6 +46,7 @@ export HOMEBREW=$(/opt/homebrew/bin/brew --prefix)
 path=(
   $HOMEBREW/{bin,sbin}
   $HOME/.bin
+  $HOME/.local/bin
   $GOBIN
   $RUSTBIN
   $path

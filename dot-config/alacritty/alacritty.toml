@@ -78,19 +78,19 @@ color = "#4f5258"
 size = 14
 
 [font.bold]
-family = "SF Mono"
+family = "Space Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "SF Mono"
+family = "Space Mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "SF Mono"
+family = "Space Mono"
 style = "Italic"
 
 [font.normal]
-family = "SF Mono"
+family = "Space Mono"
 style = "Regular"
 
 [window]
