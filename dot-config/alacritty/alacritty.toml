@@ -94,11 +94,11 @@ family = "Space Mono"
 style = "Regular"
 
 [window]
-decorations = "full"
+decorations = "Buttonless"
 opacity = 1
 blur = false
 startup_mode = "Maximized"
 
 [window.padding]
-x = 8
-y = 8
+x = 12
+y = 12
