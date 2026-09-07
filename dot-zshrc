@@ -64,6 +64,7 @@ alias ll="ls -glah"
 alias cp="cp -ivR"
 alias mv="mv -iv"
 alias cc="claude --dangerously-skip-permissions"
+alias mu="muse --yolo"
 
 # }}}
 
