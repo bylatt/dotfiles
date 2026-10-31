@@ -63,8 +63,8 @@ alias ls="ls"
 alias ll="ls -glah"
 alias cp="cp -ivR"
 alias mv="mv -iv"
-alias cc="claude --dangerously-skip-permissions"
-alias mu="muse --yolo"
+alias claude="claude --dangerously-skip-permissions"
+alias muse="muse --yolo"
 
 # }}}
 
@@ -251,7 +251,7 @@ typeset -gU cdpath fpath mailpath path
 # SKIM {{{
 
 export SKIM_DEFAULT_COMMAND='fd --type file --hidden --no-ignore'
-export SKIM_DEFAULT_OPTIONS="--color=hl:#83efef,hl+:#83efef,prompt:#83efef,pointer:#83efef,marker:#83efef,spinner:#83efef,info:#83efef --layout=reverse"
+export SKIM_DEFAULT_OPTIONS="--color=hl:#83efef,matched-bg:-1,hl+:#83efef,prompt:#83efef,pointer:#83efef,marker:#83efef,spinner:#83efef,info:#83efef --layout=reverse"
 
 sk-history-widget() {
   local selected
