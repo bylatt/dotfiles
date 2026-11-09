@@ -13,6 +13,11 @@ function connect_the_dots() {
   done
 }
 
+function install_herdr_plugins() {
+  command -v herdr >/dev/null 2>&1 || return
+  xargs -L1 -I{} herdr plugin install {} --yes <"$PWD/dot-config/herdr/plugins.txt"
+}
+
 unamestr=$(uname)
 if [[ "$unamestr" == 'Linux' ]]; then
   echo "Linux detected"
@@ -27,7 +32,10 @@ read -p "This will overwrite existing files in your home directory. Are you sure
 echo ""
 
 case $reply in
-[Yy]*) connect_the_dots ;;
+[Yy]*)
+  connect_the_dots
+  install_herdr_plugins
+  ;;
 [Nn]*) exit ;;
 *) echo "Yes or No only" ;;
 esac
