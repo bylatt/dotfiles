@@ -322,7 +322,12 @@ require("lazy").setup({
 		},
 	},
 	{
+		"willfish/herdr-navigator.nvim",
+		opts = {},
+	},
+	{
 		"aserowy/tmux.nvim",
+		cond = vim.env.HERDR_ENV == nil,
 		opts = {
 			copy_sync = {
 				enable = false,
