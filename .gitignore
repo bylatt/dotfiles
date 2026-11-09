@@ -19,3 +19,6 @@ dot-config/*
 !dot-config/tmux
 !dot-config/fontconfig
 !dot-config/opencode
+!dot-config/herdr
+dot-config/herdr/*
+!dot-config/herdr/config.toml

@@ -1,0 +1,16 @@
+onboarding = false
+
+[theme]
+name = "terminal"
+
+[keys]
+navigate_workspace_down = "j"
+navigate_workspace_up = "k"
+navigate_pane_down = "down"
+navigate_pane_up = "up"
+focus_pane_left = ["prefix+h", "ctrl+h"]
+focus_pane_down = ["prefix+j", "ctrl+j"]
+focus_pane_up = ["prefix+k", "ctrl+k"]
+focus_pane_right = ["prefix+l", "ctrl+l"]
+split_vertical = "prefix+backslash"
+split_horizontal = "prefix+minus"
