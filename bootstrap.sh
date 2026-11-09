@@ -3,14 +3,14 @@
 function install_homebrew() {
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   eval "$(/opt/homebrew/bin/brew shellenv)"
-  brew bundle install --file=$PWD/dot-brewrc
+  brew bundle install --file="$PWD/dot-brewrc"
 }
 
 function connect_the_dots() {
   for d in dot-*; do
     dotname=${d/dot-/}
-    rm -rf $HOME/.$dotname
-    ln -s $PWD/$d $HOME/.$dotname
+    rm -rf "$HOME/.$dotname"
+    ln -s "$PWD/$d" "$HOME/.$dotname"
   done
 }
 
@@ -29,7 +29,7 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
   fi
 fi
 
-read -p "This will overwrite existing files in your home directory. Are you sure? (y/n) " reply
+read -r -p "This will overwrite existing files in your home directory. Are you sure? (y/n) " reply
 echo ""
 
 case $reply in
