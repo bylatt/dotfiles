@@ -2,6 +2,7 @@
 
 function install_homebrew() {
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
   brew bundle install --file=$PWD/dot-brewrc
 }
 
@@ -23,7 +24,7 @@ if [[ "$unamestr" == 'Linux' ]]; then
   echo "Linux detected"
 elif [[ "$unamestr" == 'Darwin' ]]; then
   echo "MacOS detected"
-  if [ ! which brew ] >/dev/null 2>&1; then
+  if ! command -v brew >/dev/null 2>&1; then
     install_homebrew
   fi
 fi
